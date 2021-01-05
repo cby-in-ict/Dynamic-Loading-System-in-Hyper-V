@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Load-Balancer</RootNamespace>
+    <RootNamespace>Load_Balancer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,8 +17,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.153.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0" />
     <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Management.Automation" Version="6.2.5" />
   </ItemGroup>
 
   <ItemGroup>

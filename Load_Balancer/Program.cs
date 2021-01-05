@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*                                ChenBoYan chenboyan@ict.ac.cn
  * This is a Dynamic Balancer for Hyper-V VM, It can ensures a VM has enough free mem to startup,
  * and as the load increase, this system can detect performance shortage and dynamicly adjust the 
  * resource of a VM. for more information, Please refer to Readme.md.
