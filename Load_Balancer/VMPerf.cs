@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace HyperVWcfTransport
 {
     public class VMPerf

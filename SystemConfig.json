@@ -1,20 +1,6 @@
 {
-  "LocalVM": {
-    "Installed": "true",
-    "MemorySize": "4096",
-    "CPUCount": "2",
-    "CPULimit": "50"
-  },
-  "NetVM1": {
-    "Installed": "true",
-    "MemorySize": "4096",
-    "CPUCount": "2",
-    "CPULimit": "50"
-  },
-  "NetVM2": {
-    "Installed": "true",
-    "MemorySize": "4096",
-    "CPUCount": "2",
-    "CPULimit": "50"
-  }
+    "BalanceStrategy": "User",
+    "CPUDefaultCount": "2",
+    "MemoryDefaultSize": "4096",
+    "CPUDefaultLimit": "50"
 }
