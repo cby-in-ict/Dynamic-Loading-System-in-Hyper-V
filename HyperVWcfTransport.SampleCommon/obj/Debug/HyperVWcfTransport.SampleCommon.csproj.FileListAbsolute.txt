@@ -1,0 +1,6 @@
+D:\graduate\HyperVWcfTransport.SampleCommon\bin\Debug\HyperVWcfTransport.SampleCommon.dll
+D:\graduate\HyperVWcfTransport.SampleCommon\bin\Debug\HyperVWcfTransport.SampleCommon.pdb
+D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csprojAssemblyReference.cache
+D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csproj.CoreCompileInputs.cache
+D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.dll
+D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.pdb

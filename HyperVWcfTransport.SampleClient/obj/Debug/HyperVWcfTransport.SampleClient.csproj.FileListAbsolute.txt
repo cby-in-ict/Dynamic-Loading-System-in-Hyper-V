@@ -1,0 +1,12 @@
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.exe.config
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.exe
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.pdb
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.dll
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleCommon.dll
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.pdb
+D:\graduate\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleCommon.pdb
+D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csprojAssemblyReference.cache
+D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csproj.CoreCompileInputs.cache
+D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csproj.CopyComplete
+D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.exe
+D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.pdb
