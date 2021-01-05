@@ -19,9 +19,18 @@ namespace Load_Balancer
     {
         static void Main(string[] args)
         {
-            HostState mySysState = new HostState();
-            Int64 memSize =  mySysState.getAvailableMemory();
-            Console.WriteLine("当前内存剩余大小：" + memSize);
+            SystemInfo systemInfo = new SystemInfo();
+            Int64 AvailableMemory = systemInfo.MemoryAvailable;
+            Int64 PhysicalMemory = systemInfo.PhysicalMemory;
+            AvailableMemory = AvailableMemory / (1024 * 1024);
+            PhysicalMemory = PhysicalMemory / (1024 * 1024);
+            int ProcessorCount = systemInfo.ProcessorCount;
+            float load = systemInfo.CpuLoad;
+            
+            Console.WriteLine("CPU总个数：" + ProcessorCount);
+            Console.WriteLine("CPU负载率：" + load);
+            Console.WriteLine("总物理内存：" + PhysicalMemory + "MB");
+            Console.WriteLine("当前可用内存：" + AvailableMemory + "MB");
         }
     }
 }

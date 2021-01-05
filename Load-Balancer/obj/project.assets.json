@@ -5997,9 +5997,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\graduate\\Load-Balancer\\Load-Balancer.csproj",
-      "projectName": "Load-Balancer",
-      "projectPath": "D:\\graduate\\Load-Balancer\\Load-Balancer.csproj",
+      "projectUniqueName": "D:\\graduate\\Load-Balancer\\Load_Balancer.csproj",
+      "projectName": "Load_Balancer",
+      "projectPath": "D:\\graduate\\Load-Balancer\\Load_Balancer.csproj",
       "packagesPath": "C:\\Users\\Think\\.nuget\\packages\\",
       "outputPath": "D:\\graduate\\Load-Balancer\\obj\\",
       "projectStyle": "PackageReference",

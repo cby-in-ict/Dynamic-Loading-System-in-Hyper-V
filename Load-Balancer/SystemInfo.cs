@@ -10,55 +10,6 @@ using Microsoft.TeamFoundation.WorkItemTracking.Process.WebApi.Models;
 
 namespace HyperVWcfTransport
 {
-    class HostState
-    {
-        Int64 AvailableMemory = 0;
-        int CpuUsedPercentage = 0;
-        public Int64 getAvailableMemory()
-        {
-            //用于查询一些如系统信息的管理对象
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(); 
-            searcher.Query = new SelectQuery("Win32_PhysicalMemory", "", new string[] { "Capacity" });
-            ManagementObjectCollection collection = searcher.Get();
-            ManagementObjectCollection.ManagementObjectEnumerator em = collection.GetEnumerator();
-
-            int capacity = 0;
-            while (em.MoveNext())
-            {
-                ManagementBaseObject baseObj = em.Current;
-                if (baseObj.Properties["Capacity"].Value != null)
-                {
-                    try
-                    {
-                        capacity += int.Parse(baseObj.Properties["Capacity"].Value.ToString());
-                    }
-                    catch
-                    {
-                        Console.WriteLine("内存查询异常！", "错误信息");
-                        return -1;
-                    }
-                }
-            }
-            this.AvailableMemory = capacity;
-            return capacity;
-        }
-
-        public int getCpuUsedPercentage()
-        {
-            return 1;
-        }
-
-        void getHostComputerInfo()
-        {
-            
-        }
-    }
-}
-
-
-
-namespace SystemInfo
-{
     // System Info Class
     public class SystemInfo
     {
@@ -128,9 +79,7 @@ namespace SystemInfo
         #endregion
 
         #region CPU占用率 
-        ///  
-        /// 获取CPU占用率 
-        ///  
+        // 获取CPU占用率 
         public float CpuLoad
         {
             get
@@ -141,9 +90,7 @@ namespace SystemInfo
         #endregion
 
         #region 可用内存 
-        ///  
-        /// 获取可用内存 
-        ///  
+        // 获取可用内存 
         public long MemoryAvailable
         {
             get
@@ -168,9 +115,7 @@ namespace SystemInfo
         #endregion
 
         #region 物理内存 
-        ///  
-        /// 获取物理内存 
-        ///  
+        // 获取物理内存 
         public long PhysicalMemory
         {
             get
@@ -181,9 +126,7 @@ namespace SystemInfo
         #endregion
 
         #region 获得进程列表 
-        ///  
-        /// 获得进程列表 
-        ///  
+        // 获得进程列表 
         public List<Process> GetProcessInfo()
         {
             List<Process> ret = new List<Process>();
@@ -200,27 +143,27 @@ namespace SystemInfo
         /// 进程名称 
         //public Dictionary<string, string> GetProcessInfo(List<Process> ProcessList, string ProcesName)
         //{
-            //List pInfo = new List();
-            //Process[] processes = Process.GetProcessesByName(ProcessName);
-            //foreach (Process instance in processes)
-            //{
-            //    try
-            //    {
-            //        pInfo.Add(new ProcessInfo(instance.Id,
-            //            instance.ProcessName,
-            //            instance.TotalProcessorTime.TotalMilliseconds,
-            //            instance.WorkingSet64,
-            //            instance.MainModule.FileName));
-            //    }
-            //    catch { }
+        //List pInfo = new List();
+        //Process[] processes = Process.GetProcessesByName(ProcessName);
+        //foreach (Process instance in processes)
+        //{
+        //    try
+        //    {
+        //        pInfo.Add(new ProcessInfo(instance.Id,
+        //            instance.ProcessName,
+        //            instance.TotalProcessorTime.TotalMilliseconds,
+        //            instance.WorkingSet64,
+        //            instance.MainModule.FileName));
+        //    }
+        //    catch { }
         //    }
         //    return pInfo;
         //}
         #endregion
 
         #region 结束指定进程 
-        /// 结束指定进程 
-        /// 进程的 Process ID 
+        // 结束指定进程 
+        // 输入进程的 Process ID 
         public static void endProcess(int pid)
         {
             try
