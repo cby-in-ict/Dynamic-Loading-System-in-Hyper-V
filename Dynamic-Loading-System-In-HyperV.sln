@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{D5FF0C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamic-Loading-Repo", "Dynamic-Loading-Repo", "{5194CA1F-2D12-4A24-9DD6-F094333727F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Load-Balancer", "Load-Balancer\Load-Balancer.csproj", "{A6855896-B1CA-438A-91CA-1F58B03EED0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Load_Balancer", "Load_Balancer\Load_Balancer.csproj", "{A6855896-B1CA-438A-91CA-1F58B03EED0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perf_Detector", "Perf_Detector\Perf_Detector.csproj", "{0350FBF4-E42F-46F3-B9F4-E25147F82740}"
 EndProject
