@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 /* In this part, I partialy refer to MultiPC BackgroundCode/VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
 namespace Load_Balancer
 {
-    struct PerformanceSetting
+    public struct PerformanceSetting
     {
         public String Name;
         public String ElementName;
@@ -37,9 +37,7 @@ namespace Load_Balancer
         public bool RAM_DynamicMemoryEnabled;//动态内存
     }
 
-    class VMManagment
-    {
-        class VirtualMachine
+        public class VirtualMachine
         {
             const int StartID = 2;
             const int ForceShutDownID = 3;
@@ -223,5 +221,4 @@ namespace Load_Balancer
             }
         }
     }
-}
 

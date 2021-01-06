@@ -3,17 +3,47 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HyperVWcfTransport
+namespace Load_Balancer
 {
     class DynamicAdjustment
     {
-        bool adjustMemory()
+        public bool isDynamicMem(VirtualMachine VM)
         {
-            return true;
+            return VM.performanceSetting.RAM_DynamicMemoryEnabled == true;
         }
-        bool adjustCPU()
+        public bool AdjustMemorySize(VirtualMachine VM, Int64 MemorySize)
         {
-            return true;
+            bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize));
+            return ret;
+        }
+        public bool AdjustMemoryWeight(VirtualMachine VM, int MemoryWeight)
+        {
+            bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemoryWeight));
+            return ret;
+        }
+        public bool AdjustCPUCount(VirtualMachine VM, int Count)
+        {
+            if (VM.IsPowerOn())
+                return false;
+            
+            bool ret = VM.ModifySettingData("CPU_VirtualQuantity", Convert.ToString(Count));
+            return ret;
+        }
+        // Adjust CPU related setting
+        public bool AdjustCPULimit(VirtualMachine VM, int CPULimit)
+        {
+            bool ret = VM.ModifySettingData("CPU_Limit", Convert.ToString(CPULimit));
+            return ret;
+        }
+        public bool AdjustCPUWeight(VirtualMachine VM, int CPUWeight)
+        {
+            bool ret = VM.ModifySettingData("CPU_Weight", Convert.ToString(CPUWeight));
+            return ret;
+        }
+        public bool AdjustCPUReservation(VirtualMachine VM, int CPUReservation)
+        {
+            bool ret = VM.ModifySettingData("CPU_Reservation", Convert.ToString(CPUReservation));
+            return ret;
         }
     }
 }
