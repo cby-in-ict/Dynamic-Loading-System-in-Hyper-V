@@ -11,7 +11,7 @@ using System.Management.Automation.Runspaces;
 using System.IO;
 using System.Collections.ObjectModel;
 
-/* In this part, I partialy refer to MultiPC BackgroundCode/VirutalMachine.cs, copyright reserved by ict bis lab, based our code, I revised it*/
+/* In this part, I partialy refer to MultiPC BackgroundCode/VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
 namespace Load_Balancer
 {
     struct PerformanceSetting
@@ -125,6 +125,101 @@ namespace Load_Balancer
                 }
 
                 return performanceSetting;
+            }
+
+            public bool IsPowerOn()
+            {
+                GetPerformanceSetting();
+                return (performanceSetting.EnabledState == 2);
+            }
+
+            public bool IsPowerOff()
+            {
+                GetPerformanceSetting();
+                if (performanceSetting.EnabledState == 3)
+                {
+                    vmStatus = VirtualMachineStatus.PowerOff;
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            public bool ModifySettingData(String settingName, String settingData)
+            {
+                bool result = false;
+                if (!IsPowerOff())
+                {
+                    Console.WriteLine("关机状态下修改，非动态修改！");
+                    return false;
+                }
+
+                using (ManagementObject virtualSystemSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
+                {
+                    if (settingName.Substring(0, 3) == "CPU")
+                    {
+                        settingName = settingName.Substring(4);
+                        using (ManagementObjectCollection processorSettingDatas = virtualSystemSetting.GetRelated("Msvm_ProcessorSettingData"))
+                        using (ManagementObject processorSettingData = WmiUtilities.GetFirstObjectFromCollection(processorSettingDatas))
+                        {
+                            if (processorSettingData[settingName].GetType() == typeof(UInt64))
+                                processorSettingData[settingName] = Convert.ToUInt64(settingData);
+                            else if (processorSettingData[settingName].GetType() == typeof(UInt32))
+                                processorSettingData[settingName] = Convert.ToUInt32(settingData);
+
+                            using (ManagementBaseObject inParams = managementService.GetMethodParameters("ModifyResourceSettings"))
+                            {
+                                inParams["ResourceSettings"] = new string[] { processorSettingData.GetText(TextFormat.WmiDtd20) };
+                                using (ManagementBaseObject outParams = managementService.InvokeMethod(
+                                    "ModifyResourceSettings", inParams, null))
+                                {
+                                    try
+                                    {
+                                        result = WmiUtilities.ValidateOutput(outParams, scope);
+                                    }
+                                    catch (ManagementException e)
+                                    {
+                                        Console.WriteLine(e.Message, "修改虚拟机CPU配置异常！");
+                                    }
+                                    return result;
+                                }
+                            }
+                        }
+                    }
+                    else if (settingName.Substring(0, 3) == "RAM")
+                    {
+                        settingName = settingName.Substring(4);
+                        using (ManagementObjectCollection memorySettingDatas = virtualSystemSetting.GetRelated("Msvm_MemorySettingData"))
+                        using (ManagementObject memorySettingData = WmiUtilities.GetFirstObjectFromCollection(memorySettingDatas))
+                        {
+                            if (memorySettingData[settingName].GetType() == typeof(UInt64))
+                                memorySettingData[settingName] = Convert.ToUInt64(settingData);
+                            else if (memorySettingData[settingName].GetType() == typeof(UInt32))
+                                memorySettingData[settingName] = Convert.ToUInt32(settingData);
+                            else if (memorySettingData[settingName].GetType() == typeof(bool))
+                                memorySettingData[settingName] = Convert.ToBoolean(settingData);
+
+                            using (ManagementBaseObject inParams = managementService.GetMethodParameters("ModifyResourceSettings"))
+                            {
+                                inParams["ResourceSettings"] = new string[] { memorySettingData.GetText(TextFormat.WmiDtd20) };
+                                using (ManagementBaseObject outParams = managementService.InvokeMethod(
+                                    "ModifyResourceSettings", inParams, null))
+                                {
+                                    try
+                                    {
+                                        result = WmiUtilities.ValidateOutput(outParams, scope);
+                                    }
+                                    catch (ManagementException e)
+                                    {
+                                        Console.WriteLine(e.Message, "修改虚拟机CPU配置异常！");
+                                    }
+                                    return result;
+                                }
+                            }
+                        }
+                    }
+                    return result;
+                }
             }
         }
     }

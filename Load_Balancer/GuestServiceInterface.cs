@@ -137,8 +137,7 @@ namespace Microsoft.Samples.HyperV.IntegrationServices
         /// <param name="destinationFileName">Destination file name path.</param>
         /// <param name="overwriteExisting">Overwrite existing file.</param>
         /// <param name="createFullPath">Create the full path.</param>
-        internal void
-        CopyFileToGuest(
+        internal void CopyFileToGuest(
             string hostMachine,
             string vmName,
             string sourceFileName,
