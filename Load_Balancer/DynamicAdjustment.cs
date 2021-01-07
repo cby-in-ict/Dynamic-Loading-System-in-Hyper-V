@@ -11,6 +11,8 @@ namespace Load_Balancer
         {
             return VM.performanceSetting.RAM_DynamicMemoryEnabled == true;
         }
+
+        // Adjust Memory related setting API
         public bool AdjustMemorySize(VirtualMachine VM, Int64 MemorySize)
         {
             bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize));
@@ -21,6 +23,8 @@ namespace Load_Balancer
             bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemoryWeight));
             return ret;
         }
+
+        // Adjust CPU related setting API
         public bool AdjustCPUCount(VirtualMachine VM, int Count)
         {
             if (VM.IsPowerOn())
@@ -29,7 +33,7 @@ namespace Load_Balancer
             bool ret = VM.ModifySettingData("CPU_VirtualQuantity", Convert.ToString(Count));
             return ret;
         }
-        // Adjust CPU related setting
+        
         public bool AdjustCPULimit(VirtualMachine VM, int CPULimit)
         {
             bool ret = VM.ModifySettingData("CPU_Limit", Convert.ToString(CPULimit));
