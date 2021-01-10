@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Perf_Detector
 {
-    class MemSpoofer
+    public class MemSpoofer
     {
+        public static UInt64 AvailableMemMBytes = 0;
+
     }
 }

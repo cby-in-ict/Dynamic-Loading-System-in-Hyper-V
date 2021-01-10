@@ -1,0 +1,15 @@
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\Perf_Detector.exe
+D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.csprojAssemblyReference.cache
+D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.AssemblyInfoInputs.cache
+D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.AssemblyInfo.cs
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\Microsoft.Win32.Registry.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\System.CodeDom.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\System.Management.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\System.Security.AccessControl.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\System.Security.Principal.Windows.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Management.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.csproj.CopyComplete

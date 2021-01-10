@@ -16,6 +16,7 @@ namespace HyperVWcfTransport
         private int m_ProcessorCount = 0;   //CPU个数 
         private PerformanceCounter pcCpuLoad;   //CPU计数器 
         private long m_PhysicalMemory = 0;   //物理内存 
+        private int MaxAllocMemDivide = 2;   //最大分配给虚拟机的内存限制
 
         private const int GW_HWNDFIRST = 0;
         private const int GW_HWNDNEXT = 2;

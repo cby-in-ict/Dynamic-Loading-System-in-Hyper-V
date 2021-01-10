@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "7Cr+VeHYh5MMdPaGkMrwsN9tc08jpuso/cBDD5SYqluW8hxksux9C7ha4fwRxHpPg1owkYiCIkdRUkJCdQIqyQ==",
+  "dgSpecHash": "65UZ+i0smQSZX+qyBjnM6cZ/GvHhmOBSQekokvO2yORzPJWa9bv+BWZKjRwrxIQqo58lbHbihyzONr99FY4QEA==",
   "success": true,
   "projectFilePath": "D:\\graduate\\Load_Balancer\\Load_Balancer.csproj",
   "expectedPackageFiles": [
@@ -128,7 +128,6 @@
     "C:\\Users\\Think\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.3.0\\system.xml.xpath.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Think\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.0.1\\microsoft.aspnetcore.app.ref.3.0.1.nupkg.sha512",
     "C:\\Users\\Think\\.nuget\\packages\\microsoft.netcore.app.ref\\3.0.0\\microsoft.netcore.app.ref.3.0.0.nupkg.sha512",
-    "C:\\Users\\Think\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.0.3\\microsoft.netcore.app.host.win-x64.3.0.3.nupkg.sha512",
     "C:\\Users\\Think\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.0.0\\microsoft.windowsdesktop.app.ref.3.0.0.nupkg.sha512"
   ],
   "logs": []

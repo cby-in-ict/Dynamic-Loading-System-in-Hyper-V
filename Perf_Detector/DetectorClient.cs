@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Perf_Detector
 {
-    class DetectorClient
+    public class DetectorClient
     {
+
     }
 }

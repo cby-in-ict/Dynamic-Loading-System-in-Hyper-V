@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Perf_Detector
 {
-    class ProcessInfo
+    public class ProcessInfo
     {
     }
 }
