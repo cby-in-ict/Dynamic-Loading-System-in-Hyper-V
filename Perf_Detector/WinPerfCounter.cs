@@ -68,29 +68,32 @@ namespace Perf_Detector
         private PerformanceCounter[] trafficReceivedCounters;
         private string[] interfaces = null;
 
-        public void getProcessorCpuTime()
+        public float getProcessorCpuTime()
         {
             float tmp = cpuProcessorTime.NextValue();
             CPUProcessorTime = (float)(Math.Round((double)tmp, 1));
-            // Environment.ProcessorCount: return the total number of cores
+            return CPUProcessorTime;
         }
 
-        public void getCpuPrivilegedTime()
+        public float getCpuPrivilegedTime()
         {
             float tmp = cpuPrivilegedTime.NextValue();
             CPUPrivilegedTime = (float)(Math.Round((double)tmp, 1));
+            return CPUPrivilegedTime;
         }
 
-        public void getCpuinterruptTime()
+        public float getCpuinterruptTime()
         {
             float tmp = cpuInterruptTime.NextValue();
             CPUInterruptTime = (float)(Math.Round((double)tmp, 1));
+            return CPUInterruptTime;
         }
 
-        public void getcpuDPCTime()
+        public float getcpuDPCTime()
         {
             float tmp = cpuDPCTime.NextValue();
             CPUDPCTime = (float)(Math.Round((double)tmp, 1));
+            return CPUDPCTime;
         }
 
         public void getPageFile()
@@ -98,9 +101,10 @@ namespace Perf_Detector
             PageFile = pageFile.NextValue();
         }
 
-        public void getProcessorQueueLengh()
+        public float getProcessorQueueLengh()
         {
             ProcessorQueueLengh = processorQueueLengh.NextValue();
+            return ProcessorQueueLengh;
         }
 
         public void getMemAvailable()
@@ -147,9 +151,10 @@ namespace Perf_Detector
         {
             HANDLECountCounter = handleCountCounter.NextValue();
         }
-        public void getThreadCount()
+        public float getThreadCount()
         {
             THREADCount = threadCount.NextValue();
+            return THREADCount;
         }
 
         public void getContentSwitches()
@@ -179,32 +184,5 @@ namespace Perf_Detector
             SamplingTime = DateTime.Now;
         }
 
-        public void initNetCounters()
-        {
-            // PerformanceCounter(CategoryName,CounterName,InstanceName)
-            performanceNetCounterCategory = new PerformanceCounterCategory("Network Interface");
-            interfaces = performanceNetCounterCategory.GetInstanceNames();
-            int length = interfaces.Length;
-
-            if (length > 0)
-            {
-                trafficSentCounters = new PerformanceCounter[length];
-                trafficReceivedCounters = new PerformanceCounter[length];
-            }
-            for (int i = 0; i < length; i++)
-            {
-                // Initializes a new, read-only instance of the PerformanceCounter class.
-                //   1st paramenter: "categoryName"-The name of the performance counter category (performance object) with which this performance counter is associated.
-                //   2nd paramenter: "CounterName" -The name of the performance counter.
-                //   3rd paramenter: "instanceName" -The name of the performance counter category instance, or an empty string (""), if the category contains a single instance.
-                trafficReceivedCounters[i] = new PerformanceCounter("Network Interface", "Bytes Sent/sec", interfaces[i]);
-                trafficSentCounters[i] = new PerformanceCounter("Network Interface", "Bytes Sent/sec", interfaces[i]);
-            }
-            // List of all names of the network interfaces
-            for (int i = 0; i < length; i++)
-            {
-                Console.WriteLine("Name netInterface: {0}", performanceNetCounterCategory.GetInstanceNames()[i]);
-            }
-        }
     }
 }
