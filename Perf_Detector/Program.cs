@@ -12,9 +12,11 @@ namespace Perf_Detector
         static void Main(string[] args)
         {
             CpuSpoofer myCpuSpoofer = new CpuSpoofer();
+            MemSpoofer myMEMSpoofer = new MemSpoofer();
             while (true) 
             {
                 Thread.Sleep(1000);
+                Console.WriteLine("此时的可用内存大小为：" + Convert.ToString(myMEMSpoofer.MEMAvailable));
                 Console.WriteLine("此时的CPU占用率为：" + Convert.ToString(myCpuSpoofer.CPUProcessorTime));
             }
         }
