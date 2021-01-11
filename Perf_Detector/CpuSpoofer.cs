@@ -18,7 +18,7 @@ namespace Perf_Detector
         public static WinPerfCounter WinPerfCounter = new WinPerfCounter();
         private static System.Timers.Timer RUtimer;
 
-        CpuSpoofer()
+        public CpuSpoofer()
         {
             Thread th = new Thread(new ThreadStart(RefreshStatesByTime)); //创建线程                     
             th.Start(); //启动线程

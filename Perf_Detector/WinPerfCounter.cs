@@ -5,12 +5,11 @@ using System.Diagnostics;
 using System.Threading;
 using System.Collections;
 
-/* This class is used to get performance counter, copyright preserved by cby */
+/* This class is used to get performance counter, refer to MSDN, copyright partly preserved by cby */
 namespace Perf_Detector
 {
     public class WinPerfCounter
     {
-        public string NodeName { get; set; }
         public float CPUProcessorTime { get; set; }
         public float CPUPrivilegedTime { get; set; }
         public float CPUInterruptTime { get; set; }
@@ -35,6 +34,7 @@ namespace Perf_Detector
         public DateTime SamplingTime { get; set; }
         // CPU占用率
         private PerformanceCounter cpuProcessorTime = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        private PerformanceCounter theCPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         // CPU特权程序时间
         private PerformanceCounter cpuPrivilegedTime = new PerformanceCounter("Processor", "% Privileged Time", "_Total");
         // CPU中断时间
@@ -47,7 +47,6 @@ namespace Perf_Detector
         private PerformanceCounter memCommited = new PerformanceCounter("Memory", "Committed Bytes", null);
         private PerformanceCounter memCommitLimit = new PerformanceCounter("Memory", "Commit Limit", null);
         private PerformanceCounter memCommitedPerc = new PerformanceCounter("Memory", "% Committed Bytes In Use", null);
-        // 
         private PerformanceCounter memPollPaged = new PerformanceCounter("Memory", "Pool Paged Bytes", null);
         private PerformanceCounter memPollNonPaged = new PerformanceCounter("Memory", "Pool Nonpaged Bytes", null);
         // 内存对换区相关参数
@@ -68,8 +67,11 @@ namespace Perf_Detector
         private PerformanceCounter[] trafficReceivedCounters;
         private string[] interfaces = null;
 
+        /* CPU 参数第一次获得的值往往是0，注意! */
         public float getProcessorCpuTime()
         {
+            float tmp1 = cpuProcessorTime.NextValue();
+            Thread.Sleep(1000);
             float tmp = cpuProcessorTime.NextValue();
             CPUProcessorTime = (float)(Math.Round((double)tmp, 1));
             return CPUProcessorTime;
@@ -96,9 +98,10 @@ namespace Perf_Detector
             return CPUDPCTime;
         }
 
-        public void getPageFile()
+        public float getPageFile()
         {
             PageFile = pageFile.NextValue();
+            return PageFile;
         }
 
         public float getProcessorQueueLengh()
@@ -107,49 +110,57 @@ namespace Perf_Detector
             return ProcessorQueueLengh;
         }
 
-        public void getMemAvailable()
+        public float getMemAvailable()
         {
             MEMAvailable = memAvailable.NextValue();
+            return MEMAvailable;
         }
 
-        public void getMemCommited()
+        public float getMemCommited()
         {
             MEMCommited = memCommited.NextValue() / (1024 * 1024);
+            return MEMCommited;
         }
 
-        public void getMemCommitLimit()
+        public float getMemCommitLimit()
         {
             MEMCommitLimit = memCommitLimit.NextValue() / (1024 * 1024);
+            return MEMCommitLimit;
         }
 
-        public void getMemCommitedPerc()
+        public float getMemCommitedPerc()
         {
             float tmp = memCommitedPerc.NextValue();
             // return the value of Memory Commit Limit
             MEMCommitedPerc = (float)(Math.Round((double)tmp, 1));
+            return MEMCommitedPerc;
         }
 
-        public void getMemPoolPaged()
+        public float getMemPoolPaged()
         {
             float tmp = memPollPaged.NextValue() / (1024 * 1024);
             MEMPoolPaged = (float)(Math.Round((double)tmp, 1));
+            return MEMPoolPaged;
         }
 
-        public void getMemPoolNonPaged()
+        public float getMemPoolNonPaged()
         {
             float tmp = memPollNonPaged.NextValue() / (1024 * 1024);
             MEMPoolNonPaged = (float)(Math.Round((double)tmp, 1));
+            return MEMPoolNonPaged;
         }
 
-        public void getMemCachedBytes()
+        public float getMemCachedBytes()
         {
             // return the value of Memory Cached in MBytes
             MEMCached = memCached.NextValue() / (1024 * 1024);
+            return MEMCached;
         }
 
-        public void getHandleCountCounter()
+        public float getHandleCountCounter()
         {
             HANDLECountCounter = handleCountCounter.NextValue();
+            return HANDLECountCounter;
         }
         public float getThreadCount()
         {
@@ -157,32 +168,67 @@ namespace Perf_Detector
             return THREADCount;
         }
 
-        public void getContentSwitches()
+        public int getContentSwitches()
         {
             CONTENTSwitches = (int)Math.Ceiling(contentSwitches.NextValue());
+            return CONTENTSwitches;
         }
 
-        public void getsystemCalls()
+        public int getsystemCalls()
         {
             SYSTEMCalls = (int)Math.Ceiling(systemCalls.NextValue());
+            return SYSTEMCalls;
         }
 
-        public void getCurretTrafficSent()
-        {
-            int length = interfaces.Length;
-            float sendSum = 0.0F;
-            for (int i = 0; i < length; i++)
-            {
-                sendSum += trafficSentCounters[i].NextValue();
-            }
-            float tmp = 8 * (sendSum / 1024);
-            NetTrafficSend = (float)(Math.Round((double)tmp, 1));
-        }
-
-        public void getSampleTime()
+        public DateTime getSampleTime()
         {
             SamplingTime = DateTime.Now;
+            return SamplingTime;
         }
 
+        //刷新参数
+        public bool initAllCounterValue()
+        {
+            try
+            {
+                getProcessorCpuTime();
+                getCpuPrivilegedTime();
+                getCpuinterruptTime();
+                getcpuDPCTime();
+                getPageFile();
+                getProcessorQueueLengh();
+                getMemAvailable();
+                getMemCommited();
+                getMemCommitLimit();
+                getMemCommitedPerc();
+                getMemPoolPaged();
+                getMemPoolNonPaged();
+                getMemCachedBytes();
+                getHandleCountCounter();
+                getThreadCount();
+                getContentSwitches();
+                getsystemCalls();
+                getSampleTime();
+                return true;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine(exp.Message, "更新性能计数器参数异常");
+                return false;
+            }
+        }
+        static void Main(string[] args)
+        {
+            var counter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            Console.WriteLine(Convert.ToString(counter.NextValue()));
+            Thread.Sleep(1000);
+            Console.WriteLine(Convert.ToString(counter.NextValue()));
+            
+            WinPerfCounter winPerfCounter = new WinPerfCounter();
+            winPerfCounter.initAllCounterValue();
+            Thread.Sleep(100);
+            Console.WriteLine("CPU占用率：" + Convert.ToString(winPerfCounter.getProcessorCpuTime()) + "\nProcessor Queue Length:" + Convert.ToString(winPerfCounter.ProcessorQueueLengh) + "\n可用内存大小：" + Convert.ToString(winPerfCounter.MEMAvailable));
+        }
     }
+
 }
