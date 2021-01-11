@@ -20,13 +20,15 @@ namespace Perf_Detector
 
         public CpuSpoofer()
         {
+            WinPerfCounter.initAllCounterValue();
+            Thread.Sleep(100);
             Thread th = new Thread(new ThreadStart(RefreshStatesByTime)); //创建线程                     
             th.Start(); //启动线程
         }
         public void RefreshStatesByTime()
         {
             // 创建一个100ms定时的定时器
-            RUtimer = new System.Timers.Timer(1000);    // 参数单位为ms
+            RUtimer = new System.Timers.Timer(100);    // 参数单位为ms
                                                        // 定时时间到，处理函数为OnTimedUEvent(...)
             RUtimer.Elapsed += RefreshCPUArg;
             // 为true时，定时时间到会重新计时；为false则只定时一次
@@ -36,7 +38,7 @@ namespace Perf_Detector
             // 开始计时
             RUtimer.Start();
         }
-        public  void RefreshCPUArg(object sender, ElapsedEventArgs e)
+        public void RefreshCPUArg(object sender, ElapsedEventArgs e)
         {
             try
             {

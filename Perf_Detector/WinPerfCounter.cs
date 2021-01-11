@@ -72,6 +72,7 @@ namespace Perf_Detector
         {
             float tmp = cpuProcessorTime.NextValue();
             CPUProcessorTime = (float)(Math.Round((double)tmp, 1));
+            Console.WriteLine("Processor CPU Usage is:" + Convert.ToString(CPUProcessorTime));
             return CPUProcessorTime;
         }
 
