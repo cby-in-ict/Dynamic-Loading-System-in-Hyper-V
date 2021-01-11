@@ -70,8 +70,6 @@ namespace Perf_Detector
         /* CPU 参数第一次获得的值往往是0，注意! */
         public float getProcessorCpuTime()
         {
-            float tmp1 = cpuProcessorTime.NextValue();
-            Thread.Sleep(1000);
             float tmp = cpuProcessorTime.NextValue();
             CPUProcessorTime = (float)(Math.Round((double)tmp, 1));
             return CPUProcessorTime;
@@ -217,6 +215,7 @@ namespace Perf_Detector
                 return false;
             }
         }
+        /* 单元测试，待添加TODO
         static void Main(string[] args)
         {
             var counter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
@@ -229,6 +228,7 @@ namespace Perf_Detector
             Thread.Sleep(100);
             Console.WriteLine("CPU占用率：" + Convert.ToString(winPerfCounter.getProcessorCpuTime()) + "\nProcessor Queue Length:" + Convert.ToString(winPerfCounter.ProcessorQueueLengh) + "\n可用内存大小：" + Convert.ToString(winPerfCounter.MEMAvailable));
         }
+        */
     }
 
 }

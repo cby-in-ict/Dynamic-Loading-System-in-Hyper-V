@@ -8,22 +8,22 @@ namespace Perf_Detector
 {
     public class CpuSpoofer
     {
-        public static int CPUCount = 0;
-        public static float ProcessorQueueLength = 0;
-        public static float CPUProcessorTime { get; set; }
-        public static float CPUPrivilegedTime { get; set; }
-        public static float CPUInterruptTime { get; set; }
-        public static float CPUDPCTime { get; set; }
-        public static float ThreadCount { get; set; }
-        public static WinPerfCounter WinPerfCounter = new WinPerfCounter();
-        private static System.Timers.Timer RUtimer;
+        public int CPUCount = 0;
+        public float ProcessorQueueLength = 0;
+        public float CPUProcessorTime { get; set; }
+        public float CPUPrivilegedTime { get; set; }
+        public float CPUInterruptTime { get; set; }
+        public float CPUDPCTime { get; set; }
+        public float ThreadCount { get; set; }
+        public  WinPerfCounter WinPerfCounter = new WinPerfCounter();
+        private  System.Timers.Timer RUtimer;
 
         public CpuSpoofer()
         {
             Thread th = new Thread(new ThreadStart(RefreshStatesByTime)); //创建线程                     
             th.Start(); //启动线程
         }
-        public static void RefreshStatesByTime()
+        public void RefreshStatesByTime()
         {
             // 创建一个100ms定时的定时器
             RUtimer = new System.Timers.Timer(1000);    // 参数单位为ms
@@ -36,7 +36,7 @@ namespace Perf_Detector
             // 开始计时
             RUtimer.Start();
         }
-        public static void RefreshCPUArg(object sender, ElapsedEventArgs e)
+        public  void RefreshCPUArg(object sender, ElapsedEventArgs e)
         {
             try
             {
