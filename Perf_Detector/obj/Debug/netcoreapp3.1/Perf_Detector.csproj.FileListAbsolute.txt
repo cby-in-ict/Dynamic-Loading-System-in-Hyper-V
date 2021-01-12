@@ -13,7 +13,6 @@ D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0
 D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.csproj.CopyComplete
-D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.csproj.CoreCompileInputs.cache
 D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\Perf_Detector.deps.json
 D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\Perf_Detector.runtimeconfig.json
 D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\Perf_Detector.runtimeconfig.dev.json
@@ -35,3 +34,5 @@ D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0
 D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.dll
 D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.pdb
 D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.genruntimeconfig.cache
+D:\graduate\Perf_Detector\obj\Debug\netcoreapp3.1\Perf_Detector.csproj.CoreCompileInputs.cache
+D:\graduate\Perf_Detector\bin\Debug\netcoreapp3.1\System.Management.Automation.dll

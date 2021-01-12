@@ -9,7 +9,8 @@
       "Perf_Detector/1.0.0": {
         "dependencies": {
           "System.Diagnostics.PerformanceCounter": "5.0.0",
-          "System.Management": "5.0.0"
+          "System.Management": "5.0.0",
+          "System.Management.Automation": "1.0.0.0"
         },
         "runtime": {
           "Perf_Detector.dll": {}
@@ -231,6 +232,14 @@
             "fileVersion": "5.0.20.51904"
           }
         }
+      },
+      "System.Management.Automation/1.0.0.0": {
+        "runtime": {
+          "System.Management.Automation.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "6.1.7600.16385"
+          }
+        }
       }
     }
   },
@@ -330,6 +339,11 @@
       "sha512": "sha512-c1ho9WU9ZxMZawML+ssPKZfdnrg/OjR3pe0m9v8230z3acqphwvPJqzAkH54xRYm5ntZHGG1EPP3sux9H3qSPg==",
       "path": "system.windows.extensions/5.0.0",
       "hashPath": "system.windows.extensions.5.0.0.nupkg.sha512"
+    },
+    "System.Management.Automation/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }
