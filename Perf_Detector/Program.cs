@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Perf_Detector
 {
-    class Program
+    class Program_1
     {
         static void Main(string[] args)
         {

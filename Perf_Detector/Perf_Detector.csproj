@@ -11,6 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HyperVWcfTransport.Common\HyperVWcfTransport.csproj" />
+    <ProjectReference Include="..\HyperVWcfTransport.SampleCommon\HyperVWcfTransport.SampleCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.Management.Automation">
       <HintPath>..\System.Management.Automation.dll</HintPath>
     </Reference>

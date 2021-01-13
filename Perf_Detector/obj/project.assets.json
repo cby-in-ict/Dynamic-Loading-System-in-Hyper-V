@@ -216,6 +216,24 @@
             "rid": "win"
           }
         }
+      },
+      "HyperVWcfTransport/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/HyperVWcfTransport.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HyperVWcfTransport.dll": {}
+        }
+      },
+      "HyperVWcfTransport.SampleCommon/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/HyperVWcfTransport.SampleCommon.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HyperVWcfTransport.SampleCommon.dll": {}
+        }
       }
     }
   },
@@ -664,10 +682,22 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "HyperVWcfTransport/1.0.0": {
+      "type": "project",
+      "path": "../HyperVWcfTransport.Common/HyperVWcfTransport.csproj",
+      "msbuildProject": "../HyperVWcfTransport.Common/HyperVWcfTransport.csproj"
+    },
+    "HyperVWcfTransport.SampleCommon/1.0.0": {
+      "type": "project",
+      "path": "../HyperVWcfTransport.SampleCommon/HyperVWcfTransport.SampleCommon.csproj",
+      "msbuildProject": "../HyperVWcfTransport.SampleCommon/HyperVWcfTransport.SampleCommon.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "HyperVWcfTransport >= 1.0.0",
+      "HyperVWcfTransport.SampleCommon >= 1.0.0",
       "System.Diagnostics.PerformanceCounter >= 5.0.0",
       "System.Management >= 5.0.0"
     ]
@@ -697,7 +727,14 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
+              "projectPath": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
+            },
+            "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj": {
+              "projectPath": "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

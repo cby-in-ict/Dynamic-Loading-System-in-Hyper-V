@@ -67,12 +67,49 @@ namespace Perf_Detector
         private PerformanceCounter[] trafficReceivedCounters;
         private string[] interfaces = null;
 
+        public class QueueFixedLength : Queue
+        {
+            public QueueFixedLength(int length)
+            {
+                this.fixedLength = length;
+            }
+            public QueueFixedLength() : this(10)
+            {
+            }
+
+            private int fixedLength = 10;
+            public int FixedLength
+            {
+                get
+                {
+                    return fixedLength;
+                }
+                set
+                {
+                    fixedLength = value;
+                }
+            }
+
+            public override void Enqueue(object obj)
+            {
+                if (this.Count > 10)
+                {
+                    base.Dequeue();
+                }
+                base.Enqueue(obj);
+            }
+        }
+        // 长度为10的队列，记录了历史最近的10次CPU使用率
+        QueueFixedLength CPUProcessorTimeQueue = new QueueFixedLength();
+        QueueFixedLength MEMAvailableQueue = new QueueFixedLength();
+
         /* CPU 参数第一次获得的值往往是0，注意! */
         public float getProcessorCpuTime()
         {
             float tmp = cpuProcessorTime.NextValue();
             CPUProcessorTime = (float)(Math.Round((double)tmp, 1));
             // Console.WriteLine("Processor CPU Usage is:" + Convert.ToString(CPUProcessorTime));
+            CPUProcessorTimeQueue.Enqueue(CPUProcessorTime);
             return CPUProcessorTime;
         }
 
@@ -112,6 +149,7 @@ namespace Perf_Detector
         public float getMemAvailable()
         {
             MEMAvailable = memAvailable.NextValue();
+            MEMAvailableQueue.Enqueue(MEMAvailable);
             return MEMAvailable;
         }
 

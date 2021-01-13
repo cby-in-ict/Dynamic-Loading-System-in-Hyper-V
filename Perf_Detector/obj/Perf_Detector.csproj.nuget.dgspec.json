@@ -4,6 +4,26 @@
     "D:\\graduate\\Perf_Detector\\Perf_Detector.csproj": {}
   },
   "projects": {
+    "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj",
+        "projectName": "HyperVWcfTransport",
+        "projectPath": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
+    "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj",
+        "projectName": "HyperVWcfTransport.SampleCommon",
+        "projectPath": "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj"
+      },
+      "frameworks": {
+        "net472": {}
+      }
+    },
     "D:\\graduate\\Perf_Detector\\Perf_Detector.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -26,7 +46,14 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
+                "projectPath": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
+              },
+              "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj": {
+                "projectPath": "D:\\graduate\\HyperVWcfTransport.SampleCommon\\HyperVWcfTransport.SampleCommon.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
