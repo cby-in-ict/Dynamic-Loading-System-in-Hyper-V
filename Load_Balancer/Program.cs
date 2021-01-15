@@ -13,12 +13,25 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Collections.Generic;
+
+using System.Management;
+using Microsoft.Samples.HyperV.Common;
+
 namespace Load_Balancer
 {
     class Program
     {
         static void Main(string[] args)
         {
+            ManagementScope scope;
+            ManagementObject managementService;
+
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
+            PerformanceSetting performanceSetting = vm.GetPerformanceSetting();
+
             SystemInfo systemInfo = new SystemInfo();
             Int64 AvailableMemory = systemInfo.MemoryAvailable;
             Int64 PhysicalMemory = systemInfo.PhysicalMemory;

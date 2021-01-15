@@ -7,6 +7,7 @@ namespace Load_Balancer
 {
     class DynamicAdjustment
     {
+        // Check whether dynamicly mem enabled
         public bool isDynamicMem(VirtualMachine VM)
         {
             return VM.performanceSetting.RAM_DynamicMemoryEnabled == true;

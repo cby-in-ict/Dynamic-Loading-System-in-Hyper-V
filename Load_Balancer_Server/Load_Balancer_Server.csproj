@@ -4,8 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DC69C709-E0AF-4F03-805F-2C2B212977F0}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{C0DAA244-67E5-4018-903C-7AA5F955CCDB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Load_Balancer_Server</RootNamespace>
     <AssemblyName>Load_Balancer_Server</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -33,29 +33,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.PerformanceCounter, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.PerformanceCounter.5.0.0\lib\net461\System.Diagnostics.PerformanceCounter.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Service1.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Service1.Designer.cs">
-      <DependentUpon>Service1.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DetectorServer.cs" />
+    <Compile Include="DynamicAdjustment.cs" />
+    <Compile Include="GetConfig.cs" />
+    <Compile Include="Perf_Analysis.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemInfo.cs" />
+    <Compile Include="UnitTest.cs" />
+    <Compile Include="VMManagment.cs" />
+    <Compile Include="VMPerf.cs" />
+    <Compile Include="WmiUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -65,10 +68,6 @@
     <ProjectReference Include="..\HyperVWcfTransport.Common\HyperVWcfTransport.csproj">
       <Project>{704364e1-847f-4dc5-a84e-55fcbc773484}</Project>
       <Name>HyperVWcfTransport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Load_Balancer\Load_Balancer.csproj">
-      <Project>{a6855896-b1ca-438a-91ca-1f58b03eed0e}</Project>
-      <Name>Load_Balancer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

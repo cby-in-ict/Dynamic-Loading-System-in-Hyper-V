@@ -23,5 +23,6 @@ namespace HyperVWcfTransport
             VMPerfCounter currentPerfCount = new VMPerfCounter();
             return currentPerfCount;
         }
+        
     }
 }
