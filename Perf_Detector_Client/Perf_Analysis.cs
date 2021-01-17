@@ -10,8 +10,29 @@ using System.Timers;
  */
 namespace Perf_Detector
 {
+    [Serializable]
+    public class Perf_Transfer
+    {
+        public int CPUCount = 0;
+        public float ProcessorQueueLength { get; set; }
+        public float CPUProcessorTime { get; set; }
+        public float CPUPrivilegedTime { get; set; }
+        public float CPUInterruptTime { get; set; }
+        public float CPUDPCTime { get; set; }
+        public float MEMAvailable { get; set; }
+        public float MEMCommited { get; set; }
+        public float MEMCommitLimit { get; set; }
+        public float MEMCommitedPerc { get; set; }
+        public float MEMPoolPaged { get; set; }
+        public float MEMPoolNonPaged { get; set; }
+        public float MEMCached { get; set; }
+        public float PageFile { get; set; }
+    }
     public class Perf_Analysis
     {
+        // The class used to transfer to Server
+        public Perf_Transfer perf_Transfer;
+
         public bool MEMAlarm = false;
         public bool CPUAlarm = false;
         public float CPU_K { get; set; }
@@ -26,9 +47,22 @@ namespace Perf_Detector
         public ProcessInfo ProcessInfo = new ProcessInfo();
         private System.Timers.Timer RUtimer;
 
-        public enum MemoryCondition 
+        public bool SetPerfTransfer(MemSpoofer memSpf, CpuSpoofer cpuSpf)
         {
-            OK=0, FULL=1, NEED=2, PageFault=4, CacheMiss=7
+            try
+            {
+                this.perf_Transfer.CPUProcessorTime = cpuSpf.CPUProcessorTime;
+                return true;
+            }
+            catch (Exception exp)
+            {
+                return false;
+            }
+
+        }
+        public enum MemoryCondition
+        {
+            OK = 0, FULL = 1, NEED = 2, PageFault = 4, CacheMiss = 7
         }
 
         public void RefreshStatesByTime()
@@ -72,7 +106,7 @@ namespace Perf_Detector
             }
             if (CpuSpoofer.ThreadCount > (CpuSpoofer.CPUCount * 2))
             {
-                
+
             }
             return true;
         }

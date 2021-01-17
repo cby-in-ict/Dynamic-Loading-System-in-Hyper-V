@@ -16,6 +16,9 @@ namespace Perf_Detector
         public float MEMPoolNonPaged { get; set; }
         public float MEMCached { get; set; }
         public float PageFile { get; set; }
+        public int PageFaultsPerSec { get; set; }
+        public int PageReadsPerSec { get; set; }
+        public int PageInputPerSec { get; set; }
         public WinPerfCounter MEMPerfCounter = new WinPerfCounter();
         private System.Timers.Timer RUtimer;
 

@@ -1,6 +1,5 @@
 D:\graduate\HyperVWcfTransport.Common\bin\Debug\HyperVWcfTransport.dll
 D:\graduate\HyperVWcfTransport.Common\bin\Debug\HyperVWcfTransport.pdb
-D:\graduate\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.csprojAssemblyReference.cache
 D:\graduate\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.csproj.CoreCompileInputs.cache
 D:\graduate\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.dll
 D:\graduate\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.pdb

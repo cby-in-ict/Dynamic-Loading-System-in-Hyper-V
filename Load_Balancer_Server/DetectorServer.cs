@@ -23,7 +23,7 @@ namespace Perf_Detector
         {
             public byte[] TransferPerfAnalysis(Perf_Analysis perf_Detector)
             {
-                Console.WriteLine($"Received {perf_Detector}");
+                Console.WriteLine($"Received {perf_Detector.CPU_K}");
                 var d = new byte[64 * 1024 * 1024];
                 var rand = new System.Security.Cryptography.RNGCryptoServiceProvider();
                 rand.GetBytes(d);

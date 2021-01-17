@@ -17,11 +17,12 @@ namespace Perf_Detector
 
             // Init Perf_Analysis class for detect performance
             Perf_Analysis perf_Detector = new Perf_Analysis();
+            string HvAddr = "hypervnb://0000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
 
-            var client = new DetectorClient(new EndpointAddress("hypervnb://e0e16197-dd56-4a10-9195-5ee7a155a838/C7240163-6E2B-4466-9E41-FF74E7F0DE47"));
+            var client = new DetectorClient(new EndpointAddress(HvAddr));
             client.Open();
             var d = client.TransferPerfAnalysis(perf_Detector);
-            Console.WriteLine(d.Length);
+            //Console.WriteLine(d.Length);
             client.Close();
             Console.ReadLine();
         }
@@ -31,7 +32,7 @@ namespace Perf_Detector
     public interface IServer
     {
         [OperationContract]
-        byte[] TransferPerfAnalysis(Perf_Analysis perf_Detector);
+        bool TransferPerfAnalysis(Perf_Analysis perf_Detector);
 
     }
 
@@ -42,6 +43,6 @@ namespace Perf_Detector
         {
         }
 
-        public byte[] TransferPerfAnalysis(Perf_Analysis perf_Detector) => Channel.TransferPerfAnalysis(perf_Detector);
+        public bool TransferPerfAnalysis(Perf_Analysis perf_Detector) => Channel.TransferPerfAnalysis(perf_Detector);
     }
 }

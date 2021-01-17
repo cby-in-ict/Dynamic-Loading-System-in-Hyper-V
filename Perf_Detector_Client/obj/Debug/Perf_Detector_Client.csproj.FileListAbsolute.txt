@@ -1,0 +1,10 @@
+D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csprojAssemblyReference.cache
+D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CoreCompileInputs.cache
+D:\graduate\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.exe.config
+D:\graduate\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.exe
+D:\graduate\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.pdb
+D:\graduate\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.dll
+D:\graduate\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.pdb
+D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CopyComplete
+D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.exe
+D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.pdb

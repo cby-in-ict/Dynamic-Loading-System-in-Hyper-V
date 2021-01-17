@@ -28,6 +28,7 @@ namespace HyperVWcfTransport.SampleServer
         {
             var sh = new ServiceHost(new SampleServer());
             var binding = new HyperVNetBinding();
+            // https://docs.microsoft.com/zh-cn/dotnet/api/system.servicemodel.servicehost.-ctor?view=netframework-4.8#System_ServiceModel_ServiceHost__ctor_System_Object_System_Uri___
             sh.AddServiceEndpoint(typeof(IServer), binding, "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47");
             sh.Open();
             Console.ReadLine();
