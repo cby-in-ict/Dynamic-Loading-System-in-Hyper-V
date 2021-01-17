@@ -29,6 +29,12 @@ namespace Perf_Detector
         public int SYSTEMCalls { get; set; }
         public float NetTrafficSend { get; set; }
         public float NetTrafficReceive { get; set; }
+        public float PagesPerSec { get; set; }
+        public float PageFaultsPerSec { get; set; }
+        public float PageReadsPerSec { get; set; }
+        public float PageWritesPerSec { get; set; }
+        public float PagesInputPerSec { get; set; }
+        public float PagesOutputPerSec { get; set; }
 
         // 采样时间
         public DateTime SamplingTime { get; set; }
@@ -61,6 +67,18 @@ namespace Perf_Detector
         private PerformanceCounter contentSwitches = new PerformanceCounter("System", "Context Switches/sec", null);
         // 每秒产生的系统调用
         private PerformanceCounter systemCalls = new PerformanceCounter("System", "System Calls/sec", null);
+        // Pages/sec
+        private PerformanceCounter pagesPerSec = new PerformanceCounter("Memory", "Pages/sec", null);
+        // Page Faults/sec
+        private PerformanceCounter pageFaultsPerSec = new PerformanceCounter("Memory", "Page Faults/sec", null);
+        // Page Reads/sec
+        private PerformanceCounter pageReadPerSec = new PerformanceCounter("Memory", "Page Reads/sec", null);
+        // Page Writes/sec
+        private PerformanceCounter pageWritePerSec = new PerformanceCounter("Memory", "Page Writes/sec", null);
+        // Page Inputs/sec
+        private PerformanceCounter pageInputPerSec = new PerformanceCounter("Memory", "Pages Input/sec", null);
+        // Page Output/sec
+        private PerformanceCounter pageOutputPerSec = new PerformanceCounter("Memory", "Pages Output/sec", null);
 
         private PerformanceCounterCategory performanceNetCounterCategory;
         private PerformanceCounter[] trafficSentCounters;
@@ -223,6 +241,38 @@ namespace Perf_Detector
             return SamplingTime;
         }
 
+        //新添加和Page Faults相关的错误
+        public float getPageFaultsPerSec()
+        {
+            PageFaultsPerSec = pageFaultsPerSec.NextValue();
+            return PageFaultsPerSec;
+        }
+        public float getPageReadsPerSec()
+        {
+            PageReadsPerSec = pageReadPerSec.NextValue();
+            return PageReadsPerSec;
+        }
+        public float getPageWritesPerSec()
+        {
+            PageWritesPerSec = pageWritePerSec.NextValue();
+            return PageWritesPerSec;
+        }
+        public float getPageInputsPerSec()
+        {
+            PagesInputPerSec = pageInputPerSec.NextValue();
+            return PagesInputPerSec;
+        }
+        public float getPageOutputsPerSec()
+        {
+            PagesOutputPerSec = pageOutputPerSec.NextValue();
+            return PagesOutputPerSec;
+        }
+        public float getPagesPerSec()
+        {
+            PagesPerSec = pagesPerSec.NextValue();
+            return PagesPerSec;
+        }
+
         //刷新参数
         public bool initAllCounterValue()
         {
@@ -246,6 +296,12 @@ namespace Perf_Detector
                 getContentSwitches();
                 getsystemCalls();
                 getSampleTime();
+                getPageFaultsPerSec();
+                getPageReadsPerSec();
+                getPageWritesPerSec();
+                getPageInputsPerSec();
+                getPageOutputsPerSec();
+                getPagesPerSec();
                 return true;
             }
             catch (Exception exp)
@@ -254,20 +310,31 @@ namespace Perf_Detector
                 return false;
             }
         }
-        /* 单元测试，待添加TODO
+        // 单元测试，待添加TODO
+#if TEST
         static void Main(string[] args)
         {
-            var counter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            //var counter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            //Console.WriteLine(Convert.ToString(counter.NextValue()));
+            //Thread.Sleep(1000);
+            //Console.WriteLine(Convert.ToString(counter.NextValue()));
+
+            var counter = new PerformanceCounter("Memory", "Pages/sec", null);
             Console.WriteLine(Convert.ToString(counter.NextValue()));
-            Thread.Sleep(1000);
+            Thread.Sleep(10);
             Console.WriteLine(Convert.ToString(counter.NextValue()));
             
+            var counter1 = new PerformanceCounter("Memory", "Pages/sec", null);
+            Console.WriteLine(Convert.ToString(counter1.NextValue()));
+            Thread.Sleep(10);
+            Console.WriteLine(Convert.ToString(counter1.NextValue()));
+
             WinPerfCounter winPerfCounter = new WinPerfCounter();
             winPerfCounter.initAllCounterValue();
             Thread.Sleep(100);
-            Console.WriteLine("CPU占用率：" + Convert.ToString(winPerfCounter.getProcessorCpuTime()) + "\nProcessor Queue Length:" + Convert.ToString(winPerfCounter.ProcessorQueueLengh) + "\n可用内存大小：" + Convert.ToString(winPerfCounter.MEMAvailable));
+            Console.WriteLine("CPU占用率：" + Convert.ToString(winPerfCounter.getProcessorCpuTime()) + "\nProcessor Queue Length:" + Convert.ToString(winPerfCounter.ProcessorQueueLengh) + "\n可用内存大小：" + Convert.ToString(winPerfCounter.MEMAvailable + "\nPage Faults" + Convert.ToString(winPerfCounter.PageFaultsPerSec) + "\nPages Input" + Convert.ToString(winPerfCounter.PagesInputPerSec)));
         }
-        */
+#endif
     }
 
 }
