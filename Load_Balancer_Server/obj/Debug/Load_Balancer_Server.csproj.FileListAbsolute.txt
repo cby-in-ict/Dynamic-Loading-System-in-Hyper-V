@@ -22,3 +22,5 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Se
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\obj\Debug\Load_Balancer_Server.csproj.CopyComplete
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\obj\Debug\Load_Balancer_Server.exe
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\obj\Debug\Load_Balancer_Server.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Perf_Transfer.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Perf_Transfer.pdb

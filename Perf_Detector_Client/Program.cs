@@ -10,8 +10,7 @@ namespace Perf_Detector_Client
     {
         static void Main(string[] args)
         {
-            string HvAddr = "hypervnb://0000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-            // 00000000-0000-0000-0000-000000000000
+            string HvAddr = "hypervnb://a42e7cda-d03f-480c-9cc2-a4de20abb878/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
             Client client = new Client(HvAddr);
             client.StartUpClient();
         }

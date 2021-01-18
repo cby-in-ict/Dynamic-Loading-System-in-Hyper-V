@@ -28,8 +28,7 @@ namespace Load_Balancer_Server
             bool TransferPerfAnalysis(Perf_Analysis perf_Detector);
             [OperationContract]
             VMPerf TransferPerfStr(string perf_Str);
-            [OperationContract]
-            bool TransferPerf(VMPerf perf_Transfer);
+
         }
 
         [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
@@ -42,7 +41,7 @@ namespace Load_Balancer_Server
             }
             public VMPerf TransferPerfStr(string perf_Str)
             {
-                Console.WriteLine($"Received {perf_Str}");
+                //Console.WriteLine($"Received {perf_Str}");
 #if Debug
                 Console.WriteLine("收到性能特征字符串");
 #endif
@@ -55,15 +54,11 @@ namespace Load_Balancer_Server
                 stream.Close();
                 // TODO: 回调函数，处理perf_Transfer
                 DetectorServer.currentPerfTransfer = perf_Transfer;
+                Console.WriteLine("收到VM中的性能信息，CPU占用率为：" + Convert.ToString(perf_Transfer.CPUPrivilegedTime));
 
                 return perf_Transfer;
             }
-            public bool TransferPerf(VMPerf perf_Transfer)
-            {
-                Console.WriteLine("收到了性能信息，其中可用内存大小为：" + perf_Transfer.MEMAvailable);
-                DetectorServer.currentPerfTransfer = perf_Transfer;
-                return true;
-            }
+
         }
         public bool StartUpServer()
         {

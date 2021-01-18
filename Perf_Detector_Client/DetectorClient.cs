@@ -20,6 +20,7 @@ namespace Perf_Detector_Client
     {
         [OperationContract]
         bool TransferPerfAnalysis(VMPerf perf_Transfer);
+        [OperationContract]
         VMPerf TransferPerfStr(string perf_Str);
 
     }

@@ -69,6 +69,10 @@
       <Project>{704364e1-847f-4dc5-a84e-55fcbc773484}</Project>
       <Name>HyperVWcfTransport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Perf_Transfer\Perf_Transfer.csproj">
+      <Project>{1cc5ad62-1c15-49c2-82c7-ccdcea3c9305}</Project>
+      <Name>Perf_Transfer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
