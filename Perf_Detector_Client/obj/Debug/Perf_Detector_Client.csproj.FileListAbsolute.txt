@@ -8,3 +8,13 @@ D:\graduate\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.pdb
 D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CopyComplete
 D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.exe
 D:\graduate\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.exe.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Detector_Client.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csprojAssemblyReference.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CoreCompileInputs.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CopyComplete
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.pdb

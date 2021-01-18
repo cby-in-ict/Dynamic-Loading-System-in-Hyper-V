@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 
-namespace Perf_Detector
+namespace Perf_Detector_Client
 {
     public class ProcessInfo
     {

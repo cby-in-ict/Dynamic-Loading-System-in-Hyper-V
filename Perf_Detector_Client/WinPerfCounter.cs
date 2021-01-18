@@ -7,7 +7,7 @@ using System.Threading;
 using System.Collections;
 
 /* This class is used to get performance counter, refer to MSDN, copyright partly preserved by cby */
-namespace Perf_Detector
+namespace Perf_Detector_Client
 {
     public class WinPerfCounter
     {

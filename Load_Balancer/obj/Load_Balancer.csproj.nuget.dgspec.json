@@ -1,30 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "D:\\graduate\\Load_Balancer\\Load_Balancer.csproj": {}
+    "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\Load_Balancer\\Load_Balancer.csproj": {}
   },
   "projects": {
-    "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
+    "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
       "restore": {
-        "projectUniqueName": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj",
+        "projectUniqueName": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj",
         "projectName": "HyperVWcfTransport",
-        "projectPath": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
+        "projectPath": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
       },
       "frameworks": {
         "net472": {}
       }
     },
-    "D:\\graduate\\Load_Balancer\\Load_Balancer.csproj": {
+    "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\Load_Balancer\\Load_Balancer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\graduate\\Load_Balancer\\Load_Balancer.csproj",
+        "projectUniqueName": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\Load_Balancer\\Load_Balancer.csproj",
         "projectName": "Load_Balancer",
-        "projectPath": "D:\\graduate\\Load_Balancer\\Load_Balancer.csproj",
-        "packagesPath": "C:\\Users\\Think\\.nuget\\packages\\",
-        "outputPath": "D:\\graduate\\Load_Balancer\\obj\\",
+        "projectPath": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\Load_Balancer\\Load_Balancer.csproj",
+        "packagesPath": "C:\\Users\\CBY\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\Load_Balancer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Think\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\CBY\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -37,8 +37,8 @@
         "frameworks": {
           "netcoreapp3.0": {
             "projectReferences": {
-              "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
-                "projectPath": "D:\\graduate\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
+              "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj": {
+                "projectPath": "C:\\Users\\CBY\\Documents\\GitHub\\Dynamic-Loading-System-in-Hyper-V\\HyperVWcfTransport.Common\\HyperVWcfTransport.csproj"
               }
             }
           }
@@ -110,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

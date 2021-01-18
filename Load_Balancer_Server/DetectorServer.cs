@@ -1,7 +1,10 @@
 ﻿using HyperVWcfTransport;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,18 +19,32 @@ namespace Perf_Detector
         public interface IServer
         {
             [OperationContract]
-            byte[] TransferPerfAnalysis(Perf_Analysis perf_Detector);
+            bool TransferPerfAnalysis(Perf_Analysis perf_Detector);
+            Perf_Transfer TransferPerfStr(string perf_Str);
         }
 
         class SampleServer : IServer
         {
-            public byte[] TransferPerfAnalysis(Perf_Analysis perf_Detector)
+            public bool TransferPerfAnalysis(Perf_Analysis perf_Detector)
             {
                 Console.WriteLine($"Received {perf_Detector.CPU_K}");
-                var d = new byte[64 * 1024 * 1024];
-                var rand = new System.Security.Cryptography.RNGCryptoServiceProvider();
-                rand.GetBytes(d);
-                return d;
+                return true;
+            }
+            public Perf_Transfer TransferPerfStr(string perf_Str)
+            {
+                Console.WriteLine($"Received {perf_Str}");
+#if Debug
+                Console.WriteLine("收到性能特征字符串");
+#endif
+                Perf_Transfer perf_Transfer;
+                byte[] buffer = Convert.FromBase64String(perf_Str);
+                MemoryStream stream = new MemoryStream(buffer);
+                IFormatter formatter = new BinaryFormatter();
+                perf_Transfer = (Perf_Transfer)formatter.Deserialize(stream);
+                stream.Flush();
+                stream.Close();
+
+                return perf_Transfer;
             }
         }
         public bool StartUpServer()

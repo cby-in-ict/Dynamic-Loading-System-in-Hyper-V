@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 
-namespace Perf_Detector
+namespace Perf_Detector_Client
 {
     public class MemSpoofer
     {
