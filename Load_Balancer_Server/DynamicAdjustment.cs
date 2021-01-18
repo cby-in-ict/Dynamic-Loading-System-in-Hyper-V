@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Load_Balancer
+namespace Load_Balancer_Server
 {
     class DynamicAdjustment
     {

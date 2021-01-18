@@ -13,7 +13,8 @@ namespace Load_Balancer_Server
 {
     public class DetectorServer
     {
-        public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";\
+        public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
+        public static Perf_Transfer currentPerfTransfer;
         public DetectorServer(string Addr)
         {
             DetectorServerAddr = Addr;
@@ -27,6 +28,7 @@ namespace Load_Balancer_Server
             Perf_Transfer TransferPerfStr(string perf_Str);
         }
 
+        [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
         class SampleServer : IServer
         {
             public bool TransferPerfAnalysis(Perf_Analysis perf_Detector)
@@ -47,6 +49,8 @@ namespace Load_Balancer_Server
                 perf_Transfer = (Perf_Transfer)formatter.Deserialize(stream);
                 stream.Flush();
                 stream.Close();
+                // TODO: 回调函数，处理perf_Transfer
+                DetectorServer.currentPerfTransfer = perf_Transfer;
 
                 return perf_Transfer;
             }
