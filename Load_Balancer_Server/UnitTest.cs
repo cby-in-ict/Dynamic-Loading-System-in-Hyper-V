@@ -4,7 +4,7 @@ using System.Text;
 using HyperVWcfTransport;
 
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
-namespace Load_Balancer
+namespace Load_Balancer_Server
 {
     class UnitTest
     {

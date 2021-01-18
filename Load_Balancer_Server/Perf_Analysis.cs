@@ -8,7 +8,7 @@ using System.Timers;
  * This class analyse performance in the VM, when detect shortage in Mem and CPU resource,
  * There will be a signal when detect problem, then call the host.
  */
-namespace Perf_Detector
+namespace Load_Balancer_Server
 {
     [Serializable]
     public class Perf_Transfer

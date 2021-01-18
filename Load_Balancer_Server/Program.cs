@@ -16,13 +16,17 @@ using System.Management;
 using Microsoft.Samples.HyperV.Common;
 
 
-namespace Load_Balancer
+namespace Load_Balancer_Server
 {
     class Program
     {
         static void Main(string[] args)
         {
-        #if TEST
+            string HvAddr = "";
+            DetectorServer detectorServer = new DetectorServer(HvAddr);
+
+
+#if TEST
             ManagementScope scope;
             ManagementObject managementService;
 

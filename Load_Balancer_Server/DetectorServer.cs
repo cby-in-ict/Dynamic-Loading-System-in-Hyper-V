@@ -9,11 +9,15 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Perf_Detector
+namespace Load_Balancer_Server
 {
     public class DetectorServer
     {
-        public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
+        public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";\
+        public DetectorServer(string Addr)
+        {
+            DetectorServerAddr = Addr;
+        }
 
         [ServiceContract]
         public interface IServer

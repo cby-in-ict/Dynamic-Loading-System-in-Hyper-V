@@ -11,7 +11,7 @@ using System.Collections;
 
 /* In this part, I partialy refer to MultiPC BackgroundCode/VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
 
-namespace Load_Balancer
+namespace Load_Balancer_Server
 {
     #region Host可以直接获得的性能指标
     public struct PerformanceSetting

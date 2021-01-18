@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 
-namespace HyperVWcfTransport
+namespace Load_Balancer_Server
 {
     class GetConfig
     {

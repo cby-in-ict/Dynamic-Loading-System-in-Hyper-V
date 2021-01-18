@@ -7,7 +7,7 @@ using System.Threading;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace HyperVWcfTransport
+namespace Load_Balancer_Server
 {
     // System Info Class
     public class SystemInfo
