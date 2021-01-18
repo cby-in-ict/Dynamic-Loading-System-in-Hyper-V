@@ -6,7 +6,7 @@ using System.Text;
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server
 {
-    public class VMPerf
+    public class VMPerformance
     {
         public struct VMPerfCounter
         {

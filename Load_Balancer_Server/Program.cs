@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using Microsoft.Samples.HyperV.Common;
+using Perf_Transfer;
 
 
 namespace Load_Balancer_Server
@@ -25,7 +26,7 @@ namespace Load_Balancer_Server
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
             DetectorServer detectorServer = new DetectorServer(HvAddr);
             detectorServer.StartUpServer();
-            Perf_Transfer currentPerfTransfer = DetectorServer.currentPerfTransfer;
+            VMPerf currentPerfTransfer = DetectorServer.currentPerfTransfer;
             Console.WriteLine("可用内存大小为：" + currentPerfTransfer.MEMAvailable);
 
 

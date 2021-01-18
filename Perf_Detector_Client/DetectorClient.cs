@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Perf_Transfer;
 
 namespace Perf_Detector_Client
 {
@@ -18,8 +19,8 @@ namespace Perf_Detector_Client
     public interface IServer
     {
         [OperationContract]
-        bool TransferPerfAnalysis(Perf_Transfer perf_Transfer);
-        Perf_Transfer TransferPerfStr(string perf_Str);
+        bool TransferPerfAnalysis(VMPerf perf_Transfer);
+        VMPerf TransferPerfStr(string perf_Str);
 
     }
 
@@ -30,9 +31,9 @@ namespace Perf_Detector_Client
         {
         }
 
-        public bool TransferPerfAnalysis(Perf_Transfer perf_Transfer) => Channel.TransferPerfAnalysis(perf_Transfer);
+        public bool TransferPerfAnalysis(VMPerf perf_Transfer) => Channel.TransferPerfAnalysis(perf_Transfer);
 
-        public Perf_Transfer TransferPerfStr(string perf_Str) => Channel.TransferPerfStr(perf_Str);
+        public VMPerf TransferPerfStr(string perf_Str) => Channel.TransferPerfStr(perf_Str);
 
         
     }

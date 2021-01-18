@@ -10,3 +10,15 @@ D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleC
 D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csproj.CopyComplete
 D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.exe
 D:\graduate\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.exe.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleClient.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleCommon.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\bin\Debug\HyperVWcfTransport.SampleCommon.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csprojAssemblyReference.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csproj.CoreCompileInputs.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.csproj.CopyComplete
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleClient\obj\Debug\HyperVWcfTransport.SampleClient.pdb

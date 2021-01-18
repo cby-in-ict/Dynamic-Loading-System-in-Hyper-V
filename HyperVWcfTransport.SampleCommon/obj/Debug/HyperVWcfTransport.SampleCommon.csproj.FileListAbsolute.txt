@@ -4,3 +4,9 @@ D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleC
 D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csproj.CoreCompileInputs.cache
 D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.dll
 D:\graduate\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\bin\Debug\HyperVWcfTransport.SampleCommon.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\bin\Debug\HyperVWcfTransport.SampleCommon.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csprojAssemblyReference.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csproj.CoreCompileInputs.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.pdb

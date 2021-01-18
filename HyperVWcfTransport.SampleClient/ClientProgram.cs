@@ -16,7 +16,7 @@ namespace HyperVWcfTransport.SampleClient
         {
             Thread.Sleep(250);
 
-            var client = new ServerClient(new EndpointAddress("hypervnb://e0e16197-dd56-4a10-9195-5ee7a155a838/C7240163-6E2B-4466-9E41-FF74E7F0DE47"));
+            var client = new ServerClient(new EndpointAddress("hypervnb://bd0dd973-e1e3-4756-9d3b-fa3075024893/C7240163-6E2B-4466-9E41-FF74E7F0DE47"));
             client.Open();
             var d = client.DoThing("bar");
             Console.WriteLine(d.Length);

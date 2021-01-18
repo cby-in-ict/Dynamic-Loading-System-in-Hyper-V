@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Timers;
+using Perf_Transfer;
 
 /* 
  * This class analyse performance in the VM, when detect shortage in Mem and CPU resource,
@@ -11,34 +12,10 @@ using System.Timers;
  */
 namespace Perf_Detector_Client
 {
-    [Serializable]
-    public class Perf_Transfer
-    {
-        public int CPUCount = 0;
-        public float ProcessorQueueLength { get; set; }
-        public float CPUProcessorTime { get; set; }
-        public float CPUPrivilegedTime { get; set; }
-        public float CPUInterruptTime { get; set; }
-        public float CPUDPCTime { get; set; }
-        public float MEMAvailable { get; set; }
-        public float MEMCommited { get; set; }
-        public float MEMCommitLimit { get; set; }
-        public float MEMCommitedPerc { get; set; }
-        public float MEMPoolPaged { get; set; }
-        public float MEMPoolNonPaged { get; set; }
-        public float MEMCached { get; set; }
-        public float PageFile { get; set; }
-        public float PagesPerSec { get; set; }
-        public float PageFaultsPerSec { get; set; }
-        public float PageReadsPerSec { get; set; }
-        public float PageWritesPerSec { get; set; }
-        public float PagesInputPerSec { get; set; }
-        public float PagesOutputPerSec { get; set; }
-    }
     public class Perf_Analysis
     {
         // The class used to transfer to Server
-        public Perf_Transfer perf_Transfer = new Perf_Transfer();
+        public VMPerf perf_Transfer = new VMPerf();
 
         public bool MEMAlarm = false;
         public bool CPUAlarm = false;
