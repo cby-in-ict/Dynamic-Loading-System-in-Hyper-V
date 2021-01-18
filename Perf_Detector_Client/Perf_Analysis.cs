@@ -1,4 +1,4 @@
-﻿#define PerfAnalysisTest
+﻿//#define PerfAnalysisTest
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -66,24 +66,24 @@ namespace Perf_Detector_Client
                 Thread.Sleep(300);
                 perf_Transfer.CPUCount = cpuSpf.CPUCount;
                 perf_Transfer.ProcessorQueueLength = cpuSpf.ProcessorQueueLength;
-                this.perf_Transfer.CPUProcessorTime = cpuSpf.CPUProcessorTime;
-                this.perf_Transfer.CPUPrivilegedTime = cpuSpf.CPUPrivilegedTime;
-                this.perf_Transfer.CPUInterruptTime = cpuSpf.CPUInterruptTime;
-                this.perf_Transfer.CPUDPCTime = cpuSpf.CPUDPCTime;
+                perf_Transfer.CPUProcessorTime = cpuSpf.CPUProcessorTime;
+                perf_Transfer.CPUPrivilegedTime = cpuSpf.CPUPrivilegedTime;
+                perf_Transfer.CPUInterruptTime = cpuSpf.CPUInterruptTime;
+                perf_Transfer.CPUDPCTime = cpuSpf.CPUDPCTime;
                 perf_Transfer.MEMAvailable = memSpf.MEMAvailable;
                 perf_Transfer.MEMCommited = memSpf.MEMCommited;
                 perf_Transfer.MEMCommitLimit = memSpf.MEMCommitLimit;
-                this.perf_Transfer.MEMCommitedPerc = memSpf.MEMCommitedPerc;
-                this.perf_Transfer.MEMCached = memSpf.MEMCached;
-                this.perf_Transfer.MEMPoolPaged = memSpf.MEMPoolPaged;
-                this.perf_Transfer.MEMPoolNonPaged = memSpf.MEMPoolNonPaged;
-                this.perf_Transfer.PageFile = memSpf.PageFile;
-                this.perf_Transfer.PagesPerSec = memSpf.PagesPerSec;
-                this.perf_Transfer.PageFaultsPerSec = memSpf.PageFaultsPerSec;
-                this.perf_Transfer.PageReadsPerSec = memSpf.PageReadsPerSec;
-                this.perf_Transfer.PageWritesPerSec = memSpf.PageWritesPerSec;
-                this.perf_Transfer.PagesInputPerSec = memSpf.PagesInputPerSec;
-                this.perf_Transfer.PagesOutputPerSec = memSpf.PagesOutputPerSec;
+                perf_Transfer.MEMCommitedPerc = memSpf.MEMCommitedPerc;
+                perf_Transfer.MEMCached = memSpf.MEMCached;
+                perf_Transfer.MEMPoolPaged = memSpf.MEMPoolPaged;
+                perf_Transfer.MEMPoolNonPaged = memSpf.MEMPoolNonPaged;
+                perf_Transfer.PageFile = memSpf.PageFile;
+                perf_Transfer.PagesPerSec = memSpf.PagesPerSec;
+                perf_Transfer.PageFaultsPerSec = memSpf.PageFaultsPerSec;
+                perf_Transfer.PageReadsPerSec = memSpf.PageReadsPerSec;
+                perf_Transfer.PageWritesPerSec = memSpf.PageWritesPerSec;
+                perf_Transfer.PagesInputPerSec = memSpf.PagesInputPerSec;
+                perf_Transfer.PagesOutputPerSec = memSpf.PagesOutputPerSec;
                 return true;
             }
             catch (Exception exp)
