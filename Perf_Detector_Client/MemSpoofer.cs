@@ -16,9 +16,12 @@ namespace Perf_Detector
         public float MEMPoolNonPaged { get; set; }
         public float MEMCached { get; set; }
         public float PageFile { get; set; }
-        public int PageFaultsPerSec { get; set; }
-        public int PageReadsPerSec { get; set; }
-        public int PageInputPerSec { get; set; }
+        public float PagesPerSec { get; set; }
+        public float PageFaultsPerSec { get; set; }
+        public float PageReadsPerSec { get; set; }
+        public float PageWritesPerSec { get; set; }
+        public float PagesInputPerSec { get; set; }
+        public float PagesOutputPerSec { get; set; }
         public WinPerfCounter MEMPerfCounter = new WinPerfCounter();
         private System.Timers.Timer RUtimer;
 
@@ -54,6 +57,38 @@ namespace Perf_Detector
                 MEMPoolNonPaged = MEMPerfCounter.getMemPoolNonPaged();
                 MEMCached = MEMPerfCounter.getMemCachedBytes();
                 PageFile = MEMPerfCounter.getPageFile();
+                PagesPerSec = MEMPerfCounter.getPagesPerSec();
+                PageFaultsPerSec = MEMPerfCounter.getPageFaultsPerSec();
+                PageWritesPerSec = MEMPerfCounter.getPageWritesPerSec();
+                PageReadsPerSec = MEMPerfCounter.getPageReadsPerSec();
+                PagesInputPerSec = MEMPerfCounter.getPageInputsPerSec();
+                PagesOutputPerSec = MEMPerfCounter.getPageOutputsPerSec();
+                return;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine(exp.Message, "刷新MEM参数异常！");
+                return;
+            }
+        }
+        public void RefreshMEMArg()
+        {
+            try
+            {
+                MEMAvailable = MEMPerfCounter.getMemAvailable();
+                MEMCommited = MEMPerfCounter.getMemCommited();
+                MEMCommitLimit = MEMPerfCounter.getMemCommitLimit();
+                MEMCommitedPerc = MEMPerfCounter.getMemCommitedPerc();
+                MEMPoolPaged = MEMPerfCounter.getMemPoolPaged();
+                MEMPoolNonPaged = MEMPerfCounter.getMemPoolNonPaged();
+                MEMCached = MEMPerfCounter.getMemCachedBytes();
+                PageFile = MEMPerfCounter.getPageFile();
+                PagesPerSec = MEMPerfCounter.getPagesPerSec();
+                PageFaultsPerSec = MEMPerfCounter.getPageFaultsPerSec();
+                PageWritesPerSec = MEMPerfCounter.getPageWritesPerSec();
+                PageReadsPerSec = MEMPerfCounter.getPageReadsPerSec();
+                PagesInputPerSec = MEMPerfCounter.getPageInputsPerSec();
+                PagesOutputPerSec = MEMPerfCounter.getPageOutputsPerSec();
                 return;
             }
             catch (Exception exp)

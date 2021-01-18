@@ -55,5 +55,23 @@ namespace Perf_Detector
                 return;
             }
         }
+
+        public void RefreshCPUArg()
+        {
+            try
+            {
+                CPUProcessorTime = WinPerfCounter.getProcessorCpuTime();
+                ProcessorQueueLength = WinPerfCounter.getProcessorQueueLengh();
+                CPUPrivilegedTime = WinPerfCounter.getCpuPrivilegedTime();
+                CPUInterruptTime = WinPerfCounter.getThreadCount();
+                ThreadCount = WinPerfCounter.getThreadCount();
+                return;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine(exp.Message, "刷新CPU参数异常！");
+                return;
+            }
+        }
     }
 }

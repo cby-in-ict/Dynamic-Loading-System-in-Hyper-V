@@ -11,7 +11,7 @@ namespace Perf_Detector
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
             Thread.Sleep(250);
 

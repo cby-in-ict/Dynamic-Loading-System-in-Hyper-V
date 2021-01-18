@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define TEST
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -326,12 +327,12 @@ namespace Perf_Detector
             
             var counter1 = new PerformanceCounter("Memory", "Pages/sec", null);
             Console.WriteLine(Convert.ToString(counter1.NextValue()));
-            Thread.Sleep(10);
+            Thread.Sleep(1000);
             Console.WriteLine(Convert.ToString(counter1.NextValue()));
 
             WinPerfCounter winPerfCounter = new WinPerfCounter();
             winPerfCounter.initAllCounterValue();
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
             Console.WriteLine("CPU占用率：" + Convert.ToString(winPerfCounter.getProcessorCpuTime()) + "\nProcessor Queue Length:" + Convert.ToString(winPerfCounter.ProcessorQueueLengh) + "\n可用内存大小：" + Convert.ToString(winPerfCounter.MEMAvailable + "\nPage Faults" + Convert.ToString(winPerfCounter.PageFaultsPerSec) + "\nPages Input" + Convert.ToString(winPerfCounter.PagesInputPerSec)));
         }
 #endif

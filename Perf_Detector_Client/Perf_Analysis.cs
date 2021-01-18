@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define PerfAnalysisTest
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -27,35 +28,67 @@ namespace Perf_Detector
         public float MEMPoolNonPaged { get; set; }
         public float MEMCached { get; set; }
         public float PageFile { get; set; }
+        public float PagesPerSec { get; set; }
+        public float PageFaultsPerSec { get; set; }
+        public float PageReadsPerSec { get; set; }
+        public float PageWritesPerSec { get; set; }
+        public float PagesInputPerSec { get; set; }
+        public float PagesOutputPerSec { get; set; }
     }
     public class Perf_Analysis
     {
         // The class used to transfer to Server
-        public Perf_Transfer perf_Transfer;
+        public Perf_Transfer perf_Transfer = new Perf_Transfer();
 
         public bool MEMAlarm = false;
         public bool CPUAlarm = false;
         public float CPU_K { get; set; }
         public float MEM_K { get; set; }
-        //public float CPUUsage = 0;
-        //public UInt64 MemoryUsage = 0;
-        //public int ProcessorQueueLength = 0;
-        //public float CacheMissRate = 0;
-        //public UInt64 PageFaultCount = 0;
-        public MemSpoofer MemSpoofer = new MemSpoofer();
-        public CpuSpoofer CpuSpoofer = new CpuSpoofer();
+
+        public MemSpoofer memSpoofer;
+        public CpuSpoofer cpuSpoofer;
         public ProcessInfo ProcessInfo = new ProcessInfo();
         private System.Timers.Timer RUtimer;
+
+        public Perf_Analysis()
+        {
+            memSpoofer = new MemSpoofer();
+            cpuSpoofer = new CpuSpoofer();
+            memSpoofer.RefreshMEMArg();
+            cpuSpoofer.RefreshCPUArg();
+            bool ret = SetPerfTransfer(memSpoofer, cpuSpoofer);
+        }
 
         public bool SetPerfTransfer(MemSpoofer memSpf, CpuSpoofer cpuSpf)
         {
             try
             {
+                Thread.Sleep(300);
+                perf_Transfer.CPUCount = cpuSpf.CPUCount;
+                perf_Transfer.ProcessorQueueLength = cpuSpf.ProcessorQueueLength;
                 this.perf_Transfer.CPUProcessorTime = cpuSpf.CPUProcessorTime;
+                this.perf_Transfer.CPUPrivilegedTime = cpuSpf.CPUPrivilegedTime;
+                this.perf_Transfer.CPUInterruptTime = cpuSpf.CPUInterruptTime;
+                this.perf_Transfer.CPUDPCTime = cpuSpf.CPUDPCTime;
+                perf_Transfer.MEMAvailable = memSpf.MEMAvailable;
+                perf_Transfer.MEMCommited = memSpf.MEMCommited;
+                perf_Transfer.MEMCommitLimit = memSpf.MEMCommitLimit;
+                this.perf_Transfer.MEMCommitedPerc = memSpf.MEMCommitedPerc;
+                this.perf_Transfer.MEMCached = memSpf.MEMCached;
+                this.perf_Transfer.MEMPoolPaged = memSpf.MEMPoolPaged;
+                this.perf_Transfer.MEMPoolNonPaged = memSpf.MEMPoolNonPaged;
+                this.perf_Transfer.PageFile = memSpf.PageFile;
+                this.perf_Transfer.PagesPerSec = memSpf.PagesPerSec;
+                this.perf_Transfer.PageFaultsPerSec = memSpf.PageFaultsPerSec;
+                this.perf_Transfer.PageReadsPerSec = memSpf.PageReadsPerSec;
+                this.perf_Transfer.PageWritesPerSec = memSpf.PageWritesPerSec;
+                this.perf_Transfer.PagesInputPerSec = memSpf.PagesInputPerSec;
+                this.perf_Transfer.PagesOutputPerSec = memSpf.PagesOutputPerSec;
                 return true;
             }
             catch (Exception exp)
             {
+                Console.WriteLine(exp.Message, "SetPerfTransfer异常");
                 return false;
             }
 
@@ -88,7 +121,7 @@ namespace Perf_Detector
 
         public MemoryCondition CheckMEM()
         {
-            if (MemSpoofer.MEMAvailable < 1000)
+            if (memSpoofer.MEMAvailable < 1000)
             {
                 return MemoryCondition.FULL;
             }
@@ -97,18 +130,27 @@ namespace Perf_Detector
 
         public bool CheckCPU()
         {
-            if (CpuSpoofer.CPUProcessorTime > 90)
+            if (cpuSpoofer.CPUProcessorTime > 90)
             {
-                if (CpuSpoofer.CPUPrivilegedTime < 80)
+                if (cpuSpoofer.CPUPrivilegedTime < 80)
                     return false;
                 else
                     return true;
             }
-            if (CpuSpoofer.ThreadCount > (CpuSpoofer.CPUCount * 2))
+            if (cpuSpoofer.ThreadCount > (cpuSpoofer.CPUCount * 2))
             {
 
             }
             return true;
         }
     }
+#if PerfAnalysisTest
+    class test
+    {
+        static void Main(string[] args)
+        {
+            Perf_Analysis perf_Analysis = new Perf_Analysis();
+        }
+    }
+#endif
 }
