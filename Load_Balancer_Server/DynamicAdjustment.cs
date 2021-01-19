@@ -75,7 +75,7 @@ namespace Load_Balancer_Server
             return ret;
         }
         
-        public bool AdjustCPULimit(VirtualMachine VM, int CPULimit)
+        public bool AdjustCPULimit(VirtualMachine VM, UInt64 CPULimit)
         {
             bool ret = VM.ModifySettingData("CPU_Limit", Convert.ToString(CPULimit));
             return ret;

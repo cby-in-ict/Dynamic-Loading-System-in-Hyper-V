@@ -2,6 +2,7 @@
 #define DynamicAdjustTest
 #define GetConfigTest
 #define SystemInfoTest
+#define LoadBalancer
 
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,22 @@ namespace Load_Balancer_Server
 
             memSize = memSize - memSize/8;
             dynamicAdjustment.AdjustMemorySize(vm, memSize);
+        }
+#endif
+
+#if LoadBalancer
+        public static void LoadBalancerTest()
+        {
+            ManagementScope scope;
+            ManagementObject managementService;
+
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
+            List<VirtualMachine> vmlist = new List<VirtualMachine>();
+            vmlist.Add(vm);
+            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 3, 50.0, 3, 3, 10000, 200000);
+            testLoadBalancer.BalanceByTime();
         }
 #endif
 
