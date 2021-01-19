@@ -57,7 +57,7 @@
     <Compile Include="SystemInfo.cs" />
     <Compile Include="UnitTest.cs" />
     <Compile Include="VMManagment.cs" />
-    <Compile Include="VMPerf.cs" />
+    <Compile Include="LoadBalancer.cs" />
     <Compile Include="WmiUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,7 @@ namespace Load_Balancer_Server
         public UInt64 CPU_Reservation;//保留    0-100
         public UInt64 CPU_Limit;//限制    0-100
         public UInt32 CPU_Weight;//分配权重   1-10000
+        public UInt64 RAM_VirtualQuantity;
         public UInt32 RAM_Weight;//分配权重   1-10000
         public bool RAM_DynamicMemoryEnabled;//动态内存
         public float CpuPercentage;
@@ -127,6 +128,7 @@ namespace Load_Balancer_Server
                     using (ManagementObjectCollection memorySettingDatas = detailVMSetting.GetRelated("Msvm_MemorySettingData"))
                     using (ManagementObject memorySettingData = WmiUtilities.GetFirstObjectFromCollection(memorySettingDatas))
                     {
+                        performanceSetting.RAM_VirtualQuantity = Convert.ToUInt64(memorySettingData.GetPropertyValue("VirtualQuantity"));
                         performanceSetting.RAM_Weight = Convert.ToUInt32(memorySettingData.GetPropertyValue("Weight"));
                         performanceSetting.RAM_DynamicMemoryEnabled = Convert.ToBoolean(memorySettingData.GetPropertyValue("DynamicMemoryEnabled"));
                     }
