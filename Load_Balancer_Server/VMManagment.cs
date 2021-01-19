@@ -28,7 +28,7 @@ namespace Load_Balancer_Server
         public UInt16[] ProcessorLoadHistory;
         public UInt64 MemoryUsage;
         public String GuestOperatingSystem;
-        public Int32 MemoryAvailable;
+        // public Int32 MemoryAvailable;
         public Int32 AvailableMemoryBuffer;
         public UInt64 CPU_Reservation;//保留    0-100
         public UInt64 CPU_Limit;//限制    0-100
@@ -112,7 +112,7 @@ namespace Load_Balancer_Server
 
                 performanceSetting.MemoryUsage = Convert.ToUInt64(virtualSystemSetting.GetPropertyValue("MemoryUsage"));
                 performanceSetting.GuestOperatingSystem = virtualSystemSetting.GetPropertyValue("GuestOperatingSystem") + "";
-                performanceSetting.MemoryAvailable = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("MemoryAvailable"));
+                // performanceSetting.MemoryAvailable = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("MemoryAvailable"));
                 performanceSetting.AvailableMemoryBuffer = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("AvailableMemoryBuffer"));
 
                 using (ManagementObject detailVMSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
@@ -159,11 +159,6 @@ namespace Load_Balancer_Server
             public bool ModifySettingData(String settingName, String settingData)
             {
                 bool result = false;
-                if (!IsPowerOff())
-                {
-                    Console.WriteLine("关机状态下修改，非动态修改！");
-                    return false;
-                }
 
                 using (ManagementObject virtualSystemSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
                 {

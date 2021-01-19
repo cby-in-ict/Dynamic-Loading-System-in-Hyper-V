@@ -1,14 +1,22 @@
-﻿using System;
+﻿#define TEST
+#define DynamicAdjustTest
+#define GetConfigTest
+#define SystemInfoTest
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using HyperVWcfTransport;
+using System.Management;
+using Microsoft.Samples.HyperV.Common;
 
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server
 {
     class UnitTest
     {
-        static void Main1(string[] args)
+#if SystemInfoTest
+        public static void SystemInfoTest()
         {
             SystemInfo systemInfo = new SystemInfo();
             Int64 AvailableMemory = systemInfo.MemoryAvailable;
@@ -23,5 +31,37 @@ namespace Load_Balancer_Server
             Console.WriteLine("总物理内存：" + PhysicalMemory + "MB");
             Console.WriteLine("当前可用内存：" + AvailableMemory + "MB");
         }
+#endif
+
+#if DynamicAdjustTest
+        public static void DynamicAdjustTest()
+        {
+            ManagementScope scope;
+            ManagementObject managementService;
+
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
+
+            UInt64 memSize = vm.performanceSetting.MemoryUsage;
+            DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
+
+            memSize = memSize - memSize/8;
+            dynamicAdjustment.AdjustMemorySize(vm, memSize);
+        }
+#endif
+
+#if GetConfigTest
+#endif
+
+#if TEST
+        static void Main() 
+        {
+#if DynamicAdjustTest
+            DynamicAdjustTest();
+#endif
+        }
+#endif
+
     }
 }

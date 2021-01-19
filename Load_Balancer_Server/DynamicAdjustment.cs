@@ -1,11 +1,12 @@
 ﻿/* This class include memory and CPU resource dynamic adjustment API */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Load_Balancer_Server
 {
-    class DynamicAdjustment
+    public class DynamicAdjustment
     {
         public bool isDynamicMem(VirtualMachine VM)
         {
@@ -13,14 +14,14 @@ namespace Load_Balancer_Server
         }
 
         // Adjust Memory related setting API
-        public bool AdjustMemorySize(VirtualMachine VM, Int64 MemorySize)
+        public bool AdjustMemorySize(VirtualMachine VM, UInt64 MemorySize)
         {
             bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize));
             return ret;
         }
         public bool AdjustMemoryWeight(VirtualMachine VM, int MemoryWeight)
         {
-            bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemoryWeight));
+            bool ret = VM.ModifySettingData("RAM_Weight", Convert.ToString(MemoryWeight));
             return ret;
         }
 
