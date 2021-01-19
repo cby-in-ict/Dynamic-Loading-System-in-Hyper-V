@@ -19,6 +19,46 @@ namespace Load_Balancer_Server
             bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize));
             return ret;
         }
+
+        // Add Memory according to baseline, the baseline is the user set memory,ie:2048MB, MemorySize is current Memory Size,
+        // rank 1:MemorySize + 1/8 * baseline. rank 2:MemorySize + 1/4 * baseline
+        public bool AppendVMMemory(VirtualMachine VM, UInt64 MemorySizeBaseLine, UInt64 MemorySize, int rank)
+        {
+            if (rank == 1)
+            {
+                UInt64 appendSize = MemorySizeBaseLine / 8;
+                bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize + appendSize));
+                return ret;
+            }
+            else if (rank == 2)
+            {
+                UInt64 appendSize = MemorySizeBaseLine / 4;
+                bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize + appendSize));
+                return ret;
+            }
+            else
+                return false;
+        }
+        
+        // Recycle Memory according to baseline, the baseline is the user set memory,ie:2048MB, MemorySize is current Memory Size,
+        // rank 1:MemorySize - 1/8 * baseline. rank 2:MemorySize - 1/4 * baseline
+        public bool RecycleVMMemory(VirtualMachine VM, UInt64 MemorySizeBaseLine, UInt64 MemorySize, int rank)
+        {
+            if (rank == 1)
+            {
+                UInt64 recycleSize = MemorySizeBaseLine / 8;
+                bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize - recycleSize));
+                return ret;
+            }
+            else if (rank == 2)
+            {
+                UInt64 recycleSize = MemorySizeBaseLine / 4;
+                bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize - recycleSize));
+                return ret;
+            }
+            else
+                return false;
+        }
         public bool AdjustMemoryWeight(VirtualMachine VM, int MemoryWeight)
         {
             bool ret = VM.ModifySettingData("RAM_Weight", Convert.ToString(MemoryWeight));
