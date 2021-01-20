@@ -13,8 +13,8 @@ namespace Load_Balancer_Server
     {
         // 当前正在使用的虚拟机名
         public string currentUsedVM { set; get; }
-        public Dictionary<VirtualMachine, MemoryBalancer> memoryBalancerDict;
-        public Dictionary<VirtualMachine, CpuBalancer> cpuBalancerDict;
+        public Dictionary<VirtualMachine, MemoryBalancer> memoryBalancerDict = new Dictionary<VirtualMachine, MemoryBalancer>();
+        public Dictionary<VirtualMachine, CpuBalancer> cpuBalancerDict = new Dictionary<VirtualMachine, CpuBalancer>();
         //public MemoryBalancer memoryBalancer { set; get; }
         //public CpuBalancer cpuBalancer { set; get; }
         // Host主机的状态信息
@@ -34,8 +34,10 @@ namespace Load_Balancer_Server
             {
                 // construct balancer for each vm
                 MemoryBalancer currentMemoryBalancer = new MemoryBalancer(vm, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                currentMemoryBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentMemoryBalancer.DetectMemByTime();
                 CpuBalancer currentCpuBalancer = new CpuBalancer(vm, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentCpuBalancer.DetectCpuByTime();
 
                 memoryBalancerDict.Add(vm, currentMemoryBalancer);

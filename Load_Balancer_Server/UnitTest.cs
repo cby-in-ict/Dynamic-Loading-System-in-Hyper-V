@@ -2,7 +2,7 @@
 #define DynamicAdjustTest
 #define GetConfigTest
 #define SystemInfoTest
-#define LoadBalancer
+#define LoadBalancerTest
 
 using System;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ namespace Load_Balancer_Server
         }
 #endif
 
-#if LoadBalancer
+#if LoadBalancerTest
         public static void LoadBalancerTest()
         {
             ManagementScope scope;
@@ -74,11 +74,15 @@ namespace Load_Balancer_Server
 #if TEST
         static void Main() 
         {
+            Console.WriteLine("UnitTest Start");
 #if DynamicAdjustTest
-            DynamicAdjustTest();
+            //DynamicAdjustTest();
+#endif
+#if LoadBalancerTest
+            LoadBalancerTest();
 #endif
         }
 #endif
 
     }
-}
+    }
