@@ -3,6 +3,7 @@
 #define GetConfigTest
 #define SystemInfoTest
 #define LoadBalancerTest
+#define DetectorServerTest
 
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,14 @@ namespace Load_Balancer_Server
             testLoadBalancer.BalanceByTime();
         }
 #endif
+#if DetectorServerTest
+        public static void DetectorServerTest()
+        {
+            string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
+            DetectorServer detectorServer = new DetectorServer(HvAddr);
+            detectorServer.StartUpServer();
+        }
+#endif
 
 #if GetConfigTest
 #endif
@@ -75,6 +84,9 @@ namespace Load_Balancer_Server
         static void Main() 
         {
             Console.WriteLine("UnitTest Start");
+#if DetectorServerTest
+            DetectorServerTest();
+#endif
 #if DynamicAdjustTest
             //DynamicAdjustTest();
 #endif
