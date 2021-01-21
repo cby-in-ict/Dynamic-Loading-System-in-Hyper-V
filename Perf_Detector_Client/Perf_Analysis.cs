@@ -1,6 +1,7 @@
 ﻿//#define PerfAnalysisTest
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -21,6 +22,7 @@ namespace Perf_Detector_Client
         public bool CPUAlarm = false;
         public float CPU_K { get; set; }
         public float MEM_K { get; set; }
+        public string VMName { get; set; }
 
         public MemSpoofer memSpoofer;
         public CpuSpoofer cpuSpoofer;
@@ -34,13 +36,31 @@ namespace Perf_Detector_Client
             memSpoofer.RefreshMEMArg();
             cpuSpoofer.RefreshCPUArg();
             bool ret = SetPerfTransfer(memSpoofer, cpuSpoofer);
+            bool vmIDRet = GetVMId(@"C:\VMID.txt");
+            if (!vmIDRet)
+                VMName = "Unknown";
         }
 
+        public bool GetVMId(string vmIDFilePath)
+        {
+            try
+            {
+                if (!File.Exists(vmIDFilePath))
+                    return false;
+                VMName = File.ReadAllText(vmIDFilePath);
+                return true;
+            }
+            catch (Exception exp)
+            {
+                return false;
+            }
+        }
         public bool SetPerfTransfer(MemSpoofer memSpf, CpuSpoofer cpuSpf)
         {
             try
             {
                 Thread.Sleep(300);
+                perf_Transfer.VMName = VMName;
                 perf_Transfer.CPUCount = cpuSpf.CPUCount;
                 perf_Transfer.ProcessorQueueLength = cpuSpf.ProcessorQueueLength;
                 perf_Transfer.CPUProcessorTime = cpuSpf.CPUProcessorTime;

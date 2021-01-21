@@ -33,5 +33,7 @@ namespace HyperVWcfTransport.SampleClient
         }
 
         public byte[] DoThing(string foo) => Channel.DoThing(foo);
+        
+       
     }
 }

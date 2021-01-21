@@ -9,13 +9,14 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using Perf_Transfer;
+using System.ServiceModel.Channels;
 
 namespace Load_Balancer_Server
 {
     public class DetectorServer
     {
         public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-        public static VMPerf currentPerfTransfer;
+       // public static VMPerf currentPerfTransfer;
         public DetectorServer(string Addr)
         {
             DetectorServerAddr = Addr;
@@ -25,8 +26,6 @@ namespace Load_Balancer_Server
         public interface IServer
         {
             [OperationContract]
-            bool TransferPerfAnalysis(Perf_Analysis perf_Detector);
-            [OperationContract]
             VMPerf TransferPerfStr(string perf_Str);
 
         }
@@ -34,17 +33,14 @@ namespace Load_Balancer_Server
         [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
         class SampleServer : IServer
         {
-            public bool TransferPerfAnalysis(Perf_Analysis perf_Detector)
-            {
-                Console.WriteLine($"Received {perf_Detector.CPU_K}");
-                return true;
-            }
+            // 字典类型，记录各虚拟机实时性能
+            Dictionary<string, VMPerf> vmPerfDict = new Dictionary<string, VMPerf>();
             public VMPerf TransferPerfStr(string perf_Str)
             {
-                //Console.WriteLine($"Received {perf_Str}");
 #if Debug
                 Console.WriteLine("收到性能特征字符串");
 #endif
+                // 反序列化
                 VMPerf perf_Transfer;
                 byte[] buffer = Convert.FromBase64String(perf_Str);
                 MemoryStream stream = new MemoryStream(buffer);
@@ -52,10 +48,19 @@ namespace Load_Balancer_Server
                 perf_Transfer = (VMPerf)formatter.Deserialize(stream);
                 stream.Flush();
                 stream.Close();
-                // TODO: 回调函数，处理perf_Transfer
-                DetectorServer.currentPerfTransfer = perf_Transfer;
-                Console.WriteLine("收到VM中的性能信息，CPU占用率为：" + Convert.ToString(perf_Transfer.CPUPrivilegedTime));
 
+                // TODO: 回调函数，处理perf_Transfer
+                if (vmPerfDict.ContainsKey(perf_Transfer.VMName))
+                {
+                    vmPerfDict[perf_Transfer.VMName] = perf_Transfer;
+                }
+                else
+                {
+                    vmPerfDict.Add(perf_Transfer.VMName, perf_Transfer);
+                }
+
+                Console.WriteLine("收到虚拟机：" + perf_Transfer.VMName + "的消息，" + "\nCPU占用率为：" + Convert.ToString(vmPerfDict[perf_Transfer.VMName].CPUPrivilegedTime));
+                
                 return perf_Transfer;
             }
 

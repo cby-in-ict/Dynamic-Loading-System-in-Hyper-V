@@ -19,8 +19,6 @@ namespace Perf_Detector_Client
     public interface IServer
     {
         [OperationContract]
-        bool TransferPerfAnalysis(VMPerf perf_Transfer);
-        [OperationContract]
         VMPerf TransferPerfStr(string perf_Str);
 
     }
@@ -32,8 +30,6 @@ namespace Perf_Detector_Client
         {
         }
 
-        public bool TransferPerfAnalysis(VMPerf perf_Transfer) => Channel.TransferPerfAnalysis(perf_Transfer);
-
         public VMPerf TransferPerfStr(string perf_Str) => Channel.TransferPerfStr(perf_Str);
 
         
@@ -44,6 +40,7 @@ namespace Perf_Detector_Client
         public string HvAddr { set; get; }
         public Perf_Analysis client_perf_Analysis;
         public DetectorClient detectorClient;
+       
         public Client(string Addr)
         {
             client_perf_Analysis = new Perf_Analysis();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Dispatcher;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,8 @@ namespace HyperVWcfTransport.SampleServer
             var binding = new HyperVNetBinding();
             // https://docs.microsoft.com/zh-cn/dotnet/api/system.servicemodel.servicehost.-ctor?view=netframework-4.8#System_ServiceModel_ServiceHost__ctor_System_Object_System_Uri___
             sh.AddServiceEndpoint(typeof(IServer), binding, "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47");
+            
+            ChannelDispatcherCollection cdc = sh.ChannelDispatchers;
             sh.Open();
             Console.ReadLine();
             sh.Close();

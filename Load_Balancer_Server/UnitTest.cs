@@ -91,7 +91,7 @@ namespace Load_Balancer_Server
             //DynamicAdjustTest();
 #endif
 #if LoadBalancerTest
-            LoadBalancerTest();
+            //LoadBalancerTest();
 #endif
         }
 #endif

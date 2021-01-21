@@ -34,10 +34,10 @@ namespace Load_Balancer_Server
             {
                 // construct balancer for each vm
                 MemoryBalancer currentMemoryBalancer = new MemoryBalancer(vm, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
-                currentMemoryBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
+                // currentMemoryBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentMemoryBalancer.DetectMemByTime();
                 CpuBalancer currentCpuBalancer = new CpuBalancer(vm, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
-                currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
+                // currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentCpuBalancer.DetectCpuByTime();
 
                 memoryBalancerDict.Add(vm, currentMemoryBalancer);
@@ -65,7 +65,7 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 MemoryBalancer currentMemBalancer = kvp.Value;
-                currentMemBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
+                // !!currentMemBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 if (currentMemBalancer.isMemAlarm == true)
                 {
                     Console.WriteLine("内存预警出现，分配内存");
@@ -81,7 +81,7 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 CpuBalancer currentCpuBalancer = kvp.Value;
-                currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
+                //currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 if (currentCpuBalancer.isCpuAlarm == true)
                 {
                     Console.WriteLine("CPU预警出现，分配CPU");

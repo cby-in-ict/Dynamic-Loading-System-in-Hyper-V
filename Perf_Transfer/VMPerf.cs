@@ -9,6 +9,8 @@ namespace Perf_Transfer
     [Serializable]
     public class VMPerf
     {
+        // add src VMName
+        public string VMName { get; set; }
         public int CPUCount = 0;
         public float ProcessorQueueLength { get; set; }
         public float CPUProcessorTime { get; set; }
