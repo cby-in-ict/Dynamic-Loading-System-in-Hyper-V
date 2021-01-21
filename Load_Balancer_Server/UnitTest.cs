@@ -11,6 +11,8 @@ using System.Text;
 using HyperVWcfTransport;
 using System.Management;
 using Microsoft.Samples.HyperV.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server
@@ -56,16 +58,32 @@ namespace Load_Balancer_Server
 #if LoadBalancerTest
         public static void LoadBalancerTest()
         {
+            string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
+            DetectorServer detectorServer = new DetectorServer(HvAddr);
+            //
+
+            var task = new Task(() =>
+            {
+                detectorServer.StartUpServer();
+            });
+            task.Start();
+            // detectorServer.StartUpServer();
             ManagementScope scope;
             ManagementObject managementService;
 
             scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
             managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
-            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
+            while (DetectorServer.mySampleServer.vmPerfDict.Count == 0)
+            {
+                Thread.Sleep(1000);
+            }
+            VirtualMachine vm = new VirtualMachine("LocalVM", scope, managementService);
             List<VirtualMachine> vmlist = new List<VirtualMachine>();
             vmlist.Add(vm);
             LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 3, 50.0, 3, 3, 10000, 200000);
+            testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
+            Console.ReadLine();
         }
 #endif
 #if DetectorServerTest
@@ -85,13 +103,13 @@ namespace Load_Balancer_Server
         {
             Console.WriteLine("UnitTest Start");
 #if DetectorServerTest
-            DetectorServerTest();
+            // DetectorServerTest();
 #endif
 #if DynamicAdjustTest
             //DynamicAdjustTest();
 #endif
 #if LoadBalancerTest
-            //LoadBalancerTest();
+            LoadBalancerTest();
 #endif
         }
 #endif

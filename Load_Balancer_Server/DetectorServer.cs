@@ -16,6 +16,7 @@ namespace Load_Balancer_Server
     public class DetectorServer
     {
         public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
+        public static SampleServer mySampleServer;
        // public static VMPerf currentPerfTransfer;
         public DetectorServer(string Addr)
         {
@@ -31,10 +32,10 @@ namespace Load_Balancer_Server
         }
 
         [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple, UseSynchronizationContext = false)]
-        class SampleServer : IServer
+        public class SampleServer : IServer
         {
             // 字典类型，记录各虚拟机实时性能
-            Dictionary<string, VMPerf> vmPerfDict = new Dictionary<string, VMPerf>();
+            public Dictionary<string, VMPerf> vmPerfDict = new Dictionary<string, VMPerf>();
             public VMPerf TransferPerfStr(string perf_Str)
             {
 #if Debug
@@ -65,22 +66,23 @@ namespace Load_Balancer_Server
             }
 
         }
-        public bool StartUpServer()
+        public void StartUpServer()
         {
             try
-            {   
-                var sh = new ServiceHost(new SampleServer());
+            {
+                mySampleServer = new SampleServer();
+                var sh = new ServiceHost(mySampleServer);
                 var binding = new HyperVNetBinding();
                 sh.AddServiceEndpoint(typeof(IServer), binding, DetectorServerAddr);
                 sh.Open();
                 Console.ReadLine();
                 sh.Close();
-                return true;
+                //return true;
             }
             catch (Exception exp)
             {
                 Console.WriteLine(exp.Message, "启动服务器失败，出现异常");
-                return false;
+                //return false;
             }
             
         }

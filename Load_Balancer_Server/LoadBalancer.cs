@@ -11,12 +11,11 @@ namespace Load_Balancer_Server
 {
     public class LoadBalancer
     {
-        // 当前正在使用的虚拟机名
+        // 当前用户正在切入使用的虚拟机名
         public string currentUsedVM { set; get; }
         public Dictionary<VirtualMachine, MemoryBalancer> memoryBalancerDict = new Dictionary<VirtualMachine, MemoryBalancer>();
         public Dictionary<VirtualMachine, CpuBalancer> cpuBalancerDict = new Dictionary<VirtualMachine, CpuBalancer>();
-        //public MemoryBalancer memoryBalancer { set; get; }
-        //public CpuBalancer cpuBalancer { set; get; }
+
         // Host主机的状态信息
         public SystemInfo systemInfo = new SystemInfo();
         public double hostMemReservedPercentage { set; get; }
@@ -24,6 +23,8 @@ namespace Load_Balancer_Server
         int detectTimeGap = 10000;
         // 判断是否进行资源动态调度的时间间隔
         private System.Timers.Timer Balancetimer;
+
+        public DetectorServer myDetectorServer { set; get; }
 
         public DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
         public LoadBalancer(List<VirtualMachine> vmList, double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve) 
@@ -43,6 +44,11 @@ namespace Load_Balancer_Server
                 memoryBalancerDict.Add(vm, currentMemoryBalancer);
                 cpuBalancerDict.Add(vm, currentCpuBalancer);
             }
+        }
+
+        public void setDetectorServer(DetectorServer detectorServer)
+        {
+            myDetectorServer = detectorServer;
         }
 
         public void BalanceByTime()
@@ -115,7 +121,7 @@ namespace Load_Balancer_Server
             double thredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
-            public VMPerf currentVMPerf { set; get; }
+            public VMPerf currentVMPerf { get => DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName]; }
 
             // 内存告警的次数
             public int detectAlarmTimes { set; get; }
@@ -140,10 +146,10 @@ namespace Load_Balancer_Server
                 memFreeRanking = 5;
             }
 
-            public void SetVMPerf(VMPerf vmPerf)
-            {
-                currentVMPerf = vmPerf;
-            }
+            //public void SetVMPerf(VMPerf vmPerf)
+            //{
+            //    currentVMPerf = vmPerf;
+            //}
 
             public void SetAlarmTimesZero()
             {
@@ -214,7 +220,7 @@ namespace Load_Balancer_Server
             int processQueueLengthThredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
-            public VMPerf currentVMPerf { set; get; }
+            public VMPerf currentVMPerf { get => DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName]; }
 
             // CPU告警的次数
             public int detectAlarmTimes { set; get; }
@@ -241,10 +247,10 @@ namespace Load_Balancer_Server
                 cpuFreeRanking = 5;
             }
 
-            public void SetVMPerf(VMPerf vmPerf)
-            {
-                currentVMPerf = vmPerf;
-            }
+            //public void SetVMPerf(VMPerf vmPerf)
+            //{
+            //    currentVMPerf = vmPerf;
+            //}
 
             public void SetAlarmTimesZero()
             {
