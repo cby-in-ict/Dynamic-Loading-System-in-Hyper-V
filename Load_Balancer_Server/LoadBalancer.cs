@@ -35,10 +35,8 @@ namespace Load_Balancer_Server
             {
                 // construct balancer for each vm
                 MemoryBalancer currentMemoryBalancer = new MemoryBalancer(vm, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
-                // currentMemoryBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentMemoryBalancer.DetectMemByTime();
                 CpuBalancer currentCpuBalancer = new CpuBalancer(vm, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
-                // currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 currentCpuBalancer.DetectCpuByTime();
 
                 memoryBalancerDict.Add(vm, currentMemoryBalancer);
@@ -71,15 +69,15 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 MemoryBalancer currentMemBalancer = kvp.Value;
-                // !!currentMemBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 if (currentMemBalancer.isMemAlarm == true)
                 {
                     Console.WriteLine("内存预警出现，分配内存");
                     bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                     if (ret)
                     {
-                        // Memory become more free
-                        memoryBalancerDict[currentVM].memFreeRanking += 1;
+                        if (memoryBalancerDict[currentVM].memFreeRanking <= 8)
+                            // Memory become more free
+                            memoryBalancerDict[currentVM].memFreeRanking += 1;
                     }
                 }
             }
@@ -87,7 +85,6 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 CpuBalancer currentCpuBalancer = kvp.Value;
-                //currentCpuBalancer.SetVMPerf(DetectorServer.currentPerfTransfer);
                 if (currentCpuBalancer.isCpuAlarm == true)
                 {
                     Console.WriteLine("CPU预警出现，分配CPU");
@@ -102,7 +99,8 @@ namespace Load_Balancer_Server
                         if (ret)
                         {
                             // CPU become more free
-                            cpuBalancerDict[currentVM].cpuFreeRanking += 1;
+                            if (cpuBalancerDict[currentVM].cpuFreeRanking <=8)
+                                cpuBalancerDict[currentVM].cpuFreeRanking += 1;
                         }
                     }
                 }
@@ -118,7 +116,7 @@ namespace Load_Balancer_Server
         public class MemoryBalancer 
         {
             VirtualMachine currentVirtualMachine { set; get; }
-            double thredHold { set; get; }
+            private double percentageThredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
             public VMPerf currentVMPerf { get => DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName]; }
@@ -138,18 +136,13 @@ namespace Load_Balancer_Server
             public MemoryBalancer(VirtualMachine vm, double thredhold, int alarmTimesLimit, int detectTime)
             {
                 currentVirtualMachine = vm;
-                thredHold = thredhold;
+                percentageThredHold = thredhold;
                 memAlarmTimesLimit = alarmTimesLimit;
                 detectTimeGap = detectTime;
                 detectAlarmTimes = 0;
                 // 设置一个中间值
                 memFreeRanking = 5;
             }
-
-            //public void SetVMPerf(VMPerf vmPerf)
-            //{
-            //    currentVMPerf = vmPerf;
-            //}
 
             public void SetAlarmTimesZero()
             {
@@ -192,7 +185,7 @@ namespace Load_Balancer_Server
                 double allocMemSize = (double)currentVirtualMachine.performanceSetting.RAM_VirtualQuantity;
                 double memPercentage = memAvailable / allocMemSize;
                 /* TODO; more details to analysy memory performance */
-                if (memPercentage > thredHold)
+                if (memPercentage > percentageThredHold)
                 {
                     detectAlarmTimes += 1;
                 }
@@ -247,11 +240,6 @@ namespace Load_Balancer_Server
                 cpuFreeRanking = 5;
             }
 
-            //public void SetVMPerf(VMPerf vmPerf)
-            //{
-            //    currentVMPerf = vmPerf;
-            //}
-
             public void SetAlarmTimesZero()
             {
                 detectAlarmTimes = 0;
@@ -296,7 +284,7 @@ namespace Load_Balancer_Server
                     isCpuAlarm = true;
                     if (cpuFreeRanking > 1)
                         cpuFreeRanking -= 1;
-                }
+                 }
             }
             public void ClearCpuState(object sender, ElapsedEventArgs e)
             {
