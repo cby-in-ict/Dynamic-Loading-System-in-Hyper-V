@@ -121,8 +121,8 @@ namespace Load_Balancer_Server
                     using (ManagementObjectCollection processorSettingDatas = detailVMSetting.GetRelated("Msvm_ProcessorSettingData"))
                     using (ManagementObject processorSettingData = WmiUtilities.GetFirstObjectFromCollection(processorSettingDatas))
                     {
-                        performanceSetting.CPU_Reservation = Convert.ToUInt32(processorSettingData.GetPropertyValue("Reservation"));
-                        performanceSetting.CPU_Limit = Convert.ToUInt32(processorSettingData.GetPropertyValue("Limit"));
+                         performanceSetting.CPU_Reservation = Convert.ToUInt64(processorSettingData.GetPropertyValue("Reservation"));
+                        performanceSetting.CPU_Limit = Convert.ToUInt64(processorSettingData.GetPropertyValue("Limit"));
                         performanceSetting.CPU_Weight = Convert.ToUInt32(processorSettingData.GetPropertyValue("Weight"));
                     }
                     using (ManagementObjectCollection memorySettingDatas = detailVMSetting.GetRelated("Msvm_MemorySettingData"))

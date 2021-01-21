@@ -77,10 +77,10 @@ namespace Load_Balancer_Server
             {
                 Thread.Sleep(1000);
             }
-            VirtualMachine vm = new VirtualMachine("LocalVM", scope, managementService);
+            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
             List<VirtualMachine> vmlist = new List<VirtualMachine>();
             vmlist.Add(vm);
-            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 3, 50.0, 3, 3, 10000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 3, 50.0, 3, 1, 10000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.ReadLine();

@@ -92,13 +92,13 @@ namespace Load_Balancer_Server
                 {
                     Console.WriteLine("CPU预警出现，分配CPU");
                     ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
-                    if (currentCpuLimit > 90)
+                    if (currentCpuLimit > 90000)
                     {
                         return;
                     }
-                    else 
+                    else
                     {
-                        bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10);
+                        bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10000);
                         if (ret)
                         {
                             // CPU become more free
@@ -289,7 +289,7 @@ namespace Load_Balancer_Server
                 float processQueueLength = currentVMPerf.ProcessorQueueLength;
                 if (CpuPercentage > percentageThredHold || processQueueLength > processQueueLengthThredHold)
                 {
-                    detectAlarmTimes += 1;
+                               detectAlarmTimes += 1;
                 }
                 if (detectAlarmTimes > cpuAlarmTimesLimit)
                 {
