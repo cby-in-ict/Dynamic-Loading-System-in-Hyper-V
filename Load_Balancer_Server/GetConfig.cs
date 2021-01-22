@@ -10,12 +10,12 @@ using System.IO;
 
 namespace Load_Balancer_Server
 {
-    class GetConfig
+    public class GetConfig
     {
-        public static string ConfigFileRelPath = "..\\";
-        const string VMConfigName = "";
-        const string SysConfigName = "";
-        const string ProcessConfigName = "";
+        public static string ConfigFileRelPath = "..\\..\\..";
+        const string VMConfigName = "VMConfig.json";
+        const string SysConfigName = "SystemConfig.json";
+        const string ProcessConfigName = "ProcessWhiteList.json";
         string VMconfigPath = Path.Combine(ConfigFileRelPath, VMConfigName);
         string SysConfigPath = Path.Combine(ConfigFileRelPath, SysConfigName);
         string ProcessConfigPath = Path.Combine(ConfigFileRelPath, ProcessConfigName);

@@ -134,10 +134,6 @@ namespace Perf_Detector_Client
                 else
                     return true;
             }
-            if (cpuSpoofer.ThreadCount > (cpuSpoofer.CPUCount * 2))
-            {
-
-            }
             return true;
         }
     }

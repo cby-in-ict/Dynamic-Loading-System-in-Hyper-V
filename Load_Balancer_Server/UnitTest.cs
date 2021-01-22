@@ -1,4 +1,5 @@
 ﻿#define TEST
+#define Debug
 #define DynamicAdjustTest
 #define GetConfigTest
 #define SystemInfoTest

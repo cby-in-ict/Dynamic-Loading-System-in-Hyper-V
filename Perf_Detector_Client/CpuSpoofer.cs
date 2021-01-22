@@ -14,18 +14,18 @@ namespace Perf_Detector_Client
         public float CPUPrivilegedTime { get; set; }
         public float CPUInterruptTime { get; set; }
         public float CPUDPCTime { get; set; }
-        public float ThreadCount { get; set; }
-        public  WinPerfCounter WinPerfCounter = new WinPerfCounter();
+        public  WinPerfCounter winPerfCounter = new WinPerfCounter();
         private  System.Timers.Timer RUtimer;
 
         public CpuSpoofer()
         {
-            WinPerfCounter.initAllCounterValue();
+            winPerfCounter.initAllCounterValue();
+
             Thread.Sleep(100);
-            Thread th = new Thread(new ThreadStart(RefreshStatesByTime)); //创建线程                     
+            Thread th = new Thread(new ThreadStart(RefreshCpuStatesByTime)); //创建线程                     
             th.Start(); //启动线程
         }
-        public void RefreshStatesByTime()
+        public void RefreshCpuStatesByTime()
         {
             // 创建一个100ms定时的定时器
             RUtimer = new System.Timers.Timer(100);    // 参数单位为ms
@@ -42,11 +42,10 @@ namespace Perf_Detector_Client
         {
             try
             {
-                CPUProcessorTime = WinPerfCounter.getProcessorCpuTime();
-                ProcessorQueueLength = WinPerfCounter.getProcessorQueueLengh();
-                CPUPrivilegedTime = WinPerfCounter.getCpuPrivilegedTime();
-                CPUInterruptTime = WinPerfCounter.getThreadCount();
-                ThreadCount = WinPerfCounter.getThreadCount();
+                CPUProcessorTime = winPerfCounter.getProcessorCpuTime();
+                ProcessorQueueLength = winPerfCounter.getProcessorQueueLengh();
+                CPUPrivilegedTime = winPerfCounter.getCpuPrivilegedTime();
+                CPUInterruptTime = winPerfCounter.getThreadCount();
                 return;
             }
             catch (Exception exp)
@@ -60,11 +59,10 @@ namespace Perf_Detector_Client
         {
             try
             {
-                CPUProcessorTime = WinPerfCounter.getProcessorCpuTime();
-                ProcessorQueueLength = WinPerfCounter.getProcessorQueueLengh();
-                CPUPrivilegedTime = WinPerfCounter.getCpuPrivilegedTime();
-                CPUInterruptTime = WinPerfCounter.getThreadCount();
-                ThreadCount = WinPerfCounter.getThreadCount();
+                CPUProcessorTime = winPerfCounter.getProcessorCpuTime();
+                ProcessorQueueLength = winPerfCounter.getProcessorQueueLengh();
+                CPUPrivilegedTime = winPerfCounter.getCpuPrivilegedTime();
+                CPUInterruptTime = winPerfCounter.getThreadCount();
                 return;
             }
             catch (Exception exp)

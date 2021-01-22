@@ -59,9 +59,9 @@ namespace Load_Balancer_Server
                 {
                     vmPerfDict.Add(perf_Transfer.VMName, perf_Transfer);
                 }
-
+#if Debug
                 Console.WriteLine("收到虚拟机：" + perf_Transfer.VMName + "的消息，" + "\nCPU占用率为：" + Convert.ToString(vmPerfDict[perf_Transfer.VMName].CPUPrivilegedTime));
-                
+#endif              
                 return perf_Transfer;
             }
 
