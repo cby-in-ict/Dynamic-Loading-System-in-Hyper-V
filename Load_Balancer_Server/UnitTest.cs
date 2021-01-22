@@ -67,7 +67,7 @@ namespace Load_Balancer_Server
                 detectorServer.StartUpServer();
             });
             task.Start();
-            // detectorServer.StartUpServer();
+
             ManagementScope scope;
             ManagementObject managementService;
 
@@ -80,7 +80,7 @@ namespace Load_Balancer_Server
             VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
             List<VirtualMachine> vmlist = new List<VirtualMachine>();
             vmlist.Add(vm);
-            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 3, 50.0, 3, 1, 10000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 1, 50.0, 3, 1, 1000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.ReadLine();

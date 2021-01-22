@@ -75,6 +75,8 @@ namespace Load_Balancer_Server
                     bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                     if (ret)
                     {
+                        // 分配内存后，取消内存预警并增加内存空闲等级
+                        currentMemBalancer.isMemAlarm = false;
                         if (memoryBalancerDict[currentVM].memFreeRanking <= 8)
                             // Memory become more free
                             memoryBalancerDict[currentVM].memFreeRanking += 1;
@@ -88,7 +90,7 @@ namespace Load_Balancer_Server
                 if (currentCpuBalancer.isCpuAlarm == true)
                 {
                     Console.WriteLine("CPU预警出现，分配CPU");
-                    ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
+                    ulong currentCpuLimit = currentVM.GetPerformanceSetting().CPU_Limit;
                     if (currentCpuLimit > 90000)
                     {
                         return;
@@ -98,6 +100,8 @@ namespace Load_Balancer_Server
                         bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10000);
                         if (ret)
                         {
+                            // 取消CPU预警
+                            currentCpuBalancer.isCpuAlarm = false;
                             // CPU become more free
                             if (cpuBalancerDict[currentVM].cpuFreeRanking <=8)
                                 cpuBalancerDict[currentVM].cpuFreeRanking += 1;
