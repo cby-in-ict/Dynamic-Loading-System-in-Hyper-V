@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Management;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Samples.HyperV.Common;
 using Perf_Transfer;
@@ -182,8 +183,15 @@ namespace Load_Balancer_Server
                 {
                     Console.WriteLine("收到虚拟机状态信息异常，异常为：" + exp.Message);
                 }
-                
             }
+        }
+        public void StartMessageReceiver()
+        {
+            var task = new Task(() =>
+            {
+                ReceiveMessage();
+            });
+            task.Start();
         }
     }
 }

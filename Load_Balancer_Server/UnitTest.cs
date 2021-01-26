@@ -105,7 +105,8 @@ namespace Load_Balancer_Server
         {
             string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
             VMState vMState = new VMState(MpcVmConfigpath);
-            VMState.ReceiveMessage();
+            //VMState.ReceiveMessage();
+            vMState.StartMessageReceiver();
             Console.ReadLine();
         }
 #endif
