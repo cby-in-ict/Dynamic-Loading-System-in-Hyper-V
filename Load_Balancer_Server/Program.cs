@@ -23,6 +23,9 @@ namespace Load_Balancer_Server
     {
         static void Main1(string[] args)
         {
+            string MpcVmConfigpath = @"";
+            VMState vMState = new VMState(MpcVmConfigpath);
+
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
             DetectorServer detectorServer = new DetectorServer(HvAddr);
             detectorServer.StartUpServer();

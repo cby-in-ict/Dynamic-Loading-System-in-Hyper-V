@@ -15,7 +15,7 @@ namespace Load_Balancer_Server
 {
     public class VMState 
     { 
-        public static VirtualMachine LoaclVM;
+        public static VirtualMachine LocalVM;
         public static VirtualMachine NetVM1;
         public static VirtualMachine NetVM2;
         public VMState(string MpcVMConfigPath)
@@ -29,7 +29,7 @@ namespace Load_Balancer_Server
 
                 scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
                 managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
-                LoaclVM = new VirtualMachine("LocalVM", scope, managementService);
+                LocalVM = new VirtualMachine("LocalVM", scope, managementService);
             }
             configParser.currentMpcVMInfo = configParser.GetMpcVMInfo(MpcVMConfigPath, "NetVM1");
             if (configParser.currentMpcVMInfo.Installed == true)
@@ -57,7 +57,7 @@ namespace Load_Balancer_Server
         {
             if (VMName == "LoaclVM")
             {
-                if (LoaclVM == null)
+                if (LocalVM == null && State != "Install")
                 {
                     Console.WriteLine("LocalVM未初始化");
                     return;
@@ -65,21 +65,32 @@ namespace Load_Balancer_Server
                 switch (State)
                 {
                     case "PowerOff":
-                        VMState.LoaclVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
+                        LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
                         break;
                     case "RequestPowerOn":
-                        VMState.LoaclVM.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
                         break;
                     case "PowerOn":
-                        VMState.LoaclVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        break;
+                    case "UnInstall":
+                        LocalVM = null;
+                        break;
+                    case "Install":
+                        ManagementScope scope;
+                        ManagementObject managementService;
+
+                        scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+                        managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+                        LocalVM = new VirtualMachine("LocalVM", scope, managementService);
                         break;
                     default:
                         break;
                 }
             }
-            else if (VMName == "NetVM1")
+            else if (VMName == "NetVM1" && State != "Install")
             {
-                if (NetVM1 == null)
+                if (NetVM1 == null && State != "Install")
                 {
                     Console.WriteLine("NetVM1未初始化");
                     return;
@@ -87,19 +98,30 @@ namespace Load_Balancer_Server
                 switch (State)
                 {
                     case "PowerOff":
-                        VMState.NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
+                        NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
                         break;
                     case "RequestPowerOn":
-                        VMState.NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
                         break;
                     case "PowerOn":
-                        VMState.NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        break;
+                    case "UnInstall":
+                        NetVM1 = null;
+                        break;
+                    case "Install":
+                        ManagementScope scope;
+                        ManagementObject managementService;
+
+                        scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+                        managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+                        NetVM1 = new VirtualMachine("NetVM1", scope, managementService);
                         break;
                     default:
                         break;
                 }
             }
-            else if (VMName == "NetVM2")
+            else if (VMName == "NetVM2" && State != "Install")
             {
                 if (NetVM2 == null)
                 {
@@ -109,13 +131,24 @@ namespace Load_Balancer_Server
                 switch (State)
                 {
                     case "PowerOff":
-                        VMState.NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
+                        NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
                         break;
                     case "RequestPowerOn":
-                        VMState.NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
                         break;
                     case "PowerOn":
-                        VMState.NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        break;
+                    case "UnInstall":
+                        NetVM2 = null;
+                        break;
+                    case "Install":
+                        ManagementScope scope;
+                        ManagementObject managementService;
+
+                        scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+                        managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+                        NetVM2 = new VirtualMachine("NetVM2", scope, managementService);
                         break;
                     default:
                         break;
