@@ -10,6 +10,51 @@ using System.IO;
 
 namespace Load_Balancer_Server
 {
+    public class VMConfig
+    {
+        public string VMName { set; get; }
+        public bool Installed { set; get; }
+        public UInt64 MemorySize { set; get; }
+        public int CPUNum { set; get; }
+        public int CPULimt { set; get; }
+        public VMConfig(string _VMName, bool _Installed, UInt64 _MemorySize, int _CPUNum, int _CPULimit)
+        {
+            VMName = _VMName;
+            Installed = _Installed;
+            MemorySize = _MemorySize;
+            CPUNum = _CPUNum;
+            CPULimt = _CPULimit;
+        }
+    }
+
+    public class SysConfig
+    {
+        public string BalanceStrategy { set; get; }
+        public int CPUDefaultCount { set; get; }
+        public UInt64 MemoryDefaultSize { set; get; }
+        public int CPUDefaultLimit { set; get; }
+        public SysConfig(string _BalanceStrategy, int _CPUDefaultCount, UInt64 _MemoryDefaultSize, int _CPUDefaultLimit)
+        {
+            BalanceStrategy = _BalanceStrategy;
+            CPUDefaultCount = _CPUDefaultCount;
+            MemoryDefaultSize = _MemoryDefaultSize;
+            CPUDefaultLimit = _CPUDefaultLimit;
+        }
+    }
+
+    public class MpcVMInfo
+    {
+        public string VMName { set; get; }
+        public bool Installed { set; get; }
+        public string VMPath { set; get; }
+        public string Description { set; get; }
+        public string DefaultUser { set; get; }
+        public string Password { set; get; }
+        public string IPAddress { set; get; }
+        public string StateSnapID { set; get; }
+        public bool RenamePC { set; get; }
+    }
+
     public class GetConfig
     {
         public static string ConfigFileRelPath = "..\\..\\..";
@@ -22,50 +67,7 @@ namespace Load_Balancer_Server
         public static string VMStateJsonPath = @"..\UsefulFile\VMState.json";
 
         // VMConfig 
-        public class VMConfig
-        {
-            public string VMName { set; get; }
-            public bool Installed { set; get; }
-            public UInt64 MemorySize { set; get; }
-            public int CPUNum { set; get; }
-            public int CPULimt { set; get; }
-            public VMConfig(string _VMName, bool _Installed, UInt64 _MemorySize, int _CPUNum, int _CPULimit)
-            {
-                VMName = _VMName;
-                Installed = _Installed;
-                MemorySize = _MemorySize;
-                CPUNum = _CPUNum;
-                CPULimt = _CPULimit;
-            }
-        }
-
-        public class SysConfig
-        {
-            public string BalanceStrategy { set; get; }
-            public int CPUDefaultCount { set; get; }
-            public UInt64 MemoryDefaultSize { set; get; }
-            public int CPUDefaultLimit { set; get; }
-            public SysConfig(string _BalanceStrategy, int _CPUDefaultCount, UInt64 _MemoryDefaultSize, int _CPUDefaultLimit)
-            {
-                BalanceStrategy = _BalanceStrategy;
-                CPUDefaultCount = _CPUDefaultCount;
-                MemoryDefaultSize = _MemoryDefaultSize;
-                CPUDefaultLimit = _CPUDefaultLimit;
-            }
-        }
-
-        public class MpcVMInfo
-        {
-            public string VMName { set; get; }
-            public bool Installed { set; get; }
-            public string VMPath { set; get; }
-            public string Description { set; get; }
-            public string DefaultUser { set; get; }
-            public string Password { set; get; }
-            public string IPAddress { set; get; }
-            public string StateSnapID { set; get; }
-            public bool RenamePC { set; get; }
-        }
+       
 
         public VMConfig currentVMConfig;
         public SysConfig currentSysConfig;

@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="VMPerf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VMStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

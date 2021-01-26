@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Load_Balancer_Server;
 
 /* This proj define the interface between MultiPC and Load-Balancer, MultiPC call SetVMStaus.exe
    to transfer VM Status change to Load-Balancer */
@@ -14,11 +13,16 @@ namespace SetVMStatus
     {
         static void Main(string[] args)
         {
-            string vmName = args[0];
-            string vmStatus = args[1];
+            if (args.Length < 2)
+                return;
+            string vmName = args[1];
+            string vmStatus = args[2];
             try
             {
-                VMState.SetVMState(vmName, vmStatus);
+                MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
+                memoryMapping.WriteString(vmName + "#" + vmStatus);
+                
+                Console.WriteLine("VMName is:" + vmName + "VMStatus is:" + vmStatus);
             }
             catch (Exception exp)
             {

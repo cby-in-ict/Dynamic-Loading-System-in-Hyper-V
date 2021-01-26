@@ -18,3 +18,5 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Cl
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.csproj.CopyComplete
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.exe
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\obj\Debug\Perf_Detector_Client.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Transfer.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Transfer.pdb

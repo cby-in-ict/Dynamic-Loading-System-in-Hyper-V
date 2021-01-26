@@ -16,8 +16,11 @@ namespace Load_Balancer_Server
     public class VMState 
     { 
         public static VirtualMachine LocalVM;
+        public static VMConfig LocalVMConfig;
         public static VirtualMachine NetVM1;
+        public static VMConfig NeyVM1Config;
         public static VirtualMachine NetVM2;
+        public static VMConfig NeyVM2Config;
         public VMState(string MpcVMConfigPath)
         {
             GetConfig configParser = new GetConfig();
@@ -55,8 +58,9 @@ namespace Load_Balancer_Server
 
         public static void SetVMState(string VMName, string State)
         {
-            if (VMName == "LoaclVM")
+            if (VMName.Contains("LocalVM"))
             {
+                Console.WriteLine("here");
                 if (LocalVM == null && State != "Install")
                 {
                     Console.WriteLine("LocalVM未初始化");
@@ -69,9 +73,12 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        // TODO:加速开机流程
                         break;
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        Console.WriteLine("LocalVM转换为开机状态");
+                        // TODO:结束开机加速流程，返回初始设置
                         break;
                     case "UnInstall":
                         LocalVM = null;
@@ -88,7 +95,7 @@ namespace Load_Balancer_Server
                         break;
                 }
             }
-            else if (VMName == "NetVM1" && State != "Install")
+            else if (VMName.Contains("NetVM1"))
             {
                 if (NetVM1 == null && State != "Install")
                 {
@@ -121,9 +128,9 @@ namespace Load_Balancer_Server
                         break;
                 }
             }
-            else if (VMName == "NetVM2" && State != "Install")
+            else if (VMName.Contains("NetVM2"))
             {
-                if (NetVM2 == null)
+                if (NetVM2 == null && State != "Install")
                 {
                     Console.WriteLine("NetVM2未初始化");
                     return;
@@ -157,6 +164,26 @@ namespace Load_Balancer_Server
             else
                 return;
             return;
+        }
+        public static void ReceiveMessage()
+        {
+            MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
+            while (true)
+            {
+                try
+                {
+                    string recStr = memoryMapping.ReadString();
+                    recStr = recStr.Replace("\n", "").Replace("\t", "").Replace("\r", "").Replace("\f", "").Replace("\v", "");
+                    string vmName = recStr.Split('#')[0];
+                    string vmStatus = recStr.Split('#')[1];
+                    SetVMState(vmName, vmStatus);
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine("收到虚拟机状态信息异常，异常为：" + exp.Message);
+                }
+                
+            }
         }
     }
 }

@@ -5,6 +5,7 @@
 #define SystemInfoTest
 #define LoadBalancerTest
 #define DetectorServerTest
+#define VMStateTest
 
 using System;
 using System.Collections.Generic;
@@ -99,10 +100,27 @@ namespace Load_Balancer_Server
 #if GetConfigTest
 #endif
 
+#if VMStateTest
+        public static void VMStateTest()
+        {
+            string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
+            VMState vMState = new VMState(MpcVmConfigpath);
+            VMState.ReceiveMessage();
+            Console.ReadLine();
+        }
+#endif
+
 #if TEST
-        static void Main() 
+        static void Main(string[] args) 
         {
             Console.WriteLine("UnitTest Start");
+            if (args.Length > 1)
+            {
+                string vmName = args[0];
+                string vmStatus = args[1];
+                VMState.SetVMState(vmName, vmStatus);
+                return;
+            }
 #if DetectorServerTest
             // DetectorServerTest();
 #endif
@@ -110,7 +128,10 @@ namespace Load_Balancer_Server
             //DynamicAdjustTest();
 #endif
 #if LoadBalancerTest
-            LoadBalancerTest();
+            //LoadBalancerTest();
+#endif
+#if VMStateTest
+            VMStateTest();
 #endif
         }
 #endif

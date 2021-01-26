@@ -30,8 +30,8 @@ namespace Load_Balancer_Server
         public String GuestOperatingSystem;
         // public Int32 MemoryAvailable;
         public Int32 AvailableMemoryBuffer;
-        public UInt64 CPU_Reservation;//保留    0-100
-        public UInt64 CPU_Limit;//限制    0-100
+        public UInt64 CPU_Reservation;//保留    0-100000
+        public UInt64 CPU_Limit;//限制    0-100000
         public UInt32 CPU_Weight;//分配权重   1-10000
         public UInt64 RAM_VirtualQuantity;
         public UInt32 RAM_Weight;//分配权重   1-10000
@@ -92,8 +92,8 @@ namespace Load_Balancer_Server
             {
 
             }
-        #region 获得或者刷新虚拟机的Performance
-        public PerformanceSetting GetPerformanceSetting()
+            #region 获得或者刷新虚拟机的Performance
+            public PerformanceSetting GetPerformanceSetting()
             {
                 ManagementObjectCollection virtualSystemSettings = virtualMachine.GetRelated("Msvm_SummaryInformation");
                 ManagementObject virtualSystemSetting = WmiUtilities.GetFirstObjectFromCollection(virtualSystemSettings);
@@ -139,9 +139,9 @@ namespace Load_Balancer_Server
                 performanceSetting.CpuPercentage = performanceSetting.CpuPercentage / 4;
                 return performanceSetting;
             }
-        #endregion
+            #endregion
 
-        public bool IsPowerOn()
+            public bool IsPowerOn()
             {
                 GetPerformanceSetting();
                 return (performanceSetting.EnabledState == 2);
