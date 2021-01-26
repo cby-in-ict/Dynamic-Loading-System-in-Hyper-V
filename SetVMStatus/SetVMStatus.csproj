@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C0DAA244-67E5-4018-903C-7AA5F955CCDB}</ProjectGuid>
+    <ProjectGuid>{15377668-D7C3-4A39-A73E-02FEDF4ABCB2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Load_Balancer_Server</RootNamespace>
-    <AssemblyName>Load_Balancer_Server</AssemblyName>
+    <RootNamespace>SetVMStatus</RootNamespace>
+    <AssemblyName>SetVMStatus</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,13 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,30 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DetectorServer.cs" />
-    <Compile Include="DynamicAdjustment.cs" />
-    <Compile Include="GetConfig.cs" />
-    <Compile Include="VMState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SystemInfo.cs" />
-    <Compile Include="UnitTest.cs" />
-    <Compile Include="VMManagment.cs" />
-    <Compile Include="LoadBalancer.cs" />
-    <Compile Include="WmiUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HyperVWcfTransport.Common\HyperVWcfTransport.csproj">
-      <Project>{704364e1-847f-4dc5-a84e-55fcbc773484}</Project>
-      <Name>HyperVWcfTransport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Perf_Transfer\Perf_Transfer.csproj">
-      <Project>{1cc5ad62-1c15-49c2-82c7-ccdcea3c9305}</Project>
-      <Name>Perf_Transfer</Name>
+    <ProjectReference Include="..\Load_Balancer_Server\Load_Balancer_Server.csproj">
+      <Project>{c0daa244-67e5-4018-903c-7aa5f955ccdb}</Project>
+      <Name>Load_Balancer_Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

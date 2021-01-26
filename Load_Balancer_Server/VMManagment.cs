@@ -58,7 +58,8 @@ namespace Load_Balancer_Server
             public enum VirtualMachineStatus
             {
                 PowerOff = 0,
-                PowerOn = 1
+                RequestPowerOn = 1,
+                PowerOn = 2
             }
             private VirtualMachineStatus __vmStatus;
             public VirtualMachineStatus vmStatus

@@ -19,6 +19,7 @@ namespace Load_Balancer_Server
         string VMconfigPath = Path.Combine(ConfigFileRelPath, VMConfigName);
         string SysConfigPath = Path.Combine(ConfigFileRelPath, SysConfigName);
         string ProcessConfigPath = Path.Combine(ConfigFileRelPath, ProcessConfigName);
+        public static string VMStateJsonPath = @"..\UsefulFile\VMState.json";
 
         // VMConfig 
         public class VMConfig
@@ -53,8 +54,22 @@ namespace Load_Balancer_Server
             }
         }
 
+        public class MpcVMInfo
+        {
+            public string VMName { set; get; }
+            public bool Installed { set; get; }
+            public string VMPath { set; get; }
+            public string Description { set; get; }
+            public string DefaultUser { set; get; }
+            public string Password { set; get; }
+            public string IPAddress { set; get; }
+            public string StateSnapID { set; get; }
+            public bool RenamePC { set; get; }
+        }
+
         public VMConfig currentVMConfig;
         public SysConfig currentSysConfig;
+        public MpcVMInfo currentMpcVMInfo;
         public VMConfig GetVMConfig(string VMName)
         {
             using (System.IO.StreamReader file = System.IO.File.OpenText(VMconfigPath))
@@ -97,6 +112,62 @@ namespace Load_Balancer_Server
                     if (o.ContainsKey("CPUDefaultLimit"))
                         currentSysConfig.CPUDefaultLimit = Convert.ToInt32(o["CPUDefaultLimit"].ToString());
                     return currentSysConfig;
+                }
+            }
+        }
+
+        public MpcVMInfo GetMpcVMInfo(string VMStateJsonPath, string VMKind)
+        {
+            using (System.IO.StreamReader file = System.IO.File.OpenText(VMStateJsonPath))
+            {
+                using (JsonTextReader reader = new JsonTextReader(file))
+                {
+                    JObject o = (JObject)JToken.ReadFrom(reader);
+                    MpcVMInfo vmInfo = new MpcVMInfo();
+                    if (VMKind == "LocalVM" && o.ContainsKey("LocalVM"))
+                    {
+                        JObject vmObj = ((JObject)o["LocalVM"]);
+                        vmInfo.VMName = vmObj["VMName"].ToString();
+                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        vmInfo.VMPath = vmObj["VMPath"].ToString();
+                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        vmInfo.Password = vmObj["Password"].ToString();
+                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        vmInfo.Description = vmObj["Description"].ToString();
+                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return vmInfo;
+                    }
+                    if (VMKind == "NetVM1" && o.ContainsKey("NetVM1"))
+                    {
+                        JObject vmObj = ((JObject)o["NetVM1"]);
+                        vmInfo.VMName = vmObj["VMName"].ToString();
+                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        vmInfo.VMPath = vmObj["VMPath"].ToString();
+                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        vmInfo.Password = vmObj["Password"].ToString();
+                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        vmInfo.Description = vmObj["Description"].ToString();
+                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return vmInfo;
+                    }
+                    if (VMKind == "NetVM2" && o.ContainsKey("NetVM2"))
+                    {
+                        JObject vmObj = ((JObject)o["NetVM2"]);
+                        vmInfo.VMName = vmObj["VMName"].ToString();
+                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        vmInfo.VMPath = vmObj["VMPath"].ToString();
+                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        vmInfo.Password = vmObj["Password"].ToString();
+                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        vmInfo.Description = vmObj["Description"].ToString();
+                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return vmInfo;
+                    }
+                    else
+                        return null;
                 }
             }
         }
