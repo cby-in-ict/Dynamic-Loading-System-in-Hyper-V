@@ -17,14 +17,14 @@ namespace Load_Balancer_Server
         public UInt64 MemorySize { set; get; }
         public int CPUNum { set; get; }
         public int CPULimt { set; get; }
-        public VMConfig(string _VMName, bool _Installed, UInt64 _MemorySize, int _CPUNum, int _CPULimit)
-        {
-            VMName = _VMName;
-            Installed = _Installed;
-            MemorySize = _MemorySize;
-            CPUNum = _CPUNum;
-            CPULimt = _CPULimit;
-        }
+        //public VMConfig(string _VMName, bool _Installed, UInt64 _MemorySize, int _CPUNum, int _CPULimit)
+        //{
+        //    VMName = _VMName;
+        //    Installed = _Installed;
+        //    MemorySize = _MemorySize;
+        //    CPUNum = _CPUNum;
+        //    CPULimt = _CPULimit;
+        //}
     }
 
     public class SysConfig
@@ -33,13 +33,13 @@ namespace Load_Balancer_Server
         public int CPUDefaultCount { set; get; }
         public UInt64 MemoryDefaultSize { set; get; }
         public int CPUDefaultLimit { set; get; }
-        public SysConfig(string _BalanceStrategy, int _CPUDefaultCount, UInt64 _MemoryDefaultSize, int _CPUDefaultLimit)
-        {
-            BalanceStrategy = _BalanceStrategy;
-            CPUDefaultCount = _CPUDefaultCount;
-            MemoryDefaultSize = _MemoryDefaultSize;
-            CPUDefaultLimit = _CPUDefaultLimit;
-        }
+        //public SysConfig(string _BalanceStrategy, int _CPUDefaultCount, UInt64 _MemoryDefaultSize, int _CPUDefaultLimit)
+        //{
+        //    BalanceStrategy = _BalanceStrategy;
+        //    CPUDefaultCount = _CPUDefaultCount;
+        //    MemoryDefaultSize = _MemoryDefaultSize;
+        //    CPUDefaultLimit = _CPUDefaultLimit;
+        //}
     }
 
     public class MpcVMInfo
@@ -57,7 +57,7 @@ namespace Load_Balancer_Server
 
     public class GetConfig
     {
-        public static string ConfigFileRelPath = "..\\..\\..";
+        public static string ConfigFileRelPath = @"..\..\..";
         const string VMConfigName = "VMConfig.json";
         const string SysConfigName = "SystemConfig.json";
         const string ProcessConfigName = "ProcessWhiteList.json";
@@ -68,13 +68,12 @@ namespace Load_Balancer_Server
 
         // VMConfig 
        
-
-        public VMConfig currentVMConfig;
-        public SysConfig currentSysConfig;
-        public MpcVMInfo currentMpcVMInfo;
+        public VMConfig currentVMConfig = new VMConfig();
+        public SysConfig currentSysConfig = new SysConfig();
+        public MpcVMInfo currentMpcVMInfo = new MpcVMInfo();
         public VMConfig GetVMConfig(string VMName)
         {
-            using (System.IO.StreamReader file = System.IO.File.OpenText(VMconfigPath))
+            using ( System.IO.StreamReader file = System.IO.File.OpenText(VMconfigPath))
             {
                 using (JsonTextReader reader = new JsonTextReader(file))
                 {

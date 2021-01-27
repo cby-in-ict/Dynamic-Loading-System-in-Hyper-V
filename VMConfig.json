@@ -1,5 +1,5 @@
 {
-  "TestVM": {
+  "LocalVM": {
     "Installed": "true",
     "MemorySize": "4096",
     "CPUCount": "2",

@@ -55,6 +55,10 @@ namespace Load_Balancer_Server
                 managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
                 NetVM2 = new VirtualMachine("NetVM2", scope, managementService);
             }
+
+            LocalVMConfig = configParser.GetVMConfig("LocalVM");
+            NeyVM1Config = configParser.GetVMConfig("NetVM1");
+            NeyVM2Config = configParser.GetVMConfig("NetVM2");
         }
 
         public static void SetVMState(string VMName, string State)
