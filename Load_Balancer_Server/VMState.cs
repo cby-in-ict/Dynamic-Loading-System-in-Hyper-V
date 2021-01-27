@@ -15,7 +15,8 @@ using Perf_Transfer;
 namespace Load_Balancer_Server
 {
     public class VMState 
-    { 
+    {
+        public static string currentUsedVM = "GetOff";
         public static VirtualMachine LocalVM;
         public static VMConfig LocalVMConfig;
         public static VirtualMachine NetVM1;
@@ -179,9 +180,20 @@ namespace Load_Balancer_Server
                 {
                     string recStr = memoryMapping.ReadString();
                     recStr = recStr.Replace("\n", "").Replace("\t", "").Replace("\r", "").Replace("\f", "").Replace("\v", "");
-                    string vmName = recStr.Split('#')[0];
-                    string vmStatus = recStr.Split('#')[1];
-                    SetVMState(vmName, vmStatus);
+                    if (recStr.Split('#')[0].Contains("GetIn"))
+                    {
+                        currentUsedVM = recStr.Split('#')[1];
+                    }
+                    else if (recStr.Split('#')[0].Contains("GetOff"))
+                    {
+                        currentUsedVM = "GetOff";
+                    }
+                    else
+                    {
+                        string vmName = recStr.Split('#')[0];
+                        string vmStatus = recStr.Split('#')[1];
+                        SetVMState(vmName, vmStatus);
+                    }
                 }
                 catch (Exception exp)
                 {

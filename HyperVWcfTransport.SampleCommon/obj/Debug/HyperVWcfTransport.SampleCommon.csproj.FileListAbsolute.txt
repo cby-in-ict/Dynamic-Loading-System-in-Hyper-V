@@ -9,3 +9,4 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTranspo
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csproj.CoreCompileInputs.cache
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.dll
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.SampleCommon\obj\Debug\HyperVWcfTransport.SampleCommon.csprojAssemblyReference.cache

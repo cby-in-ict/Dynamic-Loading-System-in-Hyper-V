@@ -13,22 +13,54 @@ namespace SetVMStatus
     {
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 3)
                 return;
+            string action = args[0];
             string vmName = args[1];
             string vmStatus = args[2];
-            try
-            {
-                MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
-                memoryMapping.WriteString(vmName + "#" + vmStatus);
-                
-                Console.WriteLine("VMName is:" + vmName + "VMStatus is:" + vmStatus);
-            }
-            catch (Exception exp)
-            {
-                Console.WriteLine();
-            }
 
+            if (action.Contains("GetIn"))
+            {
+                try
+                {
+                    MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
+                    memoryMapping.WriteString("GetIn" + "#" + vmName);
+
+                    Console.WriteLine("GetIn VirtualMachine:" + vmName);
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine();
+                }
+            }
+            else if (action.Contains("GetOff"))
+            {
+                try
+                {
+                    MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
+                    memoryMapping.WriteString("GetOff" + "#" + vmName);
+
+                    Console.WriteLine("GetOff VirtualMachine:" + vmName);
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                try
+                {
+                    MemoryMapping memoryMapping = new MemoryMapping("vmStatus");
+                    memoryMapping.WriteString(vmName + "#" + vmStatus);
+
+                    Console.WriteLine("VMName is:" + vmName + "VMStatus is:" + vmStatus);
+                }
+                catch (Exception exp)
+                {
+                    Console.WriteLine();
+                }
+            }
         }
     }
 }
