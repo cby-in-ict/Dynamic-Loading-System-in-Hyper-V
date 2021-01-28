@@ -1,0 +1,6 @@
+{
+    "BalanceStrategy": "User",
+    "CPUDefaultCount": "2",
+    "MemoryDefaultSize": "4096",
+    "CPUDefaultLimit": "50"
+}

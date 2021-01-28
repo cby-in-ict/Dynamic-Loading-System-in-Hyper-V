@@ -1,0 +1,17 @@
+{
+  "LocalVM": {
+    "Installed": "true",
+    "WhiteList": "true",
+    "BlackList": "4096"
+  },
+  "NetVM1": {
+    "Installed": "true",
+    "WhiteList": "VisualStudio2019, explorer.exe",
+    "BlackList": "OneDrive.exe"
+  },
+  "NetVM2": {
+    "Installed": "true",
+    "WhiteList": "true",
+    "BlackList": "true"
+  }
+}

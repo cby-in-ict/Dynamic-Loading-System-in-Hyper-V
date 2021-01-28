@@ -1,0 +1,7 @@
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Debug\SetVMStatus.exe.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Debug\SetVMStatus.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Debug\SetVMStatus.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.csproj.CoreCompileInputs.cache
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.exe
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.csprojAssemblyReference.cache
