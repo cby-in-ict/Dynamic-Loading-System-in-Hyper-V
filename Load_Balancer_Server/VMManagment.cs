@@ -181,6 +181,30 @@ namespace Load_Balancer_Server
                 return result;
             }
 
+        public bool PowerOff()
+        {
+            bool result = false;
+            using (ManagementBaseObject inParams = virtualMachine.GetMethodParameters("RequestStateChange"))
+            {
+                inParams["RequestedState"] = ShutDownID;
+                using (ManagementBaseObject outParams = virtualMachine.InvokeMethod(
+                            "RequestStateChange", inParams, null))
+                {
+                    try
+                    {
+                        result = WmiUtilities.ValidateOutput(outParams, scope);
+                    }
+                    catch (ManagementException e)
+                    {
+                        Console.WriteLine("");
+                    }
+                }
+            }
+            if (result)
+                vmStatus = VirtualMachineStatus.PowerOff;
+            return result;
+        }
+
         public bool ModifySettingData(String settingName, String settingData)
             {
                 bool result = false;
