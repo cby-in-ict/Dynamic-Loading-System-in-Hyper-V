@@ -27,6 +27,7 @@ namespace SetVMStatus
                     memoryMapping.WriteString("GetIn" + "#" + vmName);
 
                     Console.WriteLine("GetIn VirtualMachine:" + vmName);
+                    //memoryMapping.m_Received.WaitOne();
                 }
                 catch (Exception exp)
                 {
@@ -41,6 +42,7 @@ namespace SetVMStatus
                     memoryMapping.WriteString("GetOff" + "#" + vmName);
 
                     Console.WriteLine("GetOff VirtualMachine:" + vmName);
+                    //memoryMapping.m_Received.WaitOne();
                 }
                 catch (Exception exp)
                 {
@@ -55,12 +57,14 @@ namespace SetVMStatus
                     memoryMapping.WriteString(vmName + "#" + vmStatus);
 
                     Console.WriteLine("VMName is:" + vmName + "VMStatus is:" + vmStatus);
+                    //memoryMapping.m_Received.WaitOne();
                 }
                 catch (Exception exp)
                 {
                     Console.WriteLine();
                 }
             }
+
         }
     }
 }

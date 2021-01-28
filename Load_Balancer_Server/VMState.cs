@@ -20,9 +20,9 @@ namespace Load_Balancer_Server
         public static VirtualMachine LocalVM;
         public static VMConfig LocalVMConfig;
         public static VirtualMachine NetVM1;
-        public static VMConfig NeyVM1Config;
+        public static VMConfig NetVM1Config;
         public static VirtualMachine NetVM2;
-        public static VMConfig NeyVM2Config;
+        public static VMConfig NetVM2Config;
         public VMState(string MpcVMConfigPath)
         {
             GetConfig configParser = new GetConfig();
@@ -58,8 +58,8 @@ namespace Load_Balancer_Server
             }
 
             LocalVMConfig = configParser.GetVMConfig("LocalVM");
-            NeyVM1Config = configParser.GetVMConfig("NetVM1");
-            NeyVM2Config = configParser.GetVMConfig("NetVM2");
+            NetVM1Config = configParser.GetVMConfig("NetVM1");
+            NetVM2Config = configParser.GetVMConfig("NetVM2");
         }
 
         public static void SetVMState(string VMName, string State)
@@ -80,9 +80,15 @@ namespace Load_Balancer_Server
                     case "RequestPowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
                         // TODO:加速开机流程
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(LocalVM, LocalVMConfig.MemorySize, out bool isRequestMemory);
+                        if (isRequestMemory)
+                        {
+                            // 尝试回收其他虚拟机内存
+                        }
                         break;
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(LocalVM, LocalVMConfig.MemorySize);
                         Console.WriteLine("LocalVM转换为开机状态");
                         // TODO:结束开机加速流程，返回初始设置
                         break;
@@ -100,6 +106,7 @@ namespace Load_Balancer_Server
                     default:
                         break;
                 }
+                return;
             }
             else if (VMName.Contains("NetVM1"))
             {
@@ -115,9 +122,15 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(NetVM1, NetVM1Config.MemorySize, out bool isRequestMemory);
+                        if (isRequestMemory)
+                        {
+                            // 尝试回收其他虚拟机内存
+                        }
                         break;
                     case "PowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM1, NetVM1Config.MemorySize);
                         break;
                     case "UnInstall":
                         NetVM1 = null;
@@ -133,6 +146,7 @@ namespace Load_Balancer_Server
                     default:
                         break;
                 }
+                return;
             }
             else if (VMName.Contains("NetVM2"))
             {
@@ -148,9 +162,16 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(NetVM2, NetVM2Config.MemorySize, out bool isRequestMemory);
+                        if (isRequestMemory)
+                        {
+                            // 尝试回收其他虚拟机内存
+                        }
+                        NetVM2.PowerOn();
                         break;
                     case "PowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM2, NetVM2Config.MemorySize);
                         break;
                     case "UnInstall":
                         NetVM2 = null;
@@ -166,6 +187,7 @@ namespace Load_Balancer_Server
                     default:
                         break;
                 }
+                return;
             }
             else
                 return;
@@ -193,6 +215,7 @@ namespace Load_Balancer_Server
                         string vmName = recStr.Split('#')[0];
                         string vmStatus = recStr.Split('#')[1];
                         SetVMState(vmName, vmStatus);
+                        //memoryMapping.m_Received.Release();
                     }
                 }
                 catch (Exception exp)

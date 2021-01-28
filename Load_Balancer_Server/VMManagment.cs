@@ -52,7 +52,7 @@ namespace Load_Balancer_Server
             ManagementObject virtualMachine;
             // ManagementObject snapshotService;
 
-            public String vmName;
+            public string vmName;
             public PerformanceSetting performanceSetting;
 
             public enum VirtualMachineStatus
@@ -159,7 +159,29 @@ namespace Load_Balancer_Server
                     return false;
             }
 
-            public bool ModifySettingData(String settingName, String settingData)
+            public bool PowerOn()
+            {
+                bool result = false;
+                using (ManagementBaseObject inParams = virtualMachine.GetMethodParameters("RequestStateChange"))
+                {
+                    inParams["RequestedState"] = StartID;
+                    using (ManagementBaseObject outParams = virtualMachine.InvokeMethod(
+                                "RequestStateChange", inParams, null))
+                    {
+                        try
+                        {
+                            result = WmiUtilities.ValidateOutput(outParams, scope);
+                        }
+                        catch (ManagementException e)
+                        {
+                        Console.WriteLine("无法开机，异常为:" + e.Message);
+                        }
+                    }
+                }
+                return result;
+            }
+
+        public bool ModifySettingData(String settingName, String settingData)
             {
                 bool result = false;
 

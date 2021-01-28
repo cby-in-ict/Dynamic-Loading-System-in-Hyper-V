@@ -85,7 +85,7 @@ namespace Load_Balancer_Server
             bool ret = VM.ModifySettingData("CPU_Weight", Convert.ToString(CPUWeight));
             return ret;
         }
-        public bool AdjustCPUReservation(VirtualMachine VM, int CPUReservation)
+        public bool AdjustCPUReservation(VirtualMachine VM, UInt64 CPUReservation)
         {
             bool ret = VM.ModifySettingData("CPU_Reservation", Convert.ToString(CPUReservation));
             return ret;

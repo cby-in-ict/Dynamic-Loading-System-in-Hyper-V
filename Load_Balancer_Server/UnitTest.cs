@@ -51,6 +51,8 @@ namespace Load_Balancer_Server
 
             UInt64 memSize = vm.performanceSetting.MemoryUsage;
             DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
+            bool ret = LoadBalancer.PreparePowerOnVM(vm, 4096, out bool isRequestMemory);
+            ret &= LoadBalancer.ResumePowerOnVM(vm, 1144);
 
             memSize = memSize - memSize/8;
             dynamicAdjustment.AdjustMemorySize(vm, memSize);
@@ -126,7 +128,7 @@ namespace Load_Balancer_Server
             // DetectorServerTest();
 #endif
 #if DynamicAdjustTest
-            //DynamicAdjustTest();
+            // DynamicAdjustTest();
 #endif
 #if LoadBalancerTest
             //LoadBalancerTest();

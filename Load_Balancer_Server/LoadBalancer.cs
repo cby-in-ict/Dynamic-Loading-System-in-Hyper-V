@@ -44,9 +44,72 @@ namespace Load_Balancer_Server
             }
         }
 
-        public static void PreparePowerOnVM(VirtualMachine vm, int PowerOnMemorySize, Int64 CPU_Reverve, Int64 CPU_Limit)
+        // 静态方法，供VMState类直接调用，请求开机时为虚拟机超量分配资源
+        public static bool PreparePowerOnVM(VirtualMachine vm, UInt64 PowerOnMemorySize, out bool RequestMem, UInt64 CPU_Reverve = 50000, UInt64 CPU_Limit = 100000)
         {
+            try
+            {
+                RequestMem = false;
+                if (vm == null)
+                {
+                    Console.WriteLine("虚拟机尚未安装");
+                    return false;
+                }
+                if (CPU_Reverve > CPU_Limit)
+                {
+                    Console.WriteLine("虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
+                    return false;
+                }
 
+                SystemInfo sysInfo = new SystemInfo();
+                long hostAvailableMemory = sysInfo.MemoryAvailable;
+                if (PowerOnMemorySize * 1024 * 1.2 > hostAvailableMemory)
+                    RequestMem = true;
+
+                DynamicAdjustment adjustment = new DynamicAdjustment();
+
+                bool ret = adjustment.AdjustCPUCount(vm, 4);
+                ret &= adjustment.AdjustCPUReservation(vm, CPU_Reverve);
+                ret &= adjustment.AdjustCPULimit(vm, CPU_Limit);
+
+                return true;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("虚拟机准备开启设置异常：" + exp.Message);
+                RequestMem = false;
+                return false;
+            }
+        }
+
+        public static bool ResumePowerOnVM(VirtualMachine vm, UInt64 PowerOnMemorySize, UInt64 CPU_Reverve = 50000, UInt64 CPU_Limit = 50000)
+        {
+            try
+            {
+                if (vm == null)
+                {
+                    Console.WriteLine("虚拟机尚未安装");
+                    return false;
+                }
+                if (CPU_Reverve > CPU_Limit)
+                {
+                    Console.WriteLine("虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
+                    return false;
+                }
+
+                DynamicAdjustment adjustment = new DynamicAdjustment();
+
+                bool ret = adjustment.AdjustCPUReservation(vm, CPU_Reverve);
+                ret &= adjustment.AdjustCPULimit(vm, CPU_Limit);
+                ret &= adjustment.AdjustMemorySize(vm, PowerOnMemorySize);
+
+                return true;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("虚拟机准备恢复设置异常：" + exp.Message);
+                return false;
+            }
         }
 
         public void setDetectorServer(DetectorServer detectorServer)

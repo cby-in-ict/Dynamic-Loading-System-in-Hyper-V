@@ -45,9 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CpuSpoofer.cs" />
-    <Compile Include="DetectorClient.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="MemSpoofer.cs" />
-    <Compile Include="Perf_Analysis.cs" />
+    <Compile Include="PerformanceInfo.cs" />
     <Compile Include="ProcessInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
