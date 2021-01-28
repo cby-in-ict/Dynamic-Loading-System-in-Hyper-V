@@ -44,6 +44,11 @@ namespace Load_Balancer_Server
             }
         }
 
+        public static void PreparePowerOnVM(VirtualMachine vm, int PowerOnMemorySize, Int64 CPU_Reverve, Int64 CPU_Limit)
+        {
+
+        }
+
         public void setDetectorServer(DetectorServer detectorServer)
         {
             myDetectorServer = detectorServer;

@@ -38,23 +38,21 @@ namespace Perf_Detector_Client
     {
         private System.Timers.Timer RUtimer;
         public string HvAddr { set; get; }
-        public Perf_Analysis client_perf_Analysis;
+        public PerformanceInfo clientPerfInfo;
         public DetectorClient detectorClient;
+        public int sendTimeGap { set; get; }
        
-        public Client(string Addr)
+        public Client(string Addr, int TimeGap = 100)
         {
-            client_perf_Analysis = new Perf_Analysis();
+            clientPerfInfo = new PerformanceInfo();
             HvAddr = Addr;
-            
+            sendTimeGap = TimeGap;
         }
         public void StartUpClient()
         {
             Thread.Sleep(250);
 
-            // Init Perf_Analysis class for detect performance
-            Perf_Analysis perf_Detector = new Perf_Analysis();
             //string HvAddr = "hypervnb://0000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-
             detectorClient = new DetectorClient(new EndpointAddress(HvAddr));
             detectorClient.Open();
 
@@ -67,7 +65,7 @@ namespace Perf_Detector_Client
         public void SendByTime()
         {
             // 创建一个100ms定时的定时器
-            RUtimer = new System.Timers.Timer(100);    // 参数单位为ms
+            RUtimer = new System.Timers.Timer(sendTimeGap);    // 参数单位为ms
                                                        // 定时时间到，处理函数为OnTimedUEvent(...)
             RUtimer.Elapsed += SendPerfTransfer;
             // 为true时，定时时间到会重新计时；为false则只定时一次
@@ -82,11 +80,11 @@ namespace Perf_Detector_Client
         {
             try
             {
-                client_perf_Analysis.SetPerfTransfer(client_perf_Analysis.memSpoofer, client_perf_Analysis.cpuSpoofer);
+                clientPerfInfo.SetPerfTransfer(clientPerfInfo.memSpoofer, clientPerfInfo.cpuSpoofer);
                 // Serial perf_transfer
                 IFormatter formatter = new BinaryFormatter();
                 MemoryStream stream = new MemoryStream();
-                formatter.Serialize(stream, client_perf_Analysis.perf_Transfer);
+                formatter.Serialize(stream, clientPerfInfo.perf_Transfer);
                 stream.Position = 0;
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);

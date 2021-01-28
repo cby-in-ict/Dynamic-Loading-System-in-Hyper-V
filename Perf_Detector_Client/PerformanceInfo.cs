@@ -13,7 +13,7 @@ using Perf_Transfer;
  */
 namespace Perf_Detector_Client
 {
-    public class Perf_Analysis
+    public class PerformanceInfo
     {
         // The class used to transfer to Server
         public VMPerf perf_Transfer = new VMPerf();
@@ -26,22 +26,23 @@ namespace Perf_Detector_Client
 
         public MemSpoofer memSpoofer;
         public CpuSpoofer cpuSpoofer;
-        public ProcessInfo ProcessInfo = new ProcessInfo();
+        public ProcessInfo processInfo = new ProcessInfo();
         private System.Timers.Timer RUtimer;
 
-        public Perf_Analysis()
+        public PerformanceInfo()
         {
             memSpoofer = new MemSpoofer();
             cpuSpoofer = new CpuSpoofer();
             memSpoofer.RefreshMEMArg();
             cpuSpoofer.RefreshCPUArg();
-            bool ret = SetPerfTransfer(memSpoofer, cpuSpoofer);
-            bool vmIDRet = GetVMId(@"C:\VMID.txt");
+           
+            bool vmIDRet = GetVMName(@"C:\VMID.txt");
             if (!vmIDRet)
                 VMName = "Unknown";
+            bool ret = SetPerfTransfer(memSpoofer, cpuSpoofer);
         }
 
-        public bool GetVMId(string vmIDFilePath)
+        public bool GetVMName(string vmIDFilePath)
         {
             try
             {
@@ -59,7 +60,7 @@ namespace Perf_Detector_Client
         {
             try
             {
-                Thread.Sleep(300);
+                //Thread.Sleep(300);
                 perf_Transfer.VMName = VMName;
                 perf_Transfer.CPUCount = cpuSpf.CPUCount;
                 perf_Transfer.ProcessorQueueLength = cpuSpf.ProcessorQueueLength;
