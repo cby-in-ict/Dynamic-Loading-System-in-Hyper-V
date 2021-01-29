@@ -91,6 +91,7 @@ namespace Load_Balancer_Server
                     else
                     {
                         Console.WriteLine("配置文件中无该虚拟机：" + VMName);
+                        return null;
                     }
                 }
             }
@@ -117,55 +118,54 @@ namespace Load_Balancer_Server
             }
         }
 
-        public MpcVMInfo GetMpcVMInfo(string VMStateJsonPath, string VMKind)
+        public MpcVMInfo GetMpcVMInfo(string VMStateJsonPath, string VMName)
         {
             using (System.IO.StreamReader file = System.IO.File.OpenText(VMStateJsonPath))
             {
                 using (JsonTextReader reader = new JsonTextReader(file))
                 {
                     JObject o = (JObject)JToken.ReadFrom(reader);
-                    MpcVMInfo vmInfo = new MpcVMInfo();
-                    if (VMKind == "LocalVM" && o.ContainsKey("LocalVM"))
+                    if (VMName == "LocalVM" && o.ContainsKey("LocalVM"))
                     {
                         JObject vmObj = ((JObject)o["LocalVM"]);
-                        vmInfo.VMName = vmObj["VMName"].ToString();
-                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
-                        vmInfo.VMPath = vmObj["VMPath"].ToString();
-                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
-                        vmInfo.Password = vmObj["Password"].ToString();
-                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
-                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
-                        vmInfo.Description = vmObj["Description"].ToString();
-                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
-                        return vmInfo;
+                        currentMpcVMInfo.VMName = vmObj["VMName"].ToString();
+                        currentMpcVMInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        currentMpcVMInfo.VMPath = vmObj["VMPath"].ToString();
+                        currentMpcVMInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        currentMpcVMInfo.Password = vmObj["Password"].ToString();
+                        currentMpcVMInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        currentMpcVMInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        currentMpcVMInfo.Description = vmObj["Description"].ToString();
+                        currentMpcVMInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return currentMpcVMInfo;
                     }
-                    if (VMKind == "NetVM1" && o.ContainsKey("NetVM1"))
+                    if (VMName == "NetVM1" && o.ContainsKey("NetVM1"))
                     {
                         JObject vmObj = ((JObject)o["NetVM1"]);
-                        vmInfo.VMName = vmObj["VMName"].ToString();
-                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
-                        vmInfo.VMPath = vmObj["VMPath"].ToString();
-                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
-                        vmInfo.Password = vmObj["Password"].ToString();
-                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
-                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
-                        vmInfo.Description = vmObj["Description"].ToString();
-                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
-                        return vmInfo;
+                        currentMpcVMInfo.VMName = vmObj["VMName"].ToString();
+                        currentMpcVMInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        currentMpcVMInfo.VMPath = vmObj["VMPath"].ToString();
+                        currentMpcVMInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        currentMpcVMInfo.Password = vmObj["Password"].ToString();
+                        currentMpcVMInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        currentMpcVMInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        currentMpcVMInfo.Description = vmObj["Description"].ToString();
+                        currentMpcVMInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return currentMpcVMInfo;
                     }
-                    if (VMKind == "NetVM2" && o.ContainsKey("NetVM2"))
+                    if (VMName == "NetVM2" && o.ContainsKey("NetVM2"))
                     {
                         JObject vmObj = ((JObject)o["NetVM2"]);
-                        vmInfo.VMName = vmObj["VMName"].ToString();
-                        vmInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
-                        vmInfo.VMPath = vmObj["VMPath"].ToString();
-                        vmInfo.DefaultUser = vmObj["DefaultUser"].ToString();
-                        vmInfo.Password = vmObj["Password"].ToString();
-                        vmInfo.IPAddress = vmObj["IPAddress"].ToString();
-                        vmInfo.StateSnapID = vmObj["StateSnapID"].ToString();
-                        vmInfo.Description = vmObj["Description"].ToString();
-                        vmInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
-                        return vmInfo;
+                        currentMpcVMInfo.VMName = vmObj["VMName"].ToString();
+                        currentMpcVMInfo.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
+                        currentMpcVMInfo.VMPath = vmObj["VMPath"].ToString();
+                        currentMpcVMInfo.DefaultUser = vmObj["DefaultUser"].ToString();
+                        currentMpcVMInfo.Password = vmObj["Password"].ToString();
+                        currentMpcVMInfo.IPAddress = vmObj["IPAddress"].ToString();
+                        currentMpcVMInfo.StateSnapID = vmObj["StateSnapID"].ToString();
+                        currentMpcVMInfo.Description = vmObj["Description"].ToString();
+                        currentMpcVMInfo.RenamePC = Convert.ToBoolean(vmObj["RenamePC"].ToString());
+                        return currentMpcVMInfo;
                     }
                     else
                         return null;

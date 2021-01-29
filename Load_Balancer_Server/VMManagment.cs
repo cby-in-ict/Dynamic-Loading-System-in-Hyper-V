@@ -9,7 +9,7 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Collections;
 
-/* In this part, I partialy refer to MultiPC BackgroundCode/VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
+/* In this part, I partialy refer to MultiPC VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
 
 namespace Load_Balancer_Server
 {

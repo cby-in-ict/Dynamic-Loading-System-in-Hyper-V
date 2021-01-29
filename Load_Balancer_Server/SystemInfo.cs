@@ -17,29 +17,6 @@ namespace Load_Balancer_Server
         private long m_PhysicalMemory = 0;   //物理内存 
         private int MaxAllocMemDivide = 2;   //最大分配给虚拟机的内存限制
 
-        private const int GW_HWNDFIRST = 0;
-        private const int GW_HWNDNEXT = 2;
-        private const int GWL_STYLE = (-16);
-        private const int WS_VISIBLE = 268435456;
-        private const int WS_BORDER = 8388608;
-
-        #region AIP声明 
-        [DllImport("IpHlpApi.dll")]
-        extern static public uint GetIfTable(byte[] pIfTable, ref uint pdwSize, bool bOrder);
-
-        [DllImport("User32")]
-        private extern static int GetWindow(int hWnd, int wCmd);
-
-        [DllImport("User32")]
-        private extern static int GetWindowLongA(int hWnd, int wIndx);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowText(int hWnd, StringBuilder title, int maxBufSize);
-
-        [DllImport("user32", CharSet = CharSet.Auto)]
-        private extern static int GetWindowTextLength(IntPtr hWnd);
-        #endregion
-
         #region 构造函数 
         // Constructor, init the perf counter 
         public SystemInfo()
@@ -137,28 +114,6 @@ namespace Load_Balancer_Server
             }
             return ret;
         }
-        ///  
-        /// 获得特定进程信息 
-        ///  
-        /// 进程名称 
-        //public Dictionary<string, string> GetProcessInfo(List<Process> ProcessList, string ProcesName)
-        //{
-        //List pInfo = new List();
-        //Process[] processes = Process.GetProcessesByName(ProcessName);
-        //foreach (Process instance in processes)
-        //{
-        //    try
-        //    {
-        //        pInfo.Add(new ProcessInfo(instance.Id,
-        //            instance.ProcessName,
-        //            instance.TotalProcessorTime.TotalMilliseconds,
-        //            instance.WorkingSet64,
-        //            instance.MainModule.FileName));
-        //    }
-        //    catch { }
-        //    }
-        //    return pInfo;
-        //}
         #endregion
 
         #region 结束指定进程 
@@ -175,4 +130,21 @@ namespace Load_Balancer_Server
         }
         #endregion
     }
+
+    //#region AIP声明 
+    //[DllImport("IpHlpApi.dll")]
+    //extern static public uint GetIfTable(byte[] pIfTable, ref uint pdwSize, bool bOrder);
+
+    //[DllImport("User32")]
+    //private extern static int GetWindow(int hWnd, int wCmd);
+
+    //[DllImport("User32")]
+    //private extern static int GetWindowLongA(int hWnd, int wIndx);
+
+    //[DllImport("user32.dll")]
+    //private static extern bool GetWindowText(int hWnd, StringBuilder title, int maxBufSize);
+
+    //[DllImport("user32", CharSet = CharSet.Auto)]
+    //private extern static int GetWindowTextLength(IntPtr hWnd);
+    //#endregion
 }
