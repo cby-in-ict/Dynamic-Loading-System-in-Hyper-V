@@ -51,7 +51,7 @@ namespace Perf_Detector_Client
             catch (Exception exp)
             {
                 Console.WriteLine(exp.Message, "刷新CPU参数异常！");
-                return;
+                return; 
             }
         }
 

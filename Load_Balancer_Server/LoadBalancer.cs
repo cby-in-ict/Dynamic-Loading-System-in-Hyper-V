@@ -42,6 +42,10 @@ namespace Load_Balancer_Server
                 memoryBalancerDict.Add(vm, currentMemoryBalancer);
                 cpuBalancerDict.Add(vm, currentCpuBalancer);
             }
+            if (VMState.LocalVM != null)
+            {
+                
+            }
         }
 
         // 静态方法，供VMState类直接调用，请求开机时为虚拟机超量分配资源
@@ -251,6 +255,9 @@ namespace Load_Balancer_Server
 
             public void DetectMemoryState(object sender, ElapsedEventArgs e)
             {
+                // if not PowerOn, do nothing.
+                if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    return;
                 float memAvailable = currentVMPerf.MEMAvailable;
                 float pagesPerSec = currentVMPerf.PagesPerSec;
 
@@ -345,6 +352,9 @@ namespace Load_Balancer_Server
             }
             public void DetectCpuState(object sender, ElapsedEventArgs e)
             {
+                // if not PowerOn, do nothing
+                if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    return;
                 float CpuPercentage = currentVMPerf.CPUProcessorTime;
                 float processQueueLength = currentVMPerf.ProcessorQueueLength;
                 if (CpuPercentage > percentageThredHold || processQueueLength > processQueueLengthThredHold)
