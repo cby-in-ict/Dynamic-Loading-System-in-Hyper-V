@@ -6,6 +6,7 @@
 #define LoadBalancerTest
 #define DetectorServerTest
 #define VMStateTest
+#define HyperVPerfCounter
 
 using System;
 using System.Collections.Generic;
@@ -109,7 +110,20 @@ namespace Load_Balancer_Server
             VMState vMState = new VMState(MpcVmConfigpath);
             //VMState.ReceiveMessage();
             vMState.StartMessageReceiver();
-            Console.ReadLine();
+            //Console.ReadLine();
+        }
+#endif
+#if HyperVPerfCounter
+        public static void HyperVPerfCounter()
+        {
+            HyperVPerfCounter hyperVPerfCounter = new HyperVPerfCounter();
+            while (true) 
+            {
+                Thread.Sleep(1000);
+                VMHvPerfCounterInfo NetVM2HvPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
+                Console.WriteLine("当前内存压力为：" + Convert.ToString(NetVM2HvPerfCounterInfo.currentPressure));
+            }
+            
         }
 #endif
 
@@ -124,6 +138,9 @@ namespace Load_Balancer_Server
                 VMState.SetVMState(vmName, vmStatus);
                 return;
             }
+#if SystemInfoTest
+            SystemInfoTest();
+#endif
 #if DetectorServerTest
             // DetectorServerTest();
 #endif
@@ -135,6 +152,9 @@ namespace Load_Balancer_Server
 #endif
 #if VMStateTest
             VMStateTest();
+#endif
+#if HyperVPerfCounter
+            HyperVPerfCounter();
 #endif
         }
 #endif

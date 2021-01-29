@@ -51,6 +51,7 @@
     <Compile Include="DetectorServer.cs" />
     <Compile Include="DynamicAdjustment.cs" />
     <Compile Include="GetConfig.cs" />
+    <Compile Include="HyperVPerfCounter.cs" />
     <Compile Include="MemoryMapping.cs" />
     <Compile Include="VMState.cs" />
     <Compile Include="Program.cs" />
