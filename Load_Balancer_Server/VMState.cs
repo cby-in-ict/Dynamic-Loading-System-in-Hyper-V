@@ -18,10 +18,13 @@ namespace Load_Balancer_Server
     {
         public static string currentUsedVM = "GetOff";
         public static VirtualMachine LocalVM;
+        public static VMHvPerfCounterInfo LocalVMPerfCounterInfo = new VMHvPerfCounterInfo();
         public static VMConfig LocalVMConfig;
         public static VirtualMachine NetVM1;
+        public static VMHvPerfCounterInfo NetVM1PerfCounterInfo = new VMHvPerfCounterInfo();
         public static VMConfig NetVM1Config;
         public static VirtualMachine NetVM2;
+        public static VMHvPerfCounterInfo NetVM2PerfCounterInfo = new VMHvPerfCounterInfo();
         public static VMConfig NetVM2Config;
         public VMState(string MpcVMConfigPath)
         {
