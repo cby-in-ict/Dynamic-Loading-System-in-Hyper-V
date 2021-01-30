@@ -212,7 +212,6 @@ namespace Load_Balancer_Server
             }
             else
                 return;
-            return;
         }
         public static void ReceiveMessage()
         {

@@ -36,11 +36,19 @@ namespace Load_Balancer_Server
                 {
                     if (VMState.NetVM1 == null)
                         return false;
+                    if (!VMState.NetVM1.IsPowerOn())
+                    {
+                        return false;
+                    }
                 }
                 else if (VMName == "NetVM2")
                 {
                     if (VMState.NetVM2 == null)
                         return false;
+                    if (!VMState.NetVM2.IsPowerOn())
+                    {
+                        return false;
+                    }
                 }
                 else
                 {

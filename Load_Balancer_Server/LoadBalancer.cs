@@ -13,6 +13,7 @@ namespace Load_Balancer_Server
     {
         // 当前用户正在切入使用的虚拟机名
         public string currentUsedVM { set; get; }
+        // Dictionary<vm, Spoofer>,虚拟机及其对应的监测器
         public Dictionary<VirtualMachine, MemoryBalancer> memoryBalancerDict = new Dictionary<VirtualMachine, MemoryBalancer>();
         public Dictionary<VirtualMachine, CpuBalancer> cpuBalancerDict = new Dictionary<VirtualMachine, CpuBalancer>();
 
@@ -23,28 +24,18 @@ namespace Load_Balancer_Server
         public double hostMemReservedPercentage { set; get; }
         // 监测的时间间隔，单位为毫秒(ms)
         int detectTimeGap = 10000;
-        // 判断是否进行资源动态调度的时间间隔
+        // 动态均衡的定时器
         private System.Timers.Timer Balancetimer;
-
+        // 接收性能信息的服务器
         public DetectorServer myDetectorServer { set; get; }
-
+        // 动态资源调节
         public DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
         /*List<VirtualMachine> vmList, */
         public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve) 
         {
             detectTimeGap = timeGap;
             hostMemReservedPercentage = hostMemReserve;
-            //foreach(VirtualMachine vm in vmList)
-            //{
-            //    // construct balancer for each vm
-            //    MemoryBalancer currentMemoryBalancer = new MemoryBalancer(vm, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
-            //    currentMemoryBalancer.DetectMemByTime();
-            //    CpuBalancer currentCpuBalancer = new CpuBalancer(vm, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
-            //    currentCpuBalancer.DetectCpuByTime();
 
-            //    memoryBalancerDict.Add(vm, currentMemoryBalancer);
-            //    cpuBalancerDict.Add(vm, currentCpuBalancer);
-            //}
             if (VMState.LocalVM != null)
             {
                 MemoryBalancer currentMemoryBalancer = new MemoryBalancer(VMState.LocalVM, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
@@ -105,6 +96,7 @@ namespace Load_Balancer_Server
                 bool ret = adjustment.AdjustCPUCount(vm, 4);
                 ret &= adjustment.AdjustCPUReservation(vm, CPU_Reverve);
                 ret &= adjustment.AdjustCPULimit(vm, CPU_Limit);
+                ret &= adjustment.AdjustCPUWeight(vm, 10000);
 
                 return true;
             }
@@ -136,6 +128,7 @@ namespace Load_Balancer_Server
                 bool ret = adjustment.AdjustCPUReservation(vm, CPU_Reverve);
                 ret &= adjustment.AdjustCPULimit(vm, CPU_Limit);
                 ret &= adjustment.AdjustMemorySize(vm, PowerOnMemorySize);
+                ret &= adjustment.AdjustCPUWeight(vm, 100);
 
                 return true;
             }
@@ -202,6 +195,24 @@ namespace Load_Balancer_Server
                     else if (VMState.NetVM1PerfCounterInfo.currentPressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Thread.Sleep(1000);
+                        return;
+                    }
+                }
+                else if (currentVM.vmName == "NetVM2" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                {
+                    VMState.NetVM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
+                    if (VMState.NetVM2PerfCounterInfo.currentPressure > 100)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Thread.Sleep(1000);
+                        return;
+                    }
+                    else if (VMState.NetVM2PerfCounterInfo.currentPressure < 70)
+                    {
+                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Thread.Sleep(1000);
                         return;

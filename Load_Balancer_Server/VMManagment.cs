@@ -22,14 +22,12 @@ namespace Load_Balancer_Server
         public UInt16 NumberOfProcessors;
         public UInt16 EnabledState;
         public UInt16 HealthState;
-        public String HostComputerSystemName;
-        public bool SwapFilesInUse;
         public UInt16 ProcessorLoad;
         public UInt16[] ProcessorLoadHistory;
         public UInt64 MemoryUsage;
         public String GuestOperatingSystem;
         // public Int32 MemoryAvailable;
-        public Int32 AvailableMemoryBuffer;
+        //public Int32 AvailableMemoryBuffer;
         public UInt64 CPU_Reservation;//保留    0-100000
         public UInt64 CPU_Limit;//限制    0-100000
         public UInt32 CPU_Weight;//分配权重   1-10000
@@ -50,7 +48,6 @@ namespace Load_Balancer_Server
             ManagementScope scope;
             ManagementObject managementService;
             ManagementObject virtualMachine;
-            // ManagementObject snapshotService;
 
             public string vmName;
             public PerformanceSetting performanceSetting;
@@ -105,8 +102,6 @@ namespace Load_Balancer_Server
                 performanceSetting.NumberOfProcessors = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("NumberOfProcessors"));
                 performanceSetting.EnabledState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("EnabledState"));
                 performanceSetting.HealthState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("HealthState"));
-                performanceSetting.HostComputerSystemName = virtualSystemSetting.GetPropertyValue("HostComputerSystemName") + "";
-                performanceSetting.SwapFilesInUse = Convert.ToBoolean(virtualSystemSetting.GetPropertyValue("SwapFilesInUse"));
                 performanceSetting.ProcessorLoad = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("ProcessorLoad"));
                 
                 UInt16[] ProcessorHistoryInfo = (UInt16[])virtualSystemSetting.GetPropertyValue("ProcessorLoadHistory");
@@ -114,15 +109,14 @@ namespace Load_Balancer_Server
 
                 performanceSetting.MemoryUsage = Convert.ToUInt64(virtualSystemSetting.GetPropertyValue("MemoryUsage"));
                 performanceSetting.GuestOperatingSystem = virtualSystemSetting.GetPropertyValue("GuestOperatingSystem") + "";
-                // performanceSetting.MemoryAvailable = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("MemoryAvailable"));
-                performanceSetting.AvailableMemoryBuffer = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("AvailableMemoryBuffer"));
+                //performanceSetting.AvailableMemoryBuffer = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("AvailableMemoryBuffer"));
 
                 using (ManagementObject detailVMSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
                 {
                     using (ManagementObjectCollection processorSettingDatas = detailVMSetting.GetRelated("Msvm_ProcessorSettingData"))
                     using (ManagementObject processorSettingData = WmiUtilities.GetFirstObjectFromCollection(processorSettingDatas))
                     {
-                         performanceSetting.CPU_Reservation = Convert.ToUInt64(processorSettingData.GetPropertyValue("Reservation"));
+                        performanceSetting.CPU_Reservation = Convert.ToUInt64(processorSettingData.GetPropertyValue("Reservation"));
                         performanceSetting.CPU_Limit = Convert.ToUInt64(processorSettingData.GetPropertyValue("Limit"));
                         performanceSetting.CPU_Weight = Convert.ToUInt32(processorSettingData.GetPropertyValue("Weight"));
                     }
@@ -174,7 +168,7 @@ namespace Load_Balancer_Server
                         }
                         catch (ManagementException e)
                         {
-                        Console.WriteLine("无法开机，异常为:" + e.Message);
+                            Console.WriteLine("无法开机，异常为:" + e.Message);
                         }
                     }
                 }
