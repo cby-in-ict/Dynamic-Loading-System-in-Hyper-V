@@ -164,7 +164,7 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 MemoryBalancer currentMemBalancer = kvp.Value;
-                if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                if (currentVM.vmName == "LocalVM" && currentVM.IsPowerOn())
                 {
                     VMState.LocalVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("LocalVM");
                     if (VMState.LocalVMPerfCounterInfo.currentPressure > 100)
@@ -174,7 +174,7 @@ namespace Load_Balancer_Server
                             Thread.Sleep(1000);
                         return;
                     }
-                    else if (VMState.LocalVMPerfCounterInfo.currentPressure < 70)
+                    else if (VMState.LocalVMPerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
@@ -182,7 +182,7 @@ namespace Load_Balancer_Server
                         return;
                     }
                 }
-                else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                else if (currentVM.vmName == "NetVM1" && currentVM.IsPowerOn())
                 {
                     VMState.NetVM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM1");
                     if (VMState.NetVM1PerfCounterInfo.currentPressure > 100)
@@ -192,7 +192,7 @@ namespace Load_Balancer_Server
                             Thread.Sleep(1000);
                         return;
                     }
-                    else if (VMState.NetVM1PerfCounterInfo.currentPressure < 70)
+                    else if (VMState.NetVM1PerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
@@ -200,7 +200,7 @@ namespace Load_Balancer_Server
                         return;
                     }
                 }
-                else if (currentVM.vmName == "NetVM2" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                else if (currentVM.vmName == "NetVM2" && currentVM.IsPowerOn())
                 {
                     VMState.NetVM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
                     if (VMState.NetVM2PerfCounterInfo.currentPressure > 100)
@@ -210,7 +210,7 @@ namespace Load_Balancer_Server
                             Thread.Sleep(1000);
                         return;
                     }
-                    else if (VMState.NetVM2PerfCounterInfo.currentPressure < 70)
+                    else if (VMState.NetVM2PerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)

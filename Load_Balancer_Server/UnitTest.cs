@@ -1,4 +1,4 @@
-﻿#define TEST
+﻿
 #define Debug
 #define DynamicAdjustTest
 #define GetConfigTest
@@ -85,7 +85,7 @@ namespace Load_Balancer_Server
             VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
             List<VirtualMachine> vmlist = new List<VirtualMachine>();
             vmlist.Add(vm);
-            LoadBalancer testLoadBalancer = new LoadBalancer(vmlist, 80.0, 1, 50.0, 3, 1, 1000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 50.0, 3, 1, 1000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.ReadLine();
