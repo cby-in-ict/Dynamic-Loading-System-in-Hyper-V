@@ -14,8 +14,8 @@ namespace Load_Balancer_Server
         // 当前用户正在切入使用的虚拟机名
         public string currentUsedVM { set; get; }
         // Dictionary<vm, Spoofer>,虚拟机及其对应的监测器
-        public Dictionary<VirtualMachine, MemoryBalancer> memoryBalancerDict = new Dictionary<VirtualMachine, MemoryBalancer>();
-        public Dictionary<VirtualMachine, CpuBalancer> cpuBalancerDict = new Dictionary<VirtualMachine, CpuBalancer>();
+        public Dictionary<VirtualMachine, MemoryAnalysor> memoryAnalysorDict = new Dictionary<VirtualMachine, MemoryAnalysor>();
+        public Dictionary<VirtualMachine, CpuAnalysor> cpuAnalysorrDict = new Dictionary<VirtualMachine, CpuAnalysor>();
 
         // Host主机的状态信息
         public SystemInfo systemInfo = new SystemInfo();
@@ -38,33 +38,33 @@ namespace Load_Balancer_Server
 
             if (VMState.LocalVM != null)
             {
-                MemoryBalancer currentMemoryBalancer = new MemoryBalancer(VMState.LocalVM, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.LocalVM, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuBalancer currentCpuBalancer = new CpuBalancer(VMState.LocalVM, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.LocalVM, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryBalancerDict.Add(VMState.LocalVM, currentMemoryBalancer);
-                cpuBalancerDict.Add(VMState.LocalVM, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.LocalVM, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.LocalVM, currentCpuBalancer);
             }
             if (VMState.NetVM1 != null)
             {
-                MemoryBalancer currentMemoryBalancer = new MemoryBalancer(VMState.NetVM1, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.NetVM1, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuBalancer currentCpuBalancer = new CpuBalancer(VMState.NetVM1, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.NetVM1, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryBalancerDict.Add(VMState.NetVM1, currentMemoryBalancer);
-                cpuBalancerDict.Add(VMState.NetVM1, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.NetVM1, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.NetVM1, currentCpuBalancer);
             }
             if (VMState.NetVM2 != null)
             {
-                MemoryBalancer currentMemoryBalancer = new MemoryBalancer(VMState.NetVM2, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.NetVM2, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuBalancer currentCpuBalancer = new CpuBalancer(VMState.NetVM2, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.NetVM2, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryBalancerDict.Add(VMState.NetVM2, currentMemoryBalancer);
-                cpuBalancerDict.Add(VMState.NetVM2, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.NetVM2, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.NetVM2, currentCpuBalancer);
             }
 
         }
@@ -160,10 +160,10 @@ namespace Load_Balancer_Server
         public void BalanceAllVM(object sender, ElapsedEventArgs e)
         {
             // TODO: finish all 
-            foreach (KeyValuePair<VirtualMachine, MemoryBalancer> kvp in memoryBalancerDict)
+            foreach (KeyValuePair<VirtualMachine, MemoryAnalysor> kvp in memoryAnalysorDict)
             {
                 VirtualMachine currentVM = kvp.Key;
-                MemoryBalancer currentMemBalancer = kvp.Value;
+                MemoryAnalysor currentMemBalancer = kvp.Value;
                 if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
                     if (VMState.LocalVM.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
@@ -174,13 +174,13 @@ namespace Load_Balancer_Server
                     if (VMState.LocalVMPerfCounterInfo.currentPressure > 100)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        return;
+                        continue;
                     }
                     else if (VMState.LocalVMPerfCounterInfo.averagePressure < 65)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
 
-                        return;
+                        continue;
                     }
                 }
                 else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
@@ -193,12 +193,12 @@ namespace Load_Balancer_Server
                     if (VMState.NetVM1PerfCounterInfo.currentPressure > 100)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        return;
+                        continue;
                     }
                     else if (VMState.NetVM1PerfCounterInfo.averagePressure < 65)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        return;
+                        continue;
                     }
                 }
                 else if (currentVM.vmName == "NetVM2" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
@@ -211,12 +211,12 @@ namespace Load_Balancer_Server
                     if (VMState.NetVM2PerfCounterInfo.currentPressure > 100)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        return;
+                        continue;
                     }
                     else if (VMState.NetVM2PerfCounterInfo.averagePressure < 65)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        return;
+                        continue;
                     }
                 }
                 if (currentMemBalancer.isMemAlarm == true)
@@ -225,36 +225,39 @@ namespace Load_Balancer_Server
                     bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                     if (ret)
                     {
+                        // 分配内存后，刷新虚拟机性能参数
+                        currentVM.GetPerformanceSetting();
                         // 分配内存后，取消内存预警并增加内存空闲等级
                         currentMemBalancer.isMemAlarm = false;
-                        if (memoryBalancerDict[currentVM].memFreeRanking <= 8)
+                        if (memoryAnalysorDict[currentVM].memFreeRanking <= 8)
                             // Memory become more free
-                            memoryBalancerDict[currentVM].memFreeRanking += 1;
+                            memoryAnalysorDict[currentVM].memFreeRanking += 1;
                     }
                 }
             }
-            foreach (KeyValuePair<VirtualMachine, CpuBalancer> kvp in cpuBalancerDict)
+            foreach (KeyValuePair<VirtualMachine, CpuAnalysor> kvp in cpuAnalysorrDict)
             {
                 VirtualMachine currentVM = kvp.Key;
-                CpuBalancer currentCpuBalancer = kvp.Value;
+                CpuAnalysor currentCpuBalancer = kvp.Value;
                 if (currentCpuBalancer.isCpuAlarm == true)
                 {
                     Console.WriteLine("CPU预警出现，分配CPU");
                     ulong currentCpuLimit = currentVM.GetPerformanceSetting().CPU_Limit;
                     if (currentCpuLimit > 90000)
                     {
-                        return;
+                        continue;
                     }
                     else
                     {
                         bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10000);
                         if (ret)
                         {
+                            currentVM.GetPerformanceSetting();
                             // 取消CPU预警
                             currentCpuBalancer.isCpuAlarm = false;
                             // CPU become more free
-                            if (cpuBalancerDict[currentVM].cpuFreeRanking <=8)
-                                cpuBalancerDict[currentVM].cpuFreeRanking += 1;
+                            if (cpuAnalysorrDict[currentVM].cpuFreeRanking <=8)
+                                cpuAnalysorrDict[currentVM].cpuFreeRanking += 1;
                         }
                     }
                 }
@@ -267,7 +270,7 @@ namespace Load_Balancer_Server
         }
 
 
-        public class MemoryBalancer 
+        public class MemoryAnalysor 
         {
             VirtualMachine currentVirtualMachine { set; get; }
             private double percentageThredHold { set; get; }
@@ -287,7 +290,7 @@ namespace Load_Balancer_Server
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isMemAlarm的定时器
             private System.Timers.Timer Cleartimer;
-            public MemoryBalancer(VirtualMachine vm, double thredhold, int alarmTimesLimit, int detectTime)
+            public MemoryAnalysor(VirtualMachine vm, double thredhold, int alarmTimesLimit, int detectTime)
             {
                 currentVirtualMachine = vm;
                 percentageThredHold = thredhold;
@@ -333,6 +336,7 @@ namespace Load_Balancer_Server
 
             public void DetectMemoryState(object sender, ElapsedEventArgs e)
             {
+
                 // if not PowerOn, do nothing.
                 if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     return;
@@ -368,7 +372,7 @@ namespace Load_Balancer_Server
 
         }
 
-        public class CpuBalancer
+        public class CpuAnalysor
         {
             VirtualMachine currentVirtualMachine { set; get; }
             double percentageThredHold { set; get; }
@@ -391,7 +395,7 @@ namespace Load_Balancer_Server
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isCpuAlarm的定时器
             private System.Timers.Timer Cleartimer;
-            public CpuBalancer(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap)
+            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap)
             {
                 currentVirtualMachine = vm;
                 percentageThredHold = percentagethredhold;
