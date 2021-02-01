@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DetectorServer.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="DynamicAdjustment.cs" />
     <Compile Include="GetConfig.cs" />
     <Compile Include="HyperVPerfCounter.cs" />

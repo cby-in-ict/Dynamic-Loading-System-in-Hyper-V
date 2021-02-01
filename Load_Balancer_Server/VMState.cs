@@ -38,12 +38,6 @@ namespace Load_Balancer_Server
                 scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
                 managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
                 LocalVM = new VirtualMachine("LocalVM", scope, managementService);
-                // Set vm status
-                LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
-                if (LocalVM.IsPowerOn())
-                {
-                    LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                }
             }
             configParser.currentMpcVMInfo = configParser.GetMpcVMInfo(MpcVMConfigPath, "NetVM1");
             if (configParser.currentMpcVMInfo.Installed == true)
@@ -54,12 +48,6 @@ namespace Load_Balancer_Server
                 scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
                 managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
                 NetVM1 = new VirtualMachine("NetVM1", scope, managementService);
-                // Set vm status
-                NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
-                if (NetVM1.IsPowerOn())
-                {
-                    NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                }
             }
             configParser.currentMpcVMInfo = configParser.GetMpcVMInfo(MpcVMConfigPath, "NetVM2");
             if (configParser.currentMpcVMInfo.Installed == true)
@@ -70,12 +58,6 @@ namespace Load_Balancer_Server
                 scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
                 managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
                 NetVM2 = new VirtualMachine("NetVM2", scope, managementService);
-                // Set vm status
-                NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
-                if (NetVM2.IsPowerOn())
-                {
-                    NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                }
             }
 
             LocalVMConfig = configParser.GetVMConfig("LocalVM");
@@ -106,6 +88,7 @@ namespace Load_Balancer_Server
                         {
                             // 尝试回收其他虚拟机内存
                         }
+                        LocalVM.PowerOn();
                         break;
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
@@ -148,6 +131,8 @@ namespace Load_Balancer_Server
                         {
                             // 尝试回收其他虚拟机内存
                         }
+                        NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
+                        NetVM1.PowerOn();
                         break;
                     case "PowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;

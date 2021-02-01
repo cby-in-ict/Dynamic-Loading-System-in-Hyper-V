@@ -64,7 +64,7 @@ namespace Load_Balancer_Server
         public static void LoadBalancerTest()
         {
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-            DetectorServer detectorServer = new DetectorServer(HvAddr);
+            Server detectorServer = new Server(HvAddr);
             //
 
             var task = new Task(() =>
@@ -78,7 +78,7 @@ namespace Load_Balancer_Server
 
             scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
             managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
-            while (DetectorServer.mySampleServer.vmPerfDict.Count == 0)
+            while (Server.mySampleServer.vmPerfDict.Count == 0)
             {
                 Thread.Sleep(1000);
             }
@@ -95,7 +95,7 @@ namespace Load_Balancer_Server
         public static void DetectorServerTest()
         {
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-            DetectorServer detectorServer = new DetectorServer(HvAddr);
+            Server detectorServer = new Server(HvAddr);
             detectorServer.StartUpServer();
         }
 #endif

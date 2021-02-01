@@ -58,13 +58,7 @@ namespace Load_Balancer_Server
                 RequestPowerOn = 1,
                 PowerOn = 2
             }
-            private VirtualMachineStatus __vmStatus;
-            public VirtualMachineStatus vmStatus
-            {
-                get => __vmStatus;
-                set
-                {}
-            }
+            public VirtualMachineStatus vmStatus { set; get; }
 
             public VirtualMachine(String _vmName, ManagementScope scopeM, ManagementObject managementServiceM)
             {
@@ -137,14 +131,18 @@ namespace Load_Balancer_Server
 
             public bool IsPowerOn()
             {
-                GetPerformanceSetting();
-                return (performanceSetting.EnabledState == 2);
+                ManagementObjectCollection virtualSystemSettings = virtualMachine.GetRelated("Msvm_SummaryInformation");
+                ManagementObject virtualSystemSetting = WmiUtilities.GetFirstObjectFromCollection(virtualSystemSettings);
+                UInt16 EnabledState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("EnabledState"));
+                return (EnabledState == 2);
             }
 
             public bool IsPowerOff()
             {
-                GetPerformanceSetting();
-                if (performanceSetting.EnabledState == 3)
+                ManagementObjectCollection virtualSystemSettings = virtualMachine.GetRelated("Msvm_SummaryInformation");
+                ManagementObject virtualSystemSetting = WmiUtilities.GetFirstObjectFromCollection(virtualSystemSettings);
+                UInt16 EnabledState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("EnabledState"));
+                if (EnabledState == 3)
                 {
                     vmStatus = VirtualMachineStatus.PowerOff;
                     return true;

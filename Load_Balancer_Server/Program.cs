@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using Microsoft.Samples.HyperV.Common;
+using System.IO;
 using Perf_Transfer;
 using System.Threading;
 
@@ -23,36 +24,35 @@ namespace Load_Balancer_Server
     {
         static void Main(string[] args)
         {
-            string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json"; ;
+            string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
+            if (!File.Exists(MpcVmConfigpath))
+            {
+                Console.WriteLine("路径" + MpcVmConfigpath + "下，多域PC虚拟机配置文件不存在");
+                return;
+            }
             VMState vMState = new VMState(MpcVmConfigpath);
             vMState.StartMessageReceiver();
 
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
-            DetectorServer detectorServer = new DetectorServer(HvAddr);
+            Server detectorServer = new Server(HvAddr);
             var task = new Task(() =>
             {
                 detectorServer.StartUpServer();
             });
             task.Start();
 
-            ManagementScope scope;
-            ManagementObject managementService;
-
-            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
-            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
-            //while (DetectorServer.mySampleServer.vmPerfDict.Count == 0)
-            //{
-            //    Thread.Sleep(1000);
-            //}
-
-            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 1000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 10000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.ReadLine();
 
 
 #if TEST
+            ManagementScope scope;
+            ManagementObject managementService;
 
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
             scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
             managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
             VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);

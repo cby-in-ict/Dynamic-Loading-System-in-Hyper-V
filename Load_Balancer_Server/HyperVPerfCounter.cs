@@ -27,7 +27,7 @@ namespace Load_Balancer_Server
                 {
                     if (VMState.LocalVM == null)
                         return false;
-                    if (!VMState.LocalVM.IsPowerOn())
+                    if (VMState.LocalVM.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }    
@@ -36,7 +36,7 @@ namespace Load_Balancer_Server
                 {
                     if (VMState.NetVM1 == null)
                         return false;
-                    if (!VMState.NetVM1.IsPowerOn())
+                    if (VMState.NetVM1.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }
@@ -45,7 +45,7 @@ namespace Load_Balancer_Server
                 {
                     if (VMState.NetVM2 == null)
                         return false;
-                    if (!VMState.NetVM2.IsPowerOn())
+                    if (VMState.NetVM2.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }
