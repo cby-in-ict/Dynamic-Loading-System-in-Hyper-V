@@ -45,7 +45,7 @@ namespace Load_Balancer_Server
             //    Thread.Sleep(1000);
             //}
 
-            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 50.0, 3, 1, 1000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 1000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.ReadLine();

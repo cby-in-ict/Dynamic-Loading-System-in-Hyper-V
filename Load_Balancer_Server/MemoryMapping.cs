@@ -48,31 +48,34 @@ namespace Load_Balancer_Server
             {
                 using (var reader = new BinaryReader(stream))
                 {
-                    List<byte> bytes = new List<byte>();
-                    byte[] temp = new byte[1024];
-                    while (true)
-                    {
-                        int readCount = reader.Read(temp, 0, temp.Length);
-                        if (readCount == 0)
-                        {
-                            break;
-                        }
-                        for (int i = 0; i < readCount; i++)
-                        {
-                            bytes.Add(temp[i]);
-                        }
-                    }
-                    if (bytes.Count > 0)
-                    {
-                        m_Write.Release();
-                        //将“\0”去掉
-                        return Encoding.Default.GetString(bytes.ToArray()).Replace("\0", "");
-                    }
-                    else
-                    {
-                        m_Write.Release();
-                        return null;
-                    }
+                    string str = reader.ReadString();
+                    m_Write.Release();
+                    return str;
+                    //List<byte> bytes = new List<byte>();
+                    //byte[] temp = new byte[1024];
+                    //while (true)
+                    //{
+                    //    int readCount = reader.Read(temp, 0, temp.Length);
+                    //    if (readCount == 0)
+                    //    {
+                    //        break;
+                    //    }
+                    //    for (int i = 0; i < readCount; i++)
+                    //    {
+                    //        bytes.Add(temp[i]);
+                    //    }
+                    //}
+                    //if (bytes.Count > 0)
+                    //{
+                    //    m_Write.Release();
+                    //    //将“\0”去掉
+                    //    return Encoding.Default.GetString(bytes.ToArray()).Replace("\0", "");
+                    //}
+                    //else
+                    //{
+                    //    m_Write.Release();
+                    //    return null;
+                    //}
                 }
             }
         }

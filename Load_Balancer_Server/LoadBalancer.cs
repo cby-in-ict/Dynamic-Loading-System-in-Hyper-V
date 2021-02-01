@@ -171,14 +171,14 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                     else if (VMState.LocalVMPerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                 }
@@ -189,14 +189,14 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                     else if (VMState.NetVM1PerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                 }
@@ -207,14 +207,14 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                     else if (VMState.NetVM2PerfCounterInfo.averagePressure < 70)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Thread.Sleep(1000);
+                            Thread.Sleep(100000);
                         return;
                     }
                 }
@@ -272,7 +272,7 @@ namespace Load_Balancer_Server
             private double percentageThredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
-            public VMPerf currentVMPerf { get => DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName]; }
+            public VMPerf currentVMPerf { set; get; }
 
             // 内存告警的次数
             public int detectAlarmTimes { set; get; }
@@ -333,8 +333,13 @@ namespace Load_Balancer_Server
             public void DetectMemoryState(object sender, ElapsedEventArgs e)
             {
                 // if not PowerOn, do nothing.
-                if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                if (!currentVirtualMachine.IsPowerOn())
                     return;
+                if (!DetectorServer.mySampleServer.vmPerfDict.ContainsKey(currentVirtualMachine.vmName))
+                {
+                    return;
+                }
+                currentVMPerf = DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName];
                 float memAvailable = currentVMPerf.MEMAvailable;
                 float pagesPerSec = currentVMPerf.PagesPerSec;
 
@@ -369,7 +374,7 @@ namespace Load_Balancer_Server
             int processQueueLengthThredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
-            public VMPerf currentVMPerf { get => DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName]; }
+            public VMPerf currentVMPerf { set; get; }
 
             // CPU告警的次数
             public int detectAlarmTimes { set; get; }
@@ -430,13 +435,18 @@ namespace Load_Balancer_Server
             public void DetectCpuState(object sender, ElapsedEventArgs e)
             {
                 // if not PowerOn, do nothing
-                if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                if (!currentVirtualMachine.IsPowerOn())
                     return;
+                if (!DetectorServer.mySampleServer.vmPerfDict.ContainsKey(currentVirtualMachine.vmName))
+                {
+                    return;
+                }
+                currentVMPerf = DetectorServer.mySampleServer.vmPerfDict[currentVirtualMachine.vmName];
                 float CpuPercentage = currentVMPerf.CPUProcessorTime;
                 float processQueueLength = currentVMPerf.ProcessorQueueLength;
                 if (CpuPercentage > percentageThredHold || processQueueLength > processQueueLengthThredHold)
                 {
-                               detectAlarmTimes += 1;
+                    detectAlarmTimes += 1;
                 }
                 if (detectAlarmTimes > cpuAlarmTimesLimit)
                 {
