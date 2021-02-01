@@ -239,10 +239,10 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 CpuAnalysor currentCpuBalancer = kvp.Value;
+                ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
+                ulong currentCpuReserve = currentVM.performanceSetting.CPU_Reservation;
                 if (currentCpuBalancer.isCpuAlarm == true)
                 {
-                    Console.WriteLine("CPU预警出现，分配CPU");
-                    ulong currentCpuLimit = currentVM.GetPerformanceSetting().CPU_Limit;
                     if (currentCpuLimit > 90000)
                     {
                         continue;
@@ -250,16 +250,62 @@ namespace Load_Balancer_Server
                     else
                     {
                         bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10000);
+                        if (currentCpuReserve < 50000)
+                        {
+                            ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
+                            Console.WriteLine("虚拟机：" + currentVM.vmName + "CPU预警出现，分配CPU\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
+                        }
+
                         if (ret)
                         {
                             currentVM.GetPerformanceSetting();
+                            Console.WriteLine("虚拟机：" + currentVM.vmName + "CPU预警出现，分配CPU\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 10000)/1000));
                             // 取消CPU预警
                             currentCpuBalancer.isCpuAlarm = false;
                             // CPU become more free
-                            if (cpuAnalysorrDict[currentVM].cpuFreeRanking <=8)
+                            if (cpuAnalysorrDict[currentVM].cpuFreeRanking <= 8)
                                 cpuAnalysorrDict[currentVM].cpuFreeRanking += 1;
+                            continue;
                         }
                     }
+                }
+
+                // 尝试调低CPU限制值
+                if (currentCpuBalancer.cpuFreeRanking >= 8)
+                {
+                    if (currentCpuLimit > 40)
+                    {
+                        bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
+                        if (ret)
+                        {
+                            Console.WriteLine("虚拟机：" + currentVM.vmName + "CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
+                        }
+                    }
+                }
+                // 尝试调低CPU保留值
+                if (currentCpuBalancer.cpuFreeRanking > 6 && currentCpuReserve > 0)
+                {
+                    if (currentCpuBalancer.cpuFreeRanking >= 8)
+                    {
+                        // 首先调低保留值，确保保留<限制
+                        bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
+                        // 虚拟机保留最低40%
+                        if (ret)
+                        {
+                            Console.WriteLine("虚拟机：" + currentVM.vmName + "CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                            currentCpuBalancer.cpuFreeRanking -= 2;
+                        }
+                    }
+                    else
+                    {
+                        bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
+                        if (ret)
+                        {
+                            Console.WriteLine("CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "虚拟机：" + currentVM.vmName + "调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                            currentCpuBalancer.cpuFreeRanking -= 1;
+                        }
+                    }
+                    currentVM.GetPerformanceSetting();
                 }
             }
         }
@@ -376,6 +422,7 @@ namespace Load_Balancer_Server
         {
             VirtualMachine currentVirtualMachine { set; get; }
             double percentageThredHold { set; get; }
+            double freePercThredHold { set; get; }
             int processQueueLengthThredHold { set; get; }
 
             // 当前得到的虚拟机性能计数器值
@@ -395,7 +442,7 @@ namespace Load_Balancer_Server
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isCpuAlarm的定时器
             private System.Timers.Timer Cleartimer;
-            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap)
+            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap, double freepercentagethredhold = 15.0)
             {
                 currentVirtualMachine = vm;
                 percentageThredHold = percentagethredhold;
@@ -404,6 +451,7 @@ namespace Load_Balancer_Server
                 cpuAlarmTimesLimit = alarmTimesLimit;
                 detectTimeGap = detectionGap;
                 cpuFreeRanking = 5;
+                freePercThredHold = freepercentagethredhold;
             }
 
             public void SetAlarmTimesZero()
@@ -459,6 +507,22 @@ namespace Load_Balancer_Server
                     if (cpuFreeRanking > 1)
                         cpuFreeRanking -= 1;
                  }
+                ushort[] processorLoadHistory = currentVirtualMachine.GetPerformanceSetting().ProcessorLoadHistory;
+                float guestCpuRatio = currentVirtualMachine.GetPerformanceSetting().GuestCpuRatio;
+                if (processorLoadHistory != null & processorLoadHistory.Length > 50)
+                {
+                    bool isCpuFree = true;
+                    foreach (UInt16 percentage in processorLoadHistory)
+                    {
+                        if (guestCpuRatio * percentage > freePercThredHold)
+                        {
+                            isCpuFree = false;
+                            break;
+                        }
+                    }
+                    if (isCpuFree & cpuFreeRanking <= 9)
+                        cpuFreeRanking += 1;
+                }
             }
             public void ClearCpuState(object sender, ElapsedEventArgs e)
             {
