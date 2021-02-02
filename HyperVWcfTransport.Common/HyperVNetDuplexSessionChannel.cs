@@ -180,7 +180,8 @@ namespace HyperVWcfTransport
             }
             catch (SocketException socketException)
             {
-                throw ConvertSocketException(socketException, "Receive");
+                return DecodeMessage(new ArraySegment<byte>());
+                //throw ConvertSocketException(socketException, "Receive");
             }
         }
 
@@ -257,7 +258,8 @@ namespace HyperVWcfTransport
             }
             catch (SocketException socketException)
             {
-                throw ConvertSocketException(socketException, "Receive");
+                throw socketException;
+                //throw ConvertSocketException(socketException, "Receive");
             }
         }
 

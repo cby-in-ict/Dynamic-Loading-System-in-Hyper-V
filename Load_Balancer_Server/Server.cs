@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Perf_Transfer;
 using System.ServiceModel.Channels;
+using System.Threading;
 
 namespace Load_Balancer_Server
 {
@@ -46,12 +47,16 @@ namespace Load_Balancer_Server
                     // 反序列化
                     VMPerf perf_Transfer;
                     byte[] buffer = Convert.FromBase64String(perf_Str);
+                    if (buffer.Length < 5)
+                    { 
+                        return null;
+                    }
                     MemoryStream stream = new MemoryStream(buffer);
                     BinaryFormatter formatter = new BinaryFormatter();
                     perf_Transfer = (VMPerf)formatter.Deserialize(stream);
                     stream.Flush();
                     stream.Close();
-
+                    Monitor.Enter(this);
                     // TODO: 回调函数，处理perf_Transfer
                     if (vmPerfDict.ContainsKey(perf_Transfer.VMName))
                     {
@@ -61,6 +66,7 @@ namespace Load_Balancer_Server
                     {
                         vmPerfDict.Add(perf_Transfer.VMName, perf_Transfer);
                     }
+                    Monitor.Exit(this);
 #if Debug
                 Console.WriteLine("收到虚拟机：" + perf_Transfer.VMName + "的消息，" + "\nCPU占用率为：" + Convert.ToString(vmPerfDict[perf_Transfer.VMName].CPUPrivilegedTime));
 #endif
