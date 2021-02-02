@@ -1,4 +1,5 @@
-﻿
+﻿//#define TEST
+
 #define Debug
 #define DynamicAdjustTest
 #define GetConfigTest
@@ -7,6 +8,7 @@
 #define DetectorServerTest
 #define VMStateTest
 #define HyperVPerfCounter
+#define CallSetVMStatus
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ using System.Management;
 using Microsoft.Samples.HyperV.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server
@@ -127,9 +130,32 @@ namespace Load_Balancer_Server
         }
 #endif
 
+#if CallSetVMStatus
+        public static bool CallSetVMStatus(string args)
+        {
+            try
+            {
+                ProcessStartInfo info = new ProcessStartInfo();
+                info.FileName = @".\SetVMStatus.exe";
+                info.Arguments = args;
+                info.WindowStyle = ProcessWindowStyle.Minimized;
+                Process pro = Process.Start(info);
+                pro.WaitForExit();
+                return true;
+            }
+            catch (Exception exp)
+            {
+                return false;
+            }
+        }
+#endif
+
 #if TEST
         static void Main(string[] args) 
         {
+#if CallSetVMStatus
+            bool requestPoweOnRet = CallSetVMStatus("VMStatus LocalVM RequestPowerOn");
+#endif
             Console.WriteLine("UnitTest Start");
             if (args.Length > 1)
             {
@@ -156,8 +182,9 @@ namespace Load_Balancer_Server
 #if HyperVPerfCounter
             HyperVPerfCounter();
 #endif
+
         }
 #endif
 
-    }
+        }
     }

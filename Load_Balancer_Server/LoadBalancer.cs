@@ -94,6 +94,7 @@ namespace Load_Balancer_Server
                 DynamicAdjustment adjustment = new DynamicAdjustment();
 
                 bool ret = adjustment.AdjustCPUCount(vm, 4);
+                ret &= adjustment.AdjustMemorySize(vm, PowerOnMemorySize);
                 ret &= adjustment.AdjustCPUReservation(vm, CPU_Reverve);
                 ret &= adjustment.AdjustCPULimit(vm, CPU_Limit);
                 ret &= adjustment.AdjustCPUWeight(vm, 10000);

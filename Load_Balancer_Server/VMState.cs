@@ -224,9 +224,11 @@ namespace Load_Balancer_Server
                         SetVMState(vmName, vmStatus);
                         //memoryMapping.m_Received.Release();
                     }
+                    memoryMapping.ReleaseReceiveSemaphore();
                 }
                 catch (Exception exp)
                 {
+                    memoryMapping.ReleaseReceiveSemaphore();
                     Console.WriteLine("收到虚拟机状态信息异常，异常为：" + exp.Message);
                 }
             }

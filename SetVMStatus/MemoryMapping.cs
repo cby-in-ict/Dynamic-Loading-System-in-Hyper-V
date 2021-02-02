@@ -15,22 +15,20 @@ namespace SetVMStatus
         MemoryMappedFile file;
         private Semaphore m_Write;  //可写的信号
         private Semaphore m_Read;  //可读的信号
-        public Semaphore m_Received; //收到的信号
+        public Semaphore m_Received; //是否收到并处理完的信号
         public MemoryMapping(string fileName)
         {
             m_Write = new Semaphore(1, 1, "WriteMap");
             m_Read = new Semaphore(0, 1, "ReadMap");
-            m_Received = new Semaphore(1, 1, "ReceivedMap");
+            m_Received = new Semaphore(0, 1, "ReceivedMap");
             file = MemoryMappedFile.CreateOrOpen(fileName, capacity);
         }
 
 
         public void WriteString(string msg)
         {
-            Console.WriteLine("Msg is:" + msg);
             m_Write = Semaphore.OpenExisting("WriteMap");
             m_Read = Semaphore.OpenExisting("ReadMap");
-            m_Received = Semaphore.OpenExisting("ReceivedMap");
             m_Write.WaitOne();
             using (var stream = file.CreateViewStream())
             {
@@ -39,8 +37,11 @@ namespace SetVMStatus
                     writer.Write(msg);
                 }
             }
-            m_Write.Release();
+            // 先允许读
             m_Read.Release();
+            // 等待操作完后，释放写锁退出
+            m_Write.Release();
+            m_Received.WaitOne();
         }
         public string ReadString()
         {
