@@ -78,6 +78,7 @@ namespace Load_Balancer_Server
                 switch (State)
                 {
                     case "PowerOff":
+                        Console.WriteLine("LocalVM 转换为关机状态");
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
                         break;
                     case "RequestPowerOn":
@@ -88,6 +89,7 @@ namespace Load_Balancer_Server
                             // 尝试回收其他虚拟机内存
                         }
                         LocalVM.PowerOn();
+                        Console.WriteLine("LocalVM 尝试开机成功");
                         break;
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
@@ -124,6 +126,7 @@ namespace Load_Balancer_Server
                 {
                     case "PowerOff":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
+                        Console.WriteLine("NetVM1 转换为关机状态");
                         break;
                     case "RequestPowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
@@ -134,6 +137,7 @@ namespace Load_Balancer_Server
                         }
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
                         NetVM1.PowerOn();
+                        Console.WriteLine("NetVM1 尝试开机成功");
                         break;
                     case "PowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
@@ -167,6 +171,7 @@ namespace Load_Balancer_Server
                 {
                     case "PowerOff":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOff;
+                        Console.WriteLine("NetVM2 转换为关机状态");
                         break;
                     case "RequestPowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
@@ -176,10 +181,12 @@ namespace Load_Balancer_Server
                             // 尝试回收其他虚拟机内存
                         }
                         NetVM2.PowerOn();
+                        Console.WriteLine("NetVM2 尝试开机成功");
                         break;
                     case "PowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM2, NetVM2Config.MemorySize);
+                        Console.WriteLine("NetVM2 转换为开机状态");
                         break;
                     case "UnInstall":
                         NetVM2 = null;

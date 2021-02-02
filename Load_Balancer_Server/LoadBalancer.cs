@@ -165,14 +165,16 @@ namespace Load_Balancer_Server
             {
                 VirtualMachine currentVM = kvp.Key;
                 MemoryAnalysor currentMemBalancer = kvp.Value;
+                currentVM.GetPerformanceSetting();
                 if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
                     if (VMState.LocalVM.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
+                    if (!currentVM.IsPowerOn())
+                        continue;
 
                     VMState.LocalVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("LocalVM");
-                    currentVM.GetPerformanceSetting();
-                    if (VMState.LocalVMPerfCounterInfo.currentPressure > 100)
+                    if (VMState.LocalVMPerfCounterInfo.currentPressure > 95)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
@@ -191,10 +193,11 @@ namespace Load_Balancer_Server
                 {
                     if (VMState.NetVM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
+                    if (!currentVM.IsPowerOn())
+                        continue;
 
                     VMState.NetVM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM1");
-                    currentVM.GetPerformanceSetting();
-                    if (VMState.NetVM1PerfCounterInfo.currentPressure > 100)
+                    if (VMState.NetVM1PerfCounterInfo.currentPressure > 95)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
@@ -213,10 +216,11 @@ namespace Load_Balancer_Server
                 {
                     if(VMState.NetVM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
-                   
+                   if (!currentVM.IsPowerOn())
+                        continue;
+
                     VMState.NetVM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
-                    currentVM.GetPerformanceSetting();
-                    if (VMState.NetVM2PerfCounterInfo.currentPressure > 100)
+                    if (VMState.NetVM2PerfCounterInfo.currentPressure > 95)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
@@ -271,7 +275,6 @@ namespace Load_Balancer_Server
 
                         if (ret)
                         {
-                            currentVM.GetPerformanceSetting();
                             Console.WriteLine("虚拟机：" + currentVM.vmName + " CPU预警出现，分配CPU\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 10000)/1000));
                             // 取消CPU预警
                             currentCpuBalancer.isCpuAlarm = false;
@@ -456,7 +459,7 @@ namespace Load_Balancer_Server
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isCpuAlarm的定时器
             private System.Timers.Timer Cleartimer;
-            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap, double freepercentagethredhold = 15.0)
+            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap, double freepercentagethredhold = 25.0)
             {
                 currentVirtualMachine = vm;
                 percentageThredHold = percentagethredhold;
