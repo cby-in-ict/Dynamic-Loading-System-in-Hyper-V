@@ -82,7 +82,6 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
-                        // TODO:加速开机流程
                         bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(LocalVM, LocalVMConfig.MemorySize, out bool isRequestMemory);
                         if (isRequestMemory)
                         {
@@ -93,8 +92,10 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(LocalVM, LocalVMConfig.MemorySize);
-                        Console.WriteLine("LocalVM转换为开机状态");
-                        // TODO:结束开机加速流程，返回初始设置
+                        //int copyFileRet = LocalVM.CopyFileToGuest(GetConfig.LocalVMProcessInfoPath, @"C:\Users\User\DocumentsProcessInfo.json");
+                        //if (copyFileRet == 0)
+                        //    Console.WriteLine("进程控制信息文件拷贝到本地域");
+                        Console.WriteLine("LocalVM 转换为开机状态");
                         break;
                     case "UnInstall":
                         LocalVM = null;
@@ -137,6 +138,7 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM1, NetVM1Config.MemorySize);
+                        Console.WriteLine("NetVM1 转换为开机状态");
                         break;
                     case "UnInstall":
                         NetVM1 = null;

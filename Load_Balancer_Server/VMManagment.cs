@@ -268,6 +268,35 @@ namespace Load_Balancer_Server
                     return result;
                 }
             }
+
+        //返回值：-2：失败；0：成功；-1：虚拟机未开启导致失败
+        public int CopyFileToGuest(string sourceFileName, string destinationFileName)
+        {
+            int result = 0;
+            if (!IsPowerOn())
+            {
+                return -1;
+            }
+
+            try
+            {
+                GuestServiceInterface guestServiceinterface = new GuestServiceInterface();
+
+                guestServiceinterface.FileServerStatusConfirm(scope, managementService, vmName);
+
+                guestServiceinterface.CopyFileToGuest(".", vmName, sourceFileName, destinationFileName, true, true);
+
+                result = 0;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("拷贝文件" + sourceFileName + "失败, 异常为：" + exp.Message);
+
+                result = -2;
+            }
+
+            return result;
         }
+    }
     }
 

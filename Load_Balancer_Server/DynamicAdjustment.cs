@@ -27,12 +27,20 @@ namespace Load_Balancer_Server
             if (rank == 1)
             {
                 UInt64 appendSize = MemorySizeBaseLine / 8;
+                if (appendSize % 4 != 0)
+                {
+                    appendSize = (appendSize / 4) * 4;
+                }
                 bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize + appendSize));
                 return ret;
             }
             else if (rank == 2)
             {
                 UInt64 appendSize = MemorySizeBaseLine / 4;
+                if (appendSize % 4 != 0)
+                {
+                    appendSize = (appendSize / 4) * 4;
+                }
                 bool ret = VM.ModifySettingData("RAM_VirtualQuantity", Convert.ToString(MemorySize + appendSize));
                 return ret;
             }
