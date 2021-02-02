@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperVWcfTransport", "HyperVWcfTransport.Common\HyperVWcfTransport.csproj", "{704364E1-847F-4DC5-A84E-55FCBC773484}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamic-Loading-Repo", "Dynamic-Loading-Repo", "{5194CA1F-2D12-4A24-9DD6-F094333727F8}"
+	ProjectSection(SolutionItems) = preProject
+		TodoList.md = TodoList.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{2D7EC9EA-9BC3-4D0B-AE7B-A584964EA19D}"
 	ProjectSection(SolutionItems) = preProject

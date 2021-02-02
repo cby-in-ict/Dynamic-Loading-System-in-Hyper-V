@@ -44,6 +44,7 @@ namespace Load_Balancer_Server
             LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 10, 3, 10000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
+            Console.WriteLine("负载均衡器启动成功！");
             Console.ReadLine();
 
 
