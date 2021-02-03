@@ -142,7 +142,7 @@ namespace Microsoft.Samples.HyperV.Common
 
                         if (printErrors)
                         {
-                            PrintMsvmErrors(job);
+                            //PrintMsvmErrors(job);
                         }
 
                         if (throwIfFailed)
@@ -193,7 +193,7 @@ namespace Microsoft.Samples.HyperV.Common
                 return;
             }
 
-            Console.WriteLine("Detailed errors: \n");
+            //Console.WriteLine("Detailed errors: \n");
 
             foreach (string error in errorList)
             {
@@ -242,8 +242,8 @@ namespace Microsoft.Samples.HyperV.Common
                     }
                 }
 
-                Console.WriteLine("Error Message: {0}", errorMessage);
-                Console.WriteLine("Error Source:  {0}\n", errorSource);
+                // Console.WriteLine("Error Message: {0}", errorMessage);
+                //Console.WriteLine("Error Source:  {0}\n", errorSource);
             }
         }
 

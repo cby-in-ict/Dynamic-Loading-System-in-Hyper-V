@@ -215,9 +215,16 @@ namespace HyperVWcfTransport
 
         public IAsyncResult BeginTryReceive(TimeSpan timeout, AsyncCallback callback, object state)
         {
-            base.ThrowIfDisposedOrNotOpen();
+            try
+            {
+                base.ThrowIfDisposedOrNotOpen();
 
-            return Tap.Run(callback, state, () => ReceiveAsync());
+                return Tap.Run(callback, state, () => ReceiveAsync());
+            }
+            catch (Exception exp)
+            {
+                return null;
+            }
         }
 
         public bool EndTryReceive(IAsyncResult result, out Message message)

@@ -69,11 +69,12 @@ namespace Load_Balancer_Server
 
         // VMConfig 
        
-        public VMConfig currentVMConfig = new VMConfig();
+        
         public SysConfig currentSysConfig = new SysConfig();
         public MpcVMInfo currentMpcVMInfo = new MpcVMInfo();
         public VMConfig GetVMConfig(string VMName)
         {
+            VMConfig currentVMConfig = new VMConfig();
             using ( System.IO.StreamReader file = System.IO.File.OpenText(VMconfigPath))
             {
                 using (JsonTextReader reader = new JsonTextReader(file))
@@ -86,7 +87,7 @@ namespace Load_Balancer_Server
                         JObject vmObj = ((JObject)o[VMName]);
                         currentVMConfig.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
                         currentVMConfig.CPUNum = Convert.ToInt32(vmObj["CPUCount"].ToString());
-                        currentVMConfig.MemorySize = Convert.ToUInt64(vmObj["MemorySize"].ToString());
+                        currentVMConfig.MemorySize = Convert.ToUInt64(vmObj["PowerOnMemorySize"].ToString());
                         currentVMConfig.CPULimt = Convert.ToInt32(vmObj["CPULimit"].ToString());
                     }
                     else

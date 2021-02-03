@@ -69,10 +69,9 @@ namespace Load_Balancer_Server
         {
             if (VMName.Contains("LocalVM"))
             {
-                Console.WriteLine("here");
                 if (LocalVM == null && State != "Install")
                 {
-                    Console.WriteLine("LocalVM未初始化");
+                    Console.WriteLine("LocalVM 未初始化");
                     return;
                 }
                 switch (State)
@@ -119,7 +118,7 @@ namespace Load_Balancer_Server
             {
                 if (NetVM1 == null && State != "Install")
                 {
-                    Console.WriteLine("NetVM1未初始化");
+                    Console.WriteLine("NetVM1 未初始化");
                     return;
                 }
                 switch (State)
@@ -164,7 +163,7 @@ namespace Load_Balancer_Server
             {
                 if (NetVM2 == null && State != "Install")
                 {
-                    Console.WriteLine("NetVM2未初始化");
+                    Console.WriteLine("NetVM2 未初始化");
                     return;
                 }
                 switch (State)
