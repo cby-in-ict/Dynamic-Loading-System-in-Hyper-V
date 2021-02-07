@@ -12,7 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamic-Loading-Repo", "Dyn
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{2D7EC9EA-9BC3-4D0B-AE7B-A584964EA19D}"
 	ProjectSection(SolutionItems) = preProject
-		ProcessWhiteList.json = ProcessWhiteList.json
+		LocalVMProcConfig.json = LocalVMProcConfig.json
+		NetVM1ProcConfig.json = NetVM1ProcConfig.json
+		NetVM2ProcConfig.json = NetVM2ProcConfig.json
 		SystemConfig.json = SystemConfig.json
 		VMConfig.json = VMConfig.json
 	EndProjectSection

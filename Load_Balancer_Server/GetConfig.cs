@@ -61,7 +61,9 @@ namespace Load_Balancer_Server
         const string VMConfigName = "VMConfig.json";
         const string SysConfigName = "SystemConfig.json";
         const string ProcessConfigName = "ProcessWhiteList.json";
-        public static string LocalVMProcessInfoPath =  Path.Combine(ConfigFileRelPath, "LocalVMProcessInfo.json");
+        public static string LocalVMProcessInfoPath =  Path.Combine(ConfigFileRelPath, "LocalVMProcConfig.json");
+        public static string NetVM1ProcessInfoPath = Path.Combine(ConfigFileRelPath, "NetVM1ProcConfig.json");
+        public static string NetVM2ProcessInfoPath = Path.Combine(ConfigFileRelPath, "NetVM2ProcConfig.json");
         string VMconfigPath = Path.Combine(ConfigFileRelPath, VMConfigName);
         string SysConfigPath = Path.Combine(ConfigFileRelPath, SysConfigName);
         string ProcessConfigPath = Path.Combine(ConfigFileRelPath, ProcessConfigName);

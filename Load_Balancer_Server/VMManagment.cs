@@ -8,6 +8,8 @@ using System.Windows;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Collections;
+using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 
 /* In this part, I partialy refer to MultiPC VirutalMachine.cs, copyright reserved by ict bis lab, based our code, and I revised it */
 
@@ -270,32 +272,71 @@ namespace Load_Balancer_Server
             }
 
         //返回值：-2：失败；0：成功；-1：虚拟机未开启导致失败
-        public int CopyFileToGuest(string sourceFileName, string destinationFileName)
+        public int CopyFileToGuest(string VMName, string sourceFileName, string destinationFileName)
         {
             int result = 0;
             if (!IsPowerOn())
             {
-                return -1;
+                //return -1;
             }
 
             try
             {
-                GuestServiceInterface guestServiceinterface = new GuestServiceInterface();
-
-                guestServiceinterface.FileServerStatusConfirm(scope, managementService, vmName);
-
-                guestServiceinterface.CopyFileToGuest(".", vmName, sourceFileName, destinationFileName, true, true);
-
-                result = 0;
+                // example cmd: Copy-VMFile "Test VM" -SourcePath "D:\Test.txt" -DestinationPath "C:\Temp\Test.txt" -CreateFullPath -FileSource Host
+                string cmd = "Copy-VMFile ";
+                cmd += VMName;
+                cmd += " -SourcePath ";
+                cmd += sourceFileName;
+                cmd += " -DestinationPath ";
+                cmd += destinationFileName;
+                cmd += " -CreateFullPath ";
+                cmd += " -FileSource Host";
+                bool ret = VirtualMachine.implementPSScript(cmd);
+                if (ret)
+                    result = 0;
+                else
+                    result = -1;
             }
             catch (Exception exp)
             {
                 Console.WriteLine("拷贝文件" + sourceFileName + "失败, 异常为：" + exp.Message);
-
                 result = -2;
             }
 
             return result;
+        }
+
+        public static bool implementPSScript(string script)
+        {
+            bool result = false;
+            using (Runspace runspace = RunspaceFactory.CreateRunspace())
+            {
+                runspace.Open();
+
+                PowerShell ps = PowerShell.Create();
+
+                ps.Runspace = runspace;
+
+                ps.AddScript(script);
+
+                //ps.Invoke();
+
+                ps.AddScript("$?");
+                Collection<PSObject> output = ps.Invoke();
+                if (output != null)
+                {
+                    foreach (PSObject pSObject in output)
+                    {
+                        //Console.WriteLine(pSObject.ToString());
+                        result = Convert.ToBoolean(pSObject.ToString().ToLower());
+                    }
+                }
+
+                runspace.Close();
+
+                return result;
+
+            }
         }
     }
     }

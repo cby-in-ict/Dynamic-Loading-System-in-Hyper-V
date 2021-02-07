@@ -1,0 +1,13 @@
+{
+  "BlackList":
+    [
+      {
+        "name": "cmd",
+        "memLimit": 0
+      },
+      {
+        "name": "onedrive",
+        "memLimit": 10
+      }
+    ]
+}

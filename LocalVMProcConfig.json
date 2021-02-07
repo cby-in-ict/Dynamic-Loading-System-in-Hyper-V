@@ -1,0 +1,17 @@
+{
+  "BlackList":
+    [
+      {
+        "name": "cmd",
+        "memLimit": 0
+      },
+      {
+        "name": "chrome",
+        "memLimit": 100
+      },
+      {
+        "name": "msedge",
+        "memLimit": 0
+      }
+    ]
+}

@@ -26,7 +26,7 @@ namespace Perf_Detector_Client
 
         public MemSpoofer memSpoofer;
         public CpuSpoofer cpuSpoofer;
-        public ProcessInfo processInfo = new ProcessInfo();
+        //public ProcessControler processInfo = new ProcessControler();
         private System.Timers.Timer RUtimer;
 
         public PerformanceInfo()

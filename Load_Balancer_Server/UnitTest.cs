@@ -1,4 +1,4 @@
-﻿//#define TEST
+﻿// #define TEST
 
 #define Debug
 #define DynamicAdjustTest
@@ -9,6 +9,7 @@
 #define VMStateTest
 #define HyperVPerfCounter
 #define CallSetVMStatus
+#define CopyFileTest
 
 using System;
 using System.Collections.Generic;
@@ -150,6 +151,22 @@ namespace Load_Balancer_Server
         }
 #endif
 
+#if CopyFileTest
+        public static void CopyFileTest()
+        {
+            string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
+            if (!System.IO.File.Exists(MpcVmConfigpath))
+            {
+                Console.WriteLine("路径" + MpcVmConfigpath + "下，多域PC虚拟机配置文件不存在");
+                return;
+            }
+            VMState vMState = new VMState(MpcVmConfigpath);
+            int ret = VMState.LocalVM.CopyFileToGuest("LocalVM", GetConfig.LocalVMProcessInfoPath, @"C:\TEMP\\ProcConfig.json");
+            Console.WriteLine("ret is" + Convert.ToString(ret));
+
+        }
+#endif
+
 #if WinPerfRecvTest
             ManagementScope scope;
             ManagementObject managementService;
@@ -186,6 +203,10 @@ namespace Load_Balancer_Server
 #if TEST
         static void Main(string[] args) 
         {
+#if CopyFileTest
+            CopyFileTest();
+            return;
+#endif
 #if CallSetVMStatus
             bool requestPoweOnRet = CallSetVMStatus("VMStatus LocalVM RequestPowerOn");
 #endif

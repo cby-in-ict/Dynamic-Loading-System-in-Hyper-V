@@ -93,7 +93,9 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         LocalVM.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(LocalVM, LocalVMConfig.MemorySize);
-                        //int copyFileRet = LocalVM.CopyFileToGuest(GetConfig.LocalVMProcessInfoPath, @"C:\Users\User\DocumentsProcessInfo.json");
+                       int copyFileRet = LocalVM.CopyFileToGuest("LocalVM", GetConfig.LocalVMProcessInfoPath, @"C:\TEMP\\ProcConfig.json");
+                        if (copyFileRet == 0)
+                            Console.WriteLine("拷贝本地域进程控制配置文件成功！");
                         //if (copyFileRet == 0)
                         //    Console.WriteLine("进程控制信息文件拷贝到本地域");
                         Console.WriteLine("LocalVM 转换为开机状态");
@@ -141,6 +143,9 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         NetVM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM1, NetVM1Config.MemorySize);
+                        int copyFileRet = NetVM1.CopyFileToGuest("NetVM1", GetConfig.NetVM1ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
+                        if (copyFileRet == 0)
+                            Console.WriteLine("拷贝进程控制配置文件到互联网域1成功！");
                         Console.WriteLine("NetVM1 转换为开机状态");
                         break;
                     case "UnInstall":
@@ -185,6 +190,9 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM2, NetVM2Config.MemorySize);
+                        int copyFileRet = NetVM2.CopyFileToGuest("NetVM2", GetConfig.NetVM2ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
+                        if (copyFileRet == 0)
+                            Console.WriteLine("拷贝互联网域2进程控制配置文件成功！");
                         Console.WriteLine("NetVM2 转换为开机状态");
                         break;
                     case "UnInstall":
