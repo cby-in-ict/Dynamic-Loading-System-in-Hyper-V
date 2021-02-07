@@ -27,7 +27,15 @@ namespace Perf_Detector_Client
 
         public MemSpoofer()
         {
-            MEMPerfCounter.initAllCounterValue();
+            try
+            {
+                MEMPerfCounter.initAllCounterValue();
+            }
+            catch (Exception exp)
+            {
+                
+            }
+            
             Thread.Sleep(100);
             Thread th = new Thread(new ThreadStart(RefreshMemStatesByTime)); //创建线程                     
             th.Start(); //启动线程

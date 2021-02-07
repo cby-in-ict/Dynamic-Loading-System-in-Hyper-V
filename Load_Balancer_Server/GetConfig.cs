@@ -86,7 +86,7 @@ namespace Load_Balancer_Server
                         currentVMConfig.VMName = VMName;
                         JObject vmObj = ((JObject)o[VMName]);
                         currentVMConfig.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
-                        currentVMConfig.CPUNum = Convert.ToInt32(vmObj["CPUCount"].ToString());
+                        currentVMConfig.CPUNum = Convert.ToInt32(vmObj["OriginalCPUCount"].ToString());
                         currentVMConfig.MemorySize = Convert.ToUInt64(vmObj["PowerOnMemorySize"].ToString());
                         currentVMConfig.CPULimt = Convert.ToInt32(vmObj["CPULimit"].ToString());
                     }

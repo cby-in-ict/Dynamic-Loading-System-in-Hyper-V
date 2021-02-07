@@ -2,19 +2,19 @@
   "LocalVM": {
     "Installed": "true",
     "PowerOnMemorySize": "8192",
-    "CPUCount": "2",
+    "OriginalCPUCount": "2",
     "CPULimit": "50"
   },
   "NetVM1": {
     "Installed": "true",
     "PowerOnMemorySize": "4096",
-    "CPUCount": "2",
+    "OriginalCPUCount": "2",
     "CPULimit": "50"
   },
   "NetVM2": {
     "Installed": "true",
     "PowerOnMemorySize": "4096",
-    "CPUCount": "2",
+    "OriginalCPUCount": "2",
     "CPULimit": "50"
   }
 }

@@ -75,11 +75,16 @@ namespace Load_Balancer_Server
         public VMHvPerfCounterInfo GetVMHyperVPerfInfo(string VMName)
         {
             bool ret = SetPerCounter(VMName);
-            VMHvPerfCounterInfo vmHvPerfCounterInfo = new VMHvPerfCounterInfo();
-            vmHvPerfCounterInfo.VMName = VMName;
-            vmHvPerfCounterInfo.averagePressure = memoryAveragePressure.NextValue();
-            vmHvPerfCounterInfo.currentPressure = memoryCurrentPressure.NextValue();
-            return vmHvPerfCounterInfo;
+            if (ret) 
+            {
+                VMHvPerfCounterInfo vmHvPerfCounterInfo = new VMHvPerfCounterInfo();
+                vmHvPerfCounterInfo.VMName = VMName;
+                vmHvPerfCounterInfo.averagePressure = memoryAveragePressure.NextValue();
+                vmHvPerfCounterInfo.currentPressure = memoryCurrentPressure.NextValue();
+                return vmHvPerfCounterInfo;
+            }
+            else
+                return null;
         }
     }
 }

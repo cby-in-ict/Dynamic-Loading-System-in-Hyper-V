@@ -687,7 +687,7 @@ namespace Microsoft.Samples.HyperV.Common
         {
             JobState jobState = (JobState)((ushort)jobStateObj);
 
-            Console.WriteLine(jobState);
+            //Console.WriteLine(jobState);
 
             return (jobState == JobState.Completed) || 
                 (jobState == JobState.CompletedWithWarnings) ||(jobState == JobState.Terminated) ||

@@ -22,6 +22,8 @@ namespace Load_Balancer_Server
         // Hyper-V 性能计数器
         public HyperVPerfCounter hyperVPerfCounter = new HyperVPerfCounter();
         public double hostMemReservedPercentage { set; get; }
+        public int appendMemPressure { set; get; }
+        public int recycleMemPressure { set; get; }
         // 监测的时间间隔，单位为毫秒(ms)
         int detectTimeGap = 10000;
         // 动态均衡的定时器
@@ -31,10 +33,12 @@ namespace Load_Balancer_Server
         // 动态资源调节
         public DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
         /*List<VirtualMachine> vmList, */
-        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve) 
+        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve, int recycleMemThredHold = 60, int appendMemThredHold = 90) 
         {
             detectTimeGap = timeGap;
             hostMemReservedPercentage = hostMemReserve;
+            this.recycleMemPressure = recycleMemThredHold;
+            this.appendMemPressure = appendMemThredHold;
 
             if (VMState.LocalVM != null)
             {
@@ -77,12 +81,12 @@ namespace Load_Balancer_Server
                 RequestMem = false;
                 if (vm == null)
                 {
-                    Console.WriteLine("虚拟机尚未安装");
+                    Console.WriteLine("监测到虚拟机尚未安装");
                     return false;
                 }
                 if (CPU_Reverve > CPU_Limit)
                 {
-                    Console.WriteLine("虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
+                    Console.WriteLine("监测到虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
                     return false;
                 }
 
@@ -103,7 +107,7 @@ namespace Load_Balancer_Server
             }
             catch (Exception exp)
             {
-                Console.WriteLine("虚拟机准备开启设置异常：" + exp.Message);
+                Console.WriteLine("监测到虚拟机准备开启设置异常：" + exp.Message);
                 RequestMem = false;
                 return false;
             }
@@ -115,12 +119,12 @@ namespace Load_Balancer_Server
             {
                 if (vm == null)
                 {
-                    Console.WriteLine("虚拟机尚未安装");
+                    Console.WriteLine("监测到虚拟机尚未安装");
                     return false;
                 }
                 if (CPU_Reverve > CPU_Limit)
                 {
-                    Console.WriteLine("虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
+                    Console.WriteLine("监测到虚拟机保留：" + CPU_Reverve.ToString() + "需要小于虚拟机限制资源：" + CPU_Limit.ToString());
                     return false;
                 }
 
@@ -135,7 +139,7 @@ namespace Load_Balancer_Server
             }
             catch (Exception exp)
             {
-                Console.WriteLine("虚拟机准备恢复设置异常：" + exp.Message);
+                Console.WriteLine("监测到虚拟机准备恢复设置异常：" + exp.Message);
                 return false;
             }
         }
@@ -164,7 +168,7 @@ namespace Load_Balancer_Server
             foreach (KeyValuePair<VirtualMachine, MemoryAnalysor> kvp in memoryAnalysorDict)
             {
                 VirtualMachine currentVM = kvp.Key;
-                MemoryAnalysor currentMemBalancer = kvp.Value;
+                MemoryAnalysor currentAnalysor = kvp.Value;
                 currentVM.GetPerformanceSetting();
                 if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
@@ -174,18 +178,18 @@ namespace Load_Balancer_Server
                         continue;
 
                     VMState.LocalVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("LocalVM");
-                    if (VMState.LocalVMPerfCounterInfo.currentPressure > 90)
+                    if (VMState.LocalVMPerfCounterInfo.currentPressure > appendMemPressure)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
-                    else if (VMState.LocalVMPerfCounterInfo.averagePressure < 65)
+                    else if (VMState.LocalVMPerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
@@ -197,18 +201,18 @@ namespace Load_Balancer_Server
                         continue;
 
                     VMState.NetVM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM1");
-                    if (VMState.NetVM1PerfCounterInfo.currentPressure > 90)
+                    if (VMState.NetVM1PerfCounterInfo.currentPressure > appendMemPressure)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存压力大，扩展内存大小\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
-                    else if (VMState.NetVM1PerfCounterInfo.averagePressure < 65)
+                    else if (VMState.NetVM1PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存空闲，回收内存\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
@@ -220,22 +224,22 @@ namespace Load_Balancer_Server
                         continue;
 
                     VMState.NetVM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
-                    if (VMState.NetVM2PerfCounterInfo.currentPressure > 90)
+                    if (VMState.NetVM2PerfCounterInfo.currentPressure > appendMemPressure)
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存压力大，扩展内存大小\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity));
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity));
                         continue;
                     }
-                    else if (VMState.NetVM2PerfCounterInfo.averagePressure < 65)
+                    else if (VMState.NetVM2PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " 内存空闲，回收内存\n从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
-                if (currentMemBalancer.isMemAlarm == true)
+                if (currentAnalysor.isMemAlarm == true)
                 {
                     bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                     if (ret)
@@ -244,7 +248,7 @@ namespace Load_Balancer_Server
                         // 分配内存后，刷新虚拟机性能参数
                         currentVM.GetPerformanceSetting();
                         // 分配内存后，取消内存预警并增加内存空闲等级
-                        currentMemBalancer.isMemAlarm = false;
+                        currentAnalysor.isMemAlarm = false;
                         if (memoryAnalysorDict[currentVM].memFreeRanking <= 8)
                             // Memory become more free
                             memoryAnalysorDict[currentVM].memFreeRanking += 1;
@@ -254,11 +258,11 @@ namespace Load_Balancer_Server
             foreach (KeyValuePair<VirtualMachine, CpuAnalysor> kvp in cpuAnalysorrDict)
             {
                 VirtualMachine currentVM = kvp.Key;
-                CpuAnalysor currentCpuBalancer = kvp.Value;
+                CpuAnalysor currentAnalysor = kvp.Value;
                 currentVM.GetPerformanceSetting();
                 ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
                 ulong currentCpuReserve = currentVM.performanceSetting.CPU_Reservation;
-                if (currentCpuBalancer.isCpuAlarm == true)
+                if (currentAnalysor.isCpuAlarm == true)
                 {
                     if (currentCpuLimit > 90000)
                     {
@@ -270,14 +274,14 @@ namespace Load_Balancer_Server
                         if (currentCpuReserve < 50000)
                         {
                             ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " CPU预警出现，分配CPU\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。 提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " CPU预警出现，分配CPU\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
                         }
 
                         if (ret)
                         {
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + " CPU预警出现，分配CPU\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。 提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 10000)/1000));
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " CPU预警出现，分配CPU\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 10000)/1000));
                             // 取消CPU预警
-                            currentCpuBalancer.isCpuAlarm = false;
+                            currentAnalysor.isCpuAlarm = false;
                             // CPU become more free
                             if (cpuAnalysorrDict[currentVM].cpuFreeRanking <= 5)
                                 cpuAnalysorrDict[currentVM].cpuFreeRanking += 1;
@@ -287,10 +291,10 @@ namespace Load_Balancer_Server
                 }
                 
                 // 尝试调低CPU保留值
-                if (currentCpuBalancer.cpuFreeRanking > 6)
+                if (currentAnalysor.cpuFreeRanking > 6)
                 {
                     // 等级为9和10，同时调低保留和限制
-                    if (currentCpuBalancer.cpuFreeRanking > 8)
+                    if (currentAnalysor.cpuFreeRanking > 8)
                     {
                         if (currentCpuReserve > 0) 
                         {
@@ -299,7 +303,7 @@ namespace Load_Balancer_Server
                             // 虚拟机保留最低40%
                             if (ret)
                             {
-                                Console.WriteLine("虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                                Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
                             }
                         }
                         // 尝试调低CPU限制值
@@ -308,10 +312,10 @@ namespace Load_Balancer_Server
                             bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
                             if (ret)
                             {
-                                Console.WriteLine("虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。 调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
+                                Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
                             }
                         }
-                        currentCpuBalancer.cpuFreeRanking -= 2;
+                        currentAnalysor.cpuFreeRanking -= 2;
                     }
                     // 等级为7、8
                     else if(currentCpuReserve > 0)
@@ -319,8 +323,8 @@ namespace Load_Balancer_Server
                         bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
                         if (ret)
                         {
-                            Console.WriteLine("虚拟机：" + currentVM.vmName + "CPU空闲\nCPUFreeRanking等级为：" + Convert.ToString(currentCpuBalancer.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
-                            currentCpuBalancer.cpuFreeRanking -= 1;
+                            Console.WriteLine("监测到虚拟机：" + currentVM.vmName + "CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                            currentAnalysor.cpuFreeRanking -= 1;
                         }
                     }
                 }
@@ -459,7 +463,7 @@ namespace Load_Balancer_Server
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isCpuAlarm的定时器
             private System.Timers.Timer Cleartimer;
-            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap, double freepercentagethredhold = 25.0)
+            public CpuAnalysor(VirtualMachine vm, double percentagethredhold, int queuelengththredhold, int alarmTimesLimit, int detectionGap, double freepercentagethredhold = 30.0)
             {
                 currentVirtualMachine = vm;
                 percentageThredHold = percentagethredhold;

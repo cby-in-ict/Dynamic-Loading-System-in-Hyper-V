@@ -150,6 +150,39 @@ namespace Load_Balancer_Server
         }
 #endif
 
+#if WinPerfRecvTest
+            ManagementScope scope;
+            ManagementObject managementService;
+
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+            VirtualMachine vm = new VirtualMachine("TestVM", scope, managementService);
+            PerformanceSetting performanceSetting = vm.GetPerformanceSetting();
+            Console.WriteLine(Convert.ToString(performanceSetting.ProcessorLoad));
+            if (performanceSetting.ProcessorLoadHistory != null)
+            {
+                foreach (ushort it in performanceSetting.ProcessorLoadHistory)
+                {
+                    Console.WriteLine("历史信息，CPU占用率：" + Convert.ToString(it));
+                }
+            }
+
+            SystemInfo systemInfo = new SystemInfo();
+            Int64 AvailableMemory = systemInfo.MemoryAvailable;
+            Int64 PhysicalMemory = systemInfo.PhysicalMemory;
+            AvailableMemory = AvailableMemory / (1024 * 1024);
+            PhysicalMemory = PhysicalMemory / (1024 * 1024);
+            int ProcessorCount = systemInfo.ProcessorCount;
+            float load = systemInfo.CpuLoad;
+
+            Console.WriteLine("CPU总个数：" + ProcessorCount);
+            Console.WriteLine("CPU负载率：" + load);
+            Console.WriteLine("总物理内存：" + PhysicalMemory + "MB");
+            Console.WriteLine("当前可用内存：" + AvailableMemory + "MB");
+#endif
+
 #if TEST
         static void Main(string[] args) 
         {
@@ -186,5 +219,5 @@ namespace Load_Balancer_Server
         }
 #endif
 
-        }
     }
+}

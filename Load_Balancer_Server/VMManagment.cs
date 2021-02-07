@@ -226,7 +226,7 @@ namespace Load_Balancer_Server
                                     }
                                     catch (ManagementException e)
                                     {
-                                        Console.WriteLine(e.Message, "修改虚拟机CPU配置异常！");
+                                        // Console.WriteLine(e.Message, "修改虚拟机CPU配置异常！");
                                     }
                                     return result;
                                 }
@@ -258,7 +258,7 @@ namespace Load_Balancer_Server
                                     }
                                     catch (ManagementException e)
                                     {
-                                        Console.WriteLine(e.Message, "修改虚拟机CPU配置异常！");
+                                        // Console.WriteLine(e.Message, "修改内存配置异常！");
                                     }
                                     return result;
                                 }
