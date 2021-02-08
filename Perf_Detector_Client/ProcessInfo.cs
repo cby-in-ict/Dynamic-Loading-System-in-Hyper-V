@@ -159,7 +159,7 @@ namespace Perf_Detector_Client
                             }
                         }
                     }
-                    else if (BlackProcDict[proc.procName] * 1024 * 1024 * 1024 > proc.memSize)
+                    else if (BlackProcDict[proc.procName] * 1024 * 1024 < proc.memSize)
                     {
                         Process[] p = Process.GetProcessesByName(proc.procName);
                         foreach (Process procToKill in p)
@@ -189,6 +189,7 @@ namespace Perf_Detector_Client
             if (!ret)
             {
                 Console.WriteLine("读取配置文件：" + ProcConfigPath +" 失败，请检查json格式！");
+                return;
             }
             // 创建一个100ms定时的定时器
             RUtimer = new System.Timers.Timer(CheckingTimeSpan);    // 参数单位为ms

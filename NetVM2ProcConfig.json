@@ -6,8 +6,12 @@
         "memLimit": 0
       },
       {
-        "name": "onedrive",
+        "name": "MicrosoftEdge",
         "memLimit": 10
+      },
+      {
+        "name": "notepad",
+        "memLimit": 0
       }
     ]
 }

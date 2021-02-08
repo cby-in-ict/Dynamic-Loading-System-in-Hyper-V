@@ -8,10 +8,6 @@
       {
         "name": "chrome",
         "memLimit": 100
-      },
-      {
-        "name": "msedge",
-        "memLimit": 0
       }
     ]
 }

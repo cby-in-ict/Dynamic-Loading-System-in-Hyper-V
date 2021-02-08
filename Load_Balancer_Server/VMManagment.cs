@@ -88,47 +88,55 @@ namespace Load_Balancer_Server
             #region 获得或者刷新虚拟机的Performance
             public PerformanceSetting GetPerformanceSetting()
             {
-                ManagementObjectCollection virtualSystemSettings = virtualMachine.GetRelated("Msvm_SummaryInformation");
-                ManagementObject virtualSystemSetting = WmiUtilities.GetFirstObjectFromCollection(virtualSystemSettings);
-
-                //Msvm_SummaryInformation
-                performanceSetting.Name = virtualSystemSetting.GetPropertyValue("Name") + "";
-                performanceSetting.ElementName = virtualSystemSetting.GetPropertyValue("ElementName") + "";
-                performanceSetting.InstanceID = virtualSystemSetting.GetPropertyValue("InstanceID") + "";
-                performanceSetting.NumberOfProcessors = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("NumberOfProcessors"));
-                performanceSetting.EnabledState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("EnabledState"));
-                performanceSetting.HealthState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("HealthState"));
-                performanceSetting.ProcessorLoad = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("ProcessorLoad"));
-                
-                UInt16[] ProcessorHistoryInfo = (UInt16[])virtualSystemSetting.GetPropertyValue("ProcessorLoadHistory");
-                performanceSetting.ProcessorLoadHistory = ProcessorHistoryInfo;
-
-                performanceSetting.MemoryUsage = Convert.ToUInt64(virtualSystemSetting.GetPropertyValue("MemoryUsage"));
-                performanceSetting.GuestOperatingSystem = virtualSystemSetting.GetPropertyValue("GuestOperatingSystem") + "";
-                //performanceSetting.AvailableMemoryBuffer = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("AvailableMemoryBuffer"));
-
-                using (ManagementObject detailVMSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
+                try
                 {
-                    using (ManagementObjectCollection processorSettingDatas = detailVMSetting.GetRelated("Msvm_ProcessorSettingData"))
-                    using (ManagementObject processorSettingData = WmiUtilities.GetFirstObjectFromCollection(processorSettingDatas))
-                    {
-                        performanceSetting.CPU_Reservation = Convert.ToUInt64(processorSettingData.GetPropertyValue("Reservation"));
-                        performanceSetting.CPU_Limit = Convert.ToUInt64(processorSettingData.GetPropertyValue("Limit"));
-                        performanceSetting.CPU_Weight = Convert.ToUInt32(processorSettingData.GetPropertyValue("Weight"));
-                    }
-                    using (ManagementObjectCollection memorySettingDatas = detailVMSetting.GetRelated("Msvm_MemorySettingData"))
-                    using (ManagementObject memorySettingData = WmiUtilities.GetFirstObjectFromCollection(memorySettingDatas))
-                    {
-                        performanceSetting.RAM_VirtualQuantity = Convert.ToUInt64(memorySettingData.GetPropertyValue("VirtualQuantity"));
-                        performanceSetting.RAM_Weight = Convert.ToUInt32(memorySettingData.GetPropertyValue("Weight"));
-                        performanceSetting.RAM_DynamicMemoryEnabled = Convert.ToBoolean(memorySettingData.GetPropertyValue("DynamicMemoryEnabled"));
-                    }
-                }
+                    ManagementObjectCollection virtualSystemSettings = virtualMachine.GetRelated("Msvm_SummaryInformation");
+                    ManagementObject virtualSystemSetting = WmiUtilities.GetFirstObjectFromCollection(virtualSystemSettings);
 
-                performanceSetting.GuestCpuRatio = (((float)performanceSetting.CPU_Limit/100000) * performanceSetting.NumberOfProcessors);
-                performanceSetting.GuestCpuRatio = performanceSetting.GuestCpuRatio / 8;
-                return performanceSetting;
+                    //Msvm_SummaryInformation
+                    performanceSetting.Name = virtualSystemSetting.GetPropertyValue("Name") + "";
+                    performanceSetting.ElementName = virtualSystemSetting.GetPropertyValue("ElementName") + "";
+                    performanceSetting.InstanceID = virtualSystemSetting.GetPropertyValue("InstanceID") + "";
+                    performanceSetting.NumberOfProcessors = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("NumberOfProcessors"));
+                    performanceSetting.EnabledState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("EnabledState"));
+                    performanceSetting.HealthState = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("HealthState"));
+                    performanceSetting.ProcessorLoad = Convert.ToUInt16(virtualSystemSetting.GetPropertyValue("ProcessorLoad"));
+
+                    UInt16[] ProcessorHistoryInfo = (UInt16[])virtualSystemSetting.GetPropertyValue("ProcessorLoadHistory");
+                    performanceSetting.ProcessorLoadHistory = ProcessorHistoryInfo;
+
+                    performanceSetting.MemoryUsage = Convert.ToUInt64(virtualSystemSetting.GetPropertyValue("MemoryUsage"));
+                    performanceSetting.GuestOperatingSystem = virtualSystemSetting.GetPropertyValue("GuestOperatingSystem") + "";
+                    //performanceSetting.AvailableMemoryBuffer = Convert.ToInt32(virtualSystemSetting.GetPropertyValue("AvailableMemoryBuffer"));
+
+                    using (ManagementObject detailVMSetting = WmiUtilities.GetVirtualMachineSettings(virtualMachine))
+                    {
+                        using (ManagementObjectCollection processorSettingDatas = detailVMSetting.GetRelated("Msvm_ProcessorSettingData"))
+                        using (ManagementObject processorSettingData = WmiUtilities.GetFirstObjectFromCollection(processorSettingDatas))
+                        {
+                            performanceSetting.CPU_Reservation = Convert.ToUInt64(processorSettingData.GetPropertyValue("Reservation"));
+                            performanceSetting.CPU_Limit = Convert.ToUInt64(processorSettingData.GetPropertyValue("Limit"));
+                            performanceSetting.CPU_Weight = Convert.ToUInt32(processorSettingData.GetPropertyValue("Weight"));
+                        }
+                        using (ManagementObjectCollection memorySettingDatas = detailVMSetting.GetRelated("Msvm_MemorySettingData"))
+                        using (ManagementObject memorySettingData = WmiUtilities.GetFirstObjectFromCollection(memorySettingDatas))
+                        {
+                            performanceSetting.RAM_VirtualQuantity = Convert.ToUInt64(memorySettingData.GetPropertyValue("VirtualQuantity"));
+                            performanceSetting.RAM_Weight = Convert.ToUInt32(memorySettingData.GetPropertyValue("Weight"));
+                            performanceSetting.RAM_DynamicMemoryEnabled = Convert.ToBoolean(memorySettingData.GetPropertyValue("DynamicMemoryEnabled"));
+                        }
+                    }
+
+                    performanceSetting.GuestCpuRatio = (((float)performanceSetting.CPU_Limit / 100000) * performanceSetting.NumberOfProcessors);
+                    performanceSetting.GuestCpuRatio = performanceSetting.GuestCpuRatio / 8;
+                    return performanceSetting;
+                }
+                catch (Exception exp)
+                {
+                    return performanceSetting;
+                }
             }
+            
             #endregion
 
             public bool IsPowerOn()
@@ -289,7 +297,7 @@ namespace Load_Balancer_Server
                 cmd += sourceFileName;
                 cmd += " -DestinationPath ";
                 cmd += destinationFileName;
-                cmd += " -CreateFullPath ";
+                cmd += " -CreateFullPath -Force ";
                 cmd += " -FileSource Host";
                 bool ret = VirtualMachine.implementPSScript(cmd);
                 if (ret)
