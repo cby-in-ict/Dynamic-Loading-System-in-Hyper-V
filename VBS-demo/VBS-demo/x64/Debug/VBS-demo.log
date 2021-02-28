@@ -1,0 +1,3 @@
+﻿cl : 命令行 warning D9002: 忽略未知选项“/ENCLAVE”
+  VBS-demo.cpp
+  VBS-demo.vcxproj -> O:\VBS-demo\x64\Debug\VBS-demo.exe
