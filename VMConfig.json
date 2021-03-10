@@ -1,7 +1,7 @@
 {
   "LocalVM": {
     "Installed": "true",
-    "PowerOnMemorySize": "8192",
+    "PowerOnMemorySize": "4096",
     "OriginalCPUCount": "2",
     "CPULimit": "50"
   },

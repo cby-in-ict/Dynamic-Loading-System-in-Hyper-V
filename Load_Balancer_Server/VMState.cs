@@ -190,9 +190,9 @@ namespace Load_Balancer_Server
                     case "PowerOn":
                         NetVM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
                         bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(NetVM2, NetVM2Config.MemorySize);
-                        int copyFileRet = NetVM2.CopyFileToGuest("NetVM2", GetConfig.NetVM2ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
-                        if (copyFileRet == 0)
-                            Console.WriteLine("拷贝互联网域2进程控制配置文件成功！");
+                        //int copyFileRet = NetVM2.CopyFileToGuest("NetVM2", GetConfig.NetVM2ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
+                        //if (copyFileRet == 0)
+                        //    Console.WriteLine("拷贝互联网域2进程控制配置文件成功！");
                         Console.WriteLine("NetVM2 转换为开机状态");
                         break;
                     case "UnInstall":
