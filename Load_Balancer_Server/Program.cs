@@ -22,6 +22,9 @@ namespace Load_Balancer_Server
 {
     class Program
     {
+#if TEST
+
+#else
         static void Main(string[] args)
         {
             string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
@@ -46,7 +49,7 @@ namespace Load_Balancer_Server
             testLoadBalancer.BalanceByTime();
             Console.WriteLine("负载均衡器启动成功！");
             Console.ReadLine();
-
         }
+#endif
     }
 }

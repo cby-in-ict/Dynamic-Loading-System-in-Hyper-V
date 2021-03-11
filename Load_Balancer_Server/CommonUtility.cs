@@ -26,23 +26,23 @@ namespace Load_Balancer_Server
 
                 //ps.Invoke();
 
-                ps.AddScript("$?");
+                //ps.AddScript("$?");
                 Collection<PSObject> output = ps.Invoke();
-                if (output != null)
-                {
-                    foreach (PSObject pSObject in output)
-                    {
-                        //Console.WriteLine(pSObject.ToString());
-                        result = Convert.ToBoolean(pSObject.ToString().ToLower());
-                    }
-                }
+                //if (output != null)
+                //{
+                //    foreach (PSObject pSObject in output)
+                //    {
+                //        //Console.WriteLine(pSObject.ToString());
+                //        result = Convert.ToBoolean(pSObject.ToString().ToLower());
+                //    }
+                //}
 
                 runspace.Close();
                 // fail, return false
-                if (result == false)
-                {
-                    return null;
-                }
+                //if (result == false)
+                //{
+                //    return null;
+                //}
                 return output;
             }
         }

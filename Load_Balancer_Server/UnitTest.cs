@@ -1,15 +1,16 @@
-﻿// #define TEST
+﻿#define TEST
 
-#define Debug
-#define DynamicAdjustTest
-#define GetConfigTest
-#define SystemInfoTest
-#define LoadBalancerTest
-#define DetectorServerTest
-#define VMStateTest
-#define HyperVPerfCounter
-#define CallSetVMStatus
-#define CopyFileTest
+//#define Debug
+//#define DynamicAdjustTest
+//#define GetConfigTest
+//#define SystemInfoTest
+//#define LoadBalancerTest
+//#define DetectorServerTest
+//#define VMStateTest
+//#define HyperVPerfCounter
+//#define CallSetVMStatus
+//#define CopyFileTest
+#define DockerTest
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ using Microsoft.Samples.HyperV.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Docker.DotNet;
+using Docker.DotNet.Models;
 
 /* Unit test for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server
@@ -157,7 +160,7 @@ namespace Load_Balancer_Server
             string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
             if (!System.IO.File.Exists(MpcVmConfigpath))
             {
-                Console.WriteLine("路径" + MpcVmConfigpath + "下，多域PC虚拟机配置文件不存在");
+                Console.WriteLine("路径" + MpcVmConfigpath + "下，MPC配置文件不存在");
                 return;
             }
             VMState vMState = new VMState(MpcVmConfigpath);
@@ -200,6 +203,29 @@ namespace Load_Balancer_Server
             Console.WriteLine("当前可用内存：" + AvailableMemory + "MB");
 #endif
 
+#if DockerTest
+        public static void DockerTest()
+        {
+            DockerLoader dockerLoader = new DockerLoader();
+            dockerLoader.GetContainerListAsync();
+            List<DockerLoader.ContainerPerfInfo> ret = dockerLoader.GetContainerPerfInfoListByPS();
+            Console.ReadLine();
+            foreach (ContainerListResponse containerListResponse in dockerLoader.containerListResponses)
+            {
+                Console.WriteLine(Convert.ToString(containerListResponse.ID));
+                IProgress<ContainerStatsResponse> statsProgress = dockerLoader.GetContainerStats(containerListResponse.ID, new ContainerStatsParameters());
+                
+                Console.WriteLine(Convert.ToString(containerListResponse.Names[0]));
+                Console.WriteLine(containerListResponse.State);
+            }
+            Console.ReadLine();
+            DockerLoader.ContainerPerfInfo perfInfo = dockerLoader.GetContainerPerfInfo(id: "9d450203744e");
+            Console.WriteLine("内存使用量为：" + Convert.ToString(perfInfo.memUsage) + "KB");
+            Console.WriteLine("内存占用率为：" + Convert.ToString(perfInfo.memPercentage));
+            Console.WriteLine("CPU占用率为：" + Convert.ToString(perfInfo.cpuPercentage));
+        }
+#endif
+
 #if TEST
         static void Main(string[] args) 
         {
@@ -235,6 +261,9 @@ namespace Load_Balancer_Server
 #endif
 #if HyperVPerfCounter
             HyperVPerfCounter();
+#endif
+#if DockerTest
+            DockerTest();
 #endif
 
         }

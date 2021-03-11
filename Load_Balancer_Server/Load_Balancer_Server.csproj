@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonUtility.cs" />
+    <Compile Include="DockerLoader.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="DynamicAdjustment.cs" />
     <Compile Include="GetConfig.cs" />
