@@ -204,16 +204,19 @@ namespace Load_Balancer_Server
 #endif
 
 #if DockerTest
-        public static void DockerTest()
+        public static async Task DockerTestAsync()
         {
             DockerLoader dockerLoader = new DockerLoader();
-            dockerLoader.GetContainerListAsync();
+            await dockerLoader.GetContainerListAsync();
+            await dockerLoader.GetContainerStatsAsync("9d450203744e", new ContainerStatsParameters { Stream = false});
+            Thread.Sleep(1000);
+            // GetContainerStats();
             List<DockerLoader.ContainerPerfInfo> ret = dockerLoader.GetContainerPerfInfoListByPS();
             Console.ReadLine();
             foreach (ContainerListResponse containerListResponse in dockerLoader.containerListResponses)
             {
                 Console.WriteLine(Convert.ToString(containerListResponse.ID));
-                IProgress<ContainerStatsResponse> statsProgress = dockerLoader.GetContainerStats(containerListResponse.ID, new ContainerStatsParameters());
+                //IProgress<ContainerStatsResponse> statsProgress = dockerLoader.GetContainerStatsAsync(containerListResponse.ID, new ContainerStatsParameters());
                 
                 Console.WriteLine(Convert.ToString(containerListResponse.Names[0]));
                 Console.WriteLine(containerListResponse.State);
@@ -227,7 +230,7 @@ namespace Load_Balancer_Server
 #endif
 
 #if TEST
-        static void Main(string[] args) 
+        static async Task Main(string[] args) 
         {
 #if CopyFileTest
             CopyFileTest();
@@ -263,7 +266,7 @@ namespace Load_Balancer_Server
             HyperVPerfCounter();
 #endif
 #if DockerTest
-            DockerTest();
+            await DockerTestAsync();
 #endif
 
         }

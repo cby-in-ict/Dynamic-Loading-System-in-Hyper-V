@@ -49,16 +49,31 @@ namespace Load_Balancer_Server
                 Console.WriteLine(value.ToString());
             }
         }
-
-        public StatsProgress GetContainerStats(string ContainerID, ContainerStatsParameters containerStatsParameters)
+        
+        public async Task<StatsProgress> GetContainerStatsAsync(string ContainerID, ContainerStatsParameters containerStatsParameters)
         {
             CancellationTokenSource cancellation = new CancellationTokenSource();
-            IProgress<ContainerStatsResponse> progress;
+            IProgress<ContainerStatsResponse> progress1 = null;
             StatsProgress sp = new StatsProgress();
-            client.Containers.GetContainerStatsAsync(ContainerID,  new ContainerStatsParameters
+            client.Containers.GetContainerStatsAsync(ContainerID, new ContainerStatsParameters
             {
+                Stream = false
             },
-            sp, default).Wait();
+            progress1, default).Wait();
+            Console.WriteLine(Convert.ToString(progress1));
+
+            Stream stream = await client.Containers.GetContainerStatsAsync(ContainerID, new ContainerStatsParameters
+            {
+                Stream = false
+            },
+            default);
+
+            stream.Position = 0;
+            StreamReader reader = new StreamReader(stream);
+            string text = reader.ReadToEnd();
+            Console.WriteLine(text);
+            Console.WriteLine(Convert.ToString(progress1));
+
             return sp;
         }
 
