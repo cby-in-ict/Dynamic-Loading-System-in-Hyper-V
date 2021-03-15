@@ -31,3 +31,17 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Se
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Perf_Transfer.dll.config
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Docker.DotNet.pdb
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Buffers.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Elasticsearch.Net.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Nest.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Memory.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Elasticsearch.Net.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Elasticsearch.Net.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Nest.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Nest.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Memory.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml

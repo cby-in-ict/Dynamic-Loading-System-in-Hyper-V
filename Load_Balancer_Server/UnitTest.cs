@@ -206,12 +206,38 @@ namespace Load_Balancer_Server
 #if DockerTest
         public static async Task DockerTestAsync()
         {
-            DockerLoader dockerLoader = new DockerLoader();
-            await dockerLoader.GetContainerListAsync();
+            DockerMonitor dockerLoader = new DockerMonitor();
+            IList<ContainerListResponse>containerListResponses = await dockerLoader.GetContainerListAsync();
+            Thread.Sleep(5000);
+            // 启动线程刷新各个容器的性能信息
+            _ = Task.Run(() =>
+              {
+                  foreach (ContainerListResponse containerListResponse in containerListResponses)
+                  {
+                      dockerLoader.GetContainerStats(containerListResponse.ID);
+                  }
+              });
+
+            Thread.Sleep(500000000);
+            foreach (ContainerListResponse containerListResponse in containerListResponses)
+            {
+                Console.WriteLine("容器ID为：" + Convert.ToString(containerListResponse.ID));
+                if (dockerLoader.PerfDictByID.ContainsKey(containerListResponse.ID))
+                {
+                    PerfData perfData = dockerLoader.PerfDictByID[containerListResponse.ID];
+                    Console.WriteLine("CPU占用率为：" + Convert.ToString(perfData.TotalCpuUsage));
+                }
+                else
+                {
+                    Console.WriteLine("当前性能字典中不存在ID为" + Convert.ToString(containerListResponse.ID));
+                }
+            }
+            return;
+                await dockerLoader.GetContainerListAsync();
             await dockerLoader.GetContainerStatsAsync("9d450203744e", new ContainerStatsParameters { Stream = false});
-            Thread.Sleep(1000);
+            
             // GetContainerStats();
-            List<DockerLoader.ContainerPerfInfo> ret = dockerLoader.GetContainerPerfInfoListByPS();
+            List<DockerMonitor.ContainerPerfInfo> ret = dockerLoader.GetContainerPerfInfoListByPS();
             Console.ReadLine();
             foreach (ContainerListResponse containerListResponse in dockerLoader.containerListResponses)
             {
@@ -222,7 +248,7 @@ namespace Load_Balancer_Server
                 Console.WriteLine(containerListResponse.State);
             }
             Console.ReadLine();
-            DockerLoader.ContainerPerfInfo perfInfo = dockerLoader.GetContainerPerfInfo(id: "9d450203744e");
+            DockerMonitor.ContainerPerfInfo perfInfo = dockerLoader.GetContainerPerfInfo(id: "9d450203744e");
             Console.WriteLine("内存使用量为：" + Convert.ToString(perfInfo.memUsage) + "KB");
             Console.WriteLine("内存占用率为：" + Convert.ToString(perfInfo.memPercentage));
             Console.WriteLine("CPU占用率为：" + Convert.ToString(perfInfo.cpuPercentage));
