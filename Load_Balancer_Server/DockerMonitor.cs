@@ -41,8 +41,6 @@ namespace Load_Balancer_Server
             public int PIDS { set; get; }
         }
 
-       
-
         public Dictionary<string, PerfData> PerfDictByName = new Dictionary<string, PerfData>();
 
         public Dictionary<string, PerfData> PerfDictByID = new Dictionary<string, PerfData>();
@@ -50,7 +48,9 @@ namespace Load_Balancer_Server
         DockerClient client = new DockerClientConfiguration(
             new Uri("npipe://./pipe/docker_engine"))
              .CreateClient();
+
         public IList<ContainerListResponse> containerListResponses;
+
         public async Task<List<ContainerListResponse>> GetContainerListAsync()
         {
             IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
@@ -61,6 +61,7 @@ namespace Load_Balancer_Server
             containerListResponses = containers.ToList();
             return containers.ToList();
         }
+
         public class StatsProgress : IProgress<ContainerStatsResponse>
         {
             public void Report(ContainerStatsResponse value)
@@ -123,14 +124,14 @@ namespace Load_Balancer_Server
             {
                 TotalCpuUsage = stats.CPUStats?.CPUUsage?.TotalUsage,
                 TotalMemoryUsage = stats.MemoryStats?.Usage,
-                MemoryLimit = stats.MemoryStats ?.Limit,
+                MemoryLimit = stats.MemoryStats?.Limit,
                 ReadBytes = stats.StorageStats?.ReadSizeBytes,
                 WriteBytes = stats.StorageStats?.WriteSizeBytes,
                 Timestamp = stats.Read,
                 ContainerName = stats.Name.Trim('/'),
                 ContainerId = stats.ID
             };
-            Console.WriteLine("Writing data to PerfDictByName");
+            // Console.WriteLine("Writing data to PerfDictByName, and Container ID is:" + perfData.ContainerId.ToString());
             //_elasticClient.WriteToEs(perfData);
             if (PerfDictByName.ContainsKey(perfData.ContainerName))
             {
@@ -151,18 +152,23 @@ namespace Load_Balancer_Server
             }
         }
 
-        public async void test()
+        public async Task StartMonitorContainerPerfThreadAsync()
         {
-            CancellationTokenSource cancellation = new CancellationTokenSource();
-            //Stream testStream = await client.Containers.GetContainerStatsAsync()
-            //Stream stream = await client.Miscellaneous.MonitorEventsAsync(new ContainerEventsParameters(), cancellation.Token);
+            // 启动线程刷新各个容器的性能信息
+            await Task.Run(() =>
+            {
+                foreach (ContainerListResponse containerListResponse in GetContainerListAsync().Result)
+                {
+                    GetContainerStats(containerListResponse.ID);
+                }
+            });
         }
+
         public async Task<ContainerUpdateResponse> UpdateContainer(string id, ContainerUpdateParameters updateParameters)
         {
             ContainerUpdateResponse updateResponse = await client.Containers.UpdateContainerAsync(id, updateParameters);
             return updateResponse;
         }
-
         
         public ContainerPerfInfo GetContainerPerfInfo(string id = null, string name = null)
         {

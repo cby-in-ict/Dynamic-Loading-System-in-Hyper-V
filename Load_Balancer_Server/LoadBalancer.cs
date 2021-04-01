@@ -40,35 +40,35 @@ namespace Load_Balancer_Server
             this.recycleMemPressure = recycleMemThredHold;
             this.appendMemPressure = appendMemThredHold;
 
-            if (VMState.LocalVM != null)
+            if (VMState.VM1 != null)
             {
-                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.LocalVM, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.VM1, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.LocalVM, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.VM1, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryAnalysorDict.Add(VMState.LocalVM, currentMemoryBalancer);
-                cpuAnalysorrDict.Add(VMState.LocalVM, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.VM1, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.VM1, currentCpuBalancer);
             }
-            if (VMState.NetVM1 != null)
+            if (VMState.VM2 != null)
             {
-                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.NetVM1, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.VM2, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.NetVM1, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.VM2, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryAnalysorDict.Add(VMState.NetVM1, currentMemoryBalancer);
-                cpuAnalysorrDict.Add(VMState.NetVM1, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.VM2, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.VM2, currentCpuBalancer);
             }
-            if (VMState.NetVM2 != null)
+            if (VMState.VM3 != null)
             {
-                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.NetVM2, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
+                MemoryAnalysor currentMemoryBalancer = new MemoryAnalysor(VMState.VM3, memPercentageThredHold, memAlarmTimesLimit, detectTimeGap);
                 currentMemoryBalancer.DetectMemByTime();
-                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.NetVM2, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
+                CpuAnalysor currentCpuBalancer = new CpuAnalysor(VMState.VM3, percentagethredhold, queuelengththredhold, cpuAlarmTimesLimit, detectTimeGap);
                 currentCpuBalancer.DetectCpuByTime();
 
-                memoryAnalysorDict.Add(VMState.NetVM2, currentMemoryBalancer);
-                cpuAnalysorrDict.Add(VMState.NetVM2, currentCpuBalancer);
+                memoryAnalysorDict.Add(VMState.VM3, currentMemoryBalancer);
+                cpuAnalysorrDict.Add(VMState.VM3, currentCpuBalancer);
             }
 
         }
@@ -172,7 +172,7 @@ namespace Load_Balancer_Server
                 currentVM.GetPerformanceSetting();
                 if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
-                    if (VMState.LocalVM.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                    if (VMState.VM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
                     if (!currentVM.IsPowerOn())
                         continue;
@@ -195,7 +195,7 @@ namespace Load_Balancer_Server
                 }
                 else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
-                    if (VMState.NetVM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                    if (VMState.VM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
                     if (!currentVM.IsPowerOn())
                         continue;
@@ -218,7 +218,7 @@ namespace Load_Balancer_Server
                 }
                 else if (currentVM.vmName == "NetVM2" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
                 {
-                    if(VMState.NetVM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                    if(VMState.VM3.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
                    if (!currentVM.IsPowerOn())
                         continue;

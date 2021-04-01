@@ -25,27 +25,27 @@ namespace Load_Balancer_Server
             {
                 if (VMName == "LocalVM")
                 {
-                    if (VMState.LocalVM == null)
+                    if (VMState.VM1 == null)
                         return false;
-                    if (VMState.LocalVM.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (VMState.VM1.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }    
                 }
                 else if (VMName == "NetVM1")
                 {
-                    if (VMState.NetVM1 == null)
+                    if (VMState.VM2 == null)
                         return false;
-                    if (VMState.NetVM1.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (VMState.VM2.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }
                 }
                 else if (VMName == "NetVM2")
                 {
-                    if (VMState.NetVM2 == null)
+                    if (VMState.VM3 == null)
                         return false;
-                    if (VMState.NetVM2.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (VMState.VM3.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     {
                         return false;
                     }

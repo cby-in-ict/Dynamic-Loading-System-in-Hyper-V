@@ -82,11 +82,11 @@ namespace Load_Balancer_Server
                 using (JsonTextReader reader = new JsonTextReader(file))
                 {
                     JObject o = (JObject)JToken.ReadFrom(reader);
-
+                    
                     if (o.ContainsKey(VMName))
                     {
-                        currentVMConfig.VMName = VMName;
                         JObject vmObj = ((JObject)o[VMName]);
+                        currentVMConfig.VMName = Convert.ToString(vmObj["VMName"].ToString());
                         currentVMConfig.Installed = Convert.ToBoolean(vmObj["Installed"].ToString());
                         currentVMConfig.CPUNum = Convert.ToInt32(vmObj["OriginalCPUCount"].ToString());
                         currentVMConfig.MemorySize = Convert.ToUInt64(vmObj["PowerOnMemorySize"].ToString());

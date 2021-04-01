@@ -1,20 +1,29 @@
 {
-  "LocalVM": {
+  "VM1": {
+    "VMName": "LocalVM",
     "Installed": "true",
     "PowerOnMemorySize": "4096",
     "OriginalCPUCount": "2",
     "CPULimit": "50"
   },
-  "NetVM1": {
+  "VM2": {
+    "VMName": "NetVM1",
     "Installed": "true",
     "PowerOnMemorySize": "4096",
     "OriginalCPUCount": "2",
     "CPULimit": "50"
   },
-  "NetVM2": {
+  "VM3": {
+    "VMName": "NetVM2",
     "Installed": "true",
     "PowerOnMemorySize": "4096",
     "OriginalCPUCount": "2",
     "CPULimit": "50"
+  },
+  "Docker": {
+    "Enabled": "true",
+    "IsDockerLoaderOn": "true",
+    "OriginalCPUCount": "2",
+    "CPULimit": "100"
   }
 }

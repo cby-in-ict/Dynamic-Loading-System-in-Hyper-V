@@ -209,23 +209,32 @@ namespace Load_Balancer_Server
             DockerMonitor dockerLoader = new DockerMonitor();
             IList<ContainerListResponse>containerListResponses = await dockerLoader.GetContainerListAsync();
             Thread.Sleep(5000);
+            await dockerLoader.StartMonitorContainerPerfThreadAsync();
             // 启动线程刷新各个容器的性能信息
-            _ = Task.Run(() =>
-              {
-                  foreach (ContainerListResponse containerListResponse in containerListResponses)
-                  {
-                      dockerLoader.GetContainerStats(containerListResponse.ID);
-                  }
-              });
+            //_ = Task.Run(() =>
+            //  {
+            //      foreach (ContainerListResponse containerListResponse in containerListResponses)
+            //      {
+            //          dockerLoader.GetContainerStats(containerListResponse.ID);
+            //      }
+            //  });
 
-            Thread.Sleep(500000000);
+            Console.WriteLine("继续执行...");
+            Console.ReadLine();
             foreach (ContainerListResponse containerListResponse in containerListResponses)
             {
                 Console.WriteLine("容器ID为：" + Convert.ToString(containerListResponse.ID));
                 if (dockerLoader.PerfDictByID.ContainsKey(containerListResponse.ID))
                 {
+                    Console.WriteLine("请输入任意键...");
+                    Console.ReadLine();
                     PerfData perfData = dockerLoader.PerfDictByID[containerListResponse.ID];
                     Console.WriteLine("CPU占用率为：" + Convert.ToString(perfData.TotalCpuUsage));
+                    Console.WriteLine("继续执行...");
+                    Console.ReadLine();
+                    PerfData perfData2 = dockerLoader.PerfDictByID[containerListResponse.ID];
+                    Console.WriteLine("CPU占用率为：" + Convert.ToString(perfData2.TotalCpuUsage));
+                    
                 }
                 else
                 {
