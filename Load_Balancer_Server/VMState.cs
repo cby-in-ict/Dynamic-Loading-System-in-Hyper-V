@@ -16,6 +16,8 @@ namespace Load_Balancer_Server
 {
     public class VMState 
     {
+        public static bool isDockerInstalled = false;
+        public static bool isDockerVMPowerOn = false;
         public static string currentUsedVM = "GetOff";
         public static VirtualMachine VM1;
         public static VMHvPerfCounterInfo VM1PerfCounterInfo = new VMHvPerfCounterInfo();
@@ -26,6 +28,9 @@ namespace Load_Balancer_Server
         public static VirtualMachine VM3;
         public static VMHvPerfCounterInfo VM3PerfCounterInfo = new VMHvPerfCounterInfo();
         public static VMConfig VM3Config;
+        public static VirtualMachine DockerDesktopVM = null;
+        public static VMHvPerfCounterInfo DockerVMPerfCounterInfo = new VMHvPerfCounterInfo();
+        public static VMConfig DockerVMConfig;
         public VMState()
         {
             ManagementScope scope;
@@ -36,11 +41,15 @@ namespace Load_Balancer_Server
 
             GetConfig configParser = new GetConfig();
             VM1Config = configParser.GetVMConfig("VM1");
-            VM1 = new VirtualMachine(VM1Config.VMName, scope, managementService);
+            if (VM1Config != null)
+                VM1 = new VirtualMachine(VM1Config.VMName, scope, managementService);
             VM2Config = configParser.GetVMConfig("VM2");
-            VM2 = new VirtualMachine(VM2Config.VMName, scope, managementService);
+            if (VM2Config != null)
+                VM2 = new VirtualMachine(VM2Config.VMName, scope, managementService);
             VM3Config = configParser.GetVMConfig("VM3");
-            VM3 = new VirtualMachine(VM3Config.VMName, scope, managementService);
+            if (VM3Config != null)
+                VM3 = new VirtualMachine(VM3Config.VMName, scope, managementService);
+            DockerVMConfig = configParser.GetVMConfig("Docker");
         }
         public VMState(string MpcVMConfigPath)
         {
@@ -231,6 +240,45 @@ namespace Load_Balancer_Server
             else
                 return;
         }
+
+        public static void DetectVMState(object sender, ElapsedEventArgs e)
+        {
+            if (DockerDesktopVM == null)
+            {
+                try
+                {
+                    ManagementScope scope;
+                    ManagementObject managementService;
+
+                    scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+                    managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+                    DockerDesktopVM = new VirtualMachine("DockerDesktopVM", scope, managementService);
+                    isDockerInstalled = true;
+                }
+                catch
+                {
+                    DockerDesktopVM = null;
+                    isDockerInstalled = false;
+                }
+            }
+            else
+            {
+                isDockerVMPowerOn = DockerDesktopVM.IsPowerOn();
+            }
+        }
+
+        public void StartDetectVMState(int detectTimeGap)
+        {
+            System.Timers.Timer RUtimer = new System.Timers.Timer(detectTimeGap);    // 参数单位为ms
+            RUtimer.Elapsed += DetectVMState;
+            // 为true时，定时时间到会重新计时；为false则只定时一次
+            RUtimer.AutoReset = true;
+            // 使能定时器
+            RUtimer.Enabled = true;
+            // 开始计时
+            RUtimer.Start();
+        }
+
         public static void ReceiveMessage()
         {
             MemoryMapping memoryMapping = new MemoryMapping("vmStatus");

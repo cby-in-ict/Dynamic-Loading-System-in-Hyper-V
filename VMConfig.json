@@ -13,16 +13,17 @@
     "OriginalCPUCount": "2",
     "CPULimit": "50"
   },
-  "VM3": {
+  //"VM3": {
+  //  "VMName": "DockerDesktopVM",
+  //  "Installed": "true",
+  //  "PowerOnMemorySize": "4096",
+  //  "OriginalCPUCount": "2",
+  //  "CPULimit": "50"
+  //},
+  "Docker": {
     "VMName": "DockerDesktopVM",
     "Installed": "true",
-    "PowerOnMemorySize": "4096",
-    "OriginalCPUCount": "2",
-    "CPULimit": "50"
-  },
-  "Docker": {
-    "Enabled": "true",
-    "IsDockerLoaderOn": "true",
+    "PowerOnMemorySize": "3072",
     "OriginalCPUCount": "2",
     "CPULimit": "100"
   }

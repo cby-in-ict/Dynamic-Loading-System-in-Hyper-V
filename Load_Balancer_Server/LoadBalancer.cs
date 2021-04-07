@@ -171,7 +171,7 @@ namespace Load_Balancer_Server
                 MemoryAnalysor currentAnalysor = kvp.Value;
                 currentVM.GetPerformanceSetting();
                 // if (currentVM.vmName == "LocalVM" && currentVM.is == VirtualMachine.VirtualMachineStatus.PowerOn)
-                if (currentVM.vmName == VMState.VM1Config.VMName && currentVM.IsPowerOn())
+                if (VMState.VM1Config != null && currentVM.vmName == VMState.VM1Config.VMName && currentVM.IsPowerOn())
                 {
                     if (VMState.VM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
@@ -197,7 +197,7 @@ namespace Load_Balancer_Server
                     }
                 }
                 // else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
-                else if (currentVM.vmName == VMState.VM2Config.VMName && currentVM.IsPowerOn())
+                else if (VMState.VM2Config != null && currentVM.vmName == VMState.VM2Config.VMName && currentVM.IsPowerOn())
                 {
                     if (VMState.VM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
@@ -206,6 +206,7 @@ namespace Load_Balancer_Server
                     if (VMState.VM2PerfCounterInfo == null)
                     {
                         Console.WriteLine("VM2 初始化Hyper-V计数器失败");
+                        continue;
                     }
                     if (VMState.VM2PerfCounterInfo.currentPressure > appendMemPressure)
                     {
@@ -222,7 +223,7 @@ namespace Load_Balancer_Server
                         continue;
                     }
                 }
-                else if (currentVM.vmName == VMState.VM3Config.VMName && currentVM.IsPowerOn())
+                else if (VMState.VM3Config != null && currentVM.vmName == VMState.VM3Config.VMName && currentVM.IsPowerOn())
                 {
                     if(VMState.VM3.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
@@ -231,6 +232,7 @@ namespace Load_Balancer_Server
                     if (VMState.VM3PerfCounterInfo == null)
                     {
                         Console.WriteLine("VM3 初始化Hyper-V计数器失败");
+                        continue;
                     }
                     if (VMState.VM3PerfCounterInfo.currentPressure > appendMemPressure)
                     {
@@ -244,6 +246,33 @@ namespace Load_Balancer_Server
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        continue;
+                    }
+                }
+                else if (VMState.isDockerInstalled && VMState.isDockerVMPowerOn)
+                {
+                    if (VMState.DockerDesktopVM.IsPowerOff())
+                        continue;
+
+                    VMState.DockerVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("DockerDesktopVM");
+                    if (VMState.DockerVMPerfCounterInfo == null)
+                    {
+                        Console.WriteLine("DockerDesktopVM 初始化Hyper-V计数器失败");
+                        continue;
+                    }
+                    VMState.DockerDesktopVM.GetPerformanceSetting();
+                    if (VMState.DockerVMPerfCounterInfo.currentPressure > (2 * 115))
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity));
+                        continue;
+                    }
+                    else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 90))
+                    {
+                        bool ret = dynamicAdjustment.RecycleVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }

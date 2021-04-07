@@ -38,7 +38,7 @@ namespace Load_Balancer_Server
             vMState.StartMessageReceiver();
 #else
             VMState vMState = new VMState();
-            vMState.StartMessageReceiver();
+            vMState.StartDetectVMState(15000);
 #endif
 
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
