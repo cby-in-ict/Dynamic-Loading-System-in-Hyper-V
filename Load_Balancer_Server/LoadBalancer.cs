@@ -70,7 +70,6 @@ namespace Load_Balancer_Server
                 memoryAnalysorDict.Add(VMState.VM3, currentMemoryBalancer);
                 cpuAnalysorrDict.Add(VMState.VM3, currentCpuBalancer);
             }
-
         }
 
         // 静态方法，供VMState类直接调用，请求开机时为虚拟机超量分配资源
@@ -545,6 +544,12 @@ namespace Load_Balancer_Server
             }
             public void DetectCpuState(object sender, ElapsedEventArgs e)
             {
+                // Detect Docker VM
+                float dockerVMRatio = VMState.DockerDesktopVM.GetPerformanceSetting().GuestCpuRatio;
+                ushort[] dockerVMLoadHistory = currentVirtualMachine.GetPerformanceSetting().ProcessorLoadHistory;
+                dockerVMLoadHistory
+
+
                 // if not PowerOn, do nothing
                 if (currentVirtualMachine.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
                     return;
