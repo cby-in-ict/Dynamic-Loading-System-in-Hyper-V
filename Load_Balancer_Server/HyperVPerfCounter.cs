@@ -23,36 +23,36 @@ namespace Load_Balancer_Server
         {
             try
             {
-                if (VMName == "LocalVM")
+                if (VMName == VMState.VM1Config.VMName)
                 {
                     if (VMState.VM1 == null)
                         return false;
-                    if (VMState.VM1.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (!VMState.VM1.IsPowerOn())
                     {
                         return false;
                     }    
                 }
-                else if (VMName == "NetVM1")
+                else if (VMName == VMState.VM2Config.VMName)
                 {
                     if (VMState.VM2 == null)
                         return false;
-                    if (VMState.VM2.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (!VMState.VM2.IsPowerOn())
                     {
                         return false;
                     }
                 }
-                else if (VMName == "NetVM2")
+                else if (VMName == VMState.VM3Config.VMName)
                 {
                     if (VMState.VM3 == null)
                         return false;
-                    if (VMState.VM3.vmStatus != VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (!VMState.VM3.IsPowerOn())
                     {
                         return false;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("虚拟机名：" + VMName + "，非本地域、互联网域中的任意一种");
+                    Console.WriteLine("虚拟机名：" + VMName + "，不存在配置文件中");
                     return false;
                 }
                 memoryCurrentPressure = new PerformanceCounter("Hyper-V Dynamic Memory VM", "Current Pressure", VMName);

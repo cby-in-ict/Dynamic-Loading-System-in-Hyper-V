@@ -4,7 +4,7 @@
  * resource of a VM. for more information, Please refer to Readme.md.
  *                       Copyright preserved by ChenBoYan, chenboyan@ict.ac.cn 
 */
-#define TEST
+//#define TEST
 using HyperVWcfTransport;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace Load_Balancer_Server
 #else
         static void Main(string[] args)
         {
+#if MPC
             string MpcVmConfigpath = @"C:\Users\CBY\Documents\代码库\0106\FieldManagerUI\FieldManagerUI\bin\UsefulFile\VMState.json";
             if (!File.Exists(MpcVmConfigpath))
             {
@@ -35,6 +36,10 @@ namespace Load_Balancer_Server
             }
             VMState vMState = new VMState(MpcVmConfigpath);
             vMState.StartMessageReceiver();
+#else
+            VMState vMState = new VMState();
+            vMState.StartMessageReceiver();
+#endif
 
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
             Server detectorServer = new Server(HvAddr);
@@ -51,5 +56,5 @@ namespace Load_Balancer_Server
             Console.ReadLine();
         }
 #endif
-    }
+        }
 }

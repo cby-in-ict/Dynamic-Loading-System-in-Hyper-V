@@ -170,70 +170,78 @@ namespace Load_Balancer_Server
                 VirtualMachine currentVM = kvp.Key;
                 MemoryAnalysor currentAnalysor = kvp.Value;
                 currentVM.GetPerformanceSetting();
-                if (currentVM.vmName == "LocalVM" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                // if (currentVM.vmName == "LocalVM" && currentVM.is == VirtualMachine.VirtualMachineStatus.PowerOn)
+                if (currentVM.vmName == VMState.VM1Config.VMName && currentVM.IsPowerOn())
                 {
                     if (VMState.VM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
-                    if (!currentVM.IsPowerOn())
-                        continue;
 
-                    VMState.LocalVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("LocalVM");
-                    if (VMState.LocalVMPerfCounterInfo.currentPressure > appendMemPressure)
+                    if (VMState.VM1PerfCounterInfo == null)
                     {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        Console.WriteLine("VM1 初始化Hyper-V计数器失败");
+                    }
+                    VMState.VM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM1Config.VMName);
+                    if (VMState.VM1PerfCounterInfo.currentPressure > appendMemPressure)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
-                    else if (VMState.LocalVMPerfCounterInfo.averagePressure < recycleMemPressure)
+                    else if (VMState.VM1PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.LocalVMConfig.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
-                else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                // else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                else if (currentVM.vmName == VMState.VM2Config.VMName && currentVM.IsPowerOn())
                 {
                     if (VMState.VM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
-                    if (!currentVM.IsPowerOn())
-                        continue;
 
-                    VMState.NetVM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM1");
-                    if (VMState.NetVM1PerfCounterInfo.currentPressure > appendMemPressure)
+                    VMState.VM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM2Config.VMName);
+                    if (VMState.VM2PerfCounterInfo == null)
                     {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        Console.WriteLine("VM2 初始化Hyper-V计数器失败");
+                    }
+                    if (VMState.VM2PerfCounterInfo.currentPressure > appendMemPressure)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
-                    else if (VMState.NetVM1PerfCounterInfo.averagePressure < recycleMemPressure)
+                    else if (VMState.VM2PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
-                else if (currentVM.vmName == "NetVM2" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                else if (currentVM.vmName == VMState.VM3Config.VMName && currentVM.IsPowerOn())
                 {
                     if(VMState.VM3.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
                         continue;
-                   if (!currentVM.IsPowerOn())
-                        continue;
 
-                    VMState.NetVM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("NetVM2");
-                    if (VMState.NetVM2PerfCounterInfo.currentPressure > appendMemPressure)
+                    VMState.VM3PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM3Config.VMName);
+                    if (VMState.VM3PerfCounterInfo == null)
                     {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        Console.WriteLine("VM3 初始化Hyper-V计数器失败");
+                    }
+                    if (VMState.VM3PerfCounterInfo.currentPressure > appendMemPressure)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity));
                         continue;
                     }
-                    else if (VMState.NetVM2PerfCounterInfo.averagePressure < recycleMemPressure)
+                    else if (VMState.VM3PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.NetVM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;

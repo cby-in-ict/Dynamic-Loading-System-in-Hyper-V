@@ -18,20 +18,36 @@ namespace Load_Balancer_Server
     {
         public static string currentUsedVM = "GetOff";
         public static VirtualMachine VM1;
-        public static VMHvPerfCounterInfo LocalVMPerfCounterInfo = new VMHvPerfCounterInfo();
-        public static VMConfig LocalVMConfig;
+        public static VMHvPerfCounterInfo VM1PerfCounterInfo = new VMHvPerfCounterInfo();
+        public static VMConfig VM1Config;
         public static VirtualMachine VM2;
-        public static VMHvPerfCounterInfo NetVM1PerfCounterInfo = new VMHvPerfCounterInfo();
-        public static VMConfig NetVM1Config;
+        public static VMHvPerfCounterInfo VM2PerfCounterInfo = new VMHvPerfCounterInfo();
+        public static VMConfig VM2Config;
         public static VirtualMachine VM3;
-        public static VMHvPerfCounterInfo NetVM2PerfCounterInfo = new VMHvPerfCounterInfo();
-        public static VMConfig NetVM2Config;
+        public static VMHvPerfCounterInfo VM3PerfCounterInfo = new VMHvPerfCounterInfo();
+        public static VMConfig VM3Config;
+        public VMState()
+        {
+            ManagementScope scope;
+            ManagementObject managementService;
+
+            scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+            managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+
+            GetConfig configParser = new GetConfig();
+            VM1Config = configParser.GetVMConfig("VM1");
+            VM1 = new VirtualMachine(VM1Config.VMName, scope, managementService);
+            VM2Config = configParser.GetVMConfig("VM2");
+            VM2 = new VirtualMachine(VM2Config.VMName, scope, managementService);
+            VM3Config = configParser.GetVMConfig("VM3");
+            VM3 = new VirtualMachine(VM3Config.VMName, scope, managementService);
+        }
         public VMState(string MpcVMConfigPath)
         {
             GetConfig configParser = new GetConfig();
-            LocalVMConfig = configParser.GetVMConfig("VM1");
-            NetVM1Config = configParser.GetVMConfig("VM2");
-            NetVM2Config = configParser.GetVMConfig("VM3");
+            VM1Config = configParser.GetVMConfig("VM1");
+            VM2Config = configParser.GetVMConfig("VM2");
+            VM3Config = configParser.GetVMConfig("VM3");
 
             configParser.currentMpcVMInfo = configParser.GetMpcVMInfo(MpcVMConfigPath, "LocalVM");
             if (configParser.currentMpcVMInfo.Installed == true)
@@ -83,7 +99,7 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         VM1.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
-                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM1, LocalVMConfig.MemorySize, out bool isRequestMemory);
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM1, VM1Config.MemorySize, out bool isRequestMemory);
                         if (isRequestMemory)
                         {
                             // 尝试回收其他虚拟机内存
@@ -93,7 +109,7 @@ namespace Load_Balancer_Server
                         break;
                     case "PowerOn":
                         VM1.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM1, LocalVMConfig.MemorySize);
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM1, VM1Config.MemorySize);
                        int copyFileRet = VM1.CopyFileToGuest("LocalVM", GetConfig.LocalVMProcessInfoPath, @"C:\TEMP\\ProcConfig.json");
                         if (copyFileRet == 0)
                             Console.WriteLine("拷贝本地域进程控制配置文件成功！");
@@ -132,7 +148,7 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         VM2.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
-                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM2, NetVM1Config.MemorySize, out bool isRequestMemory);
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM2, VM2Config.MemorySize, out bool isRequestMemory);
                         if (isRequestMemory)
                         {
                             // 尝试回收其他虚拟机内存
@@ -143,7 +159,7 @@ namespace Load_Balancer_Server
                         break;
                     case "PowerOn":
                         VM2.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM2, NetVM1Config.MemorySize);
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM2, VM2Config.MemorySize);
                         int copyFileRet = VM2.CopyFileToGuest("NetVM1", GetConfig.NetVM1ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
                         if (copyFileRet == 0)
                             Console.WriteLine("拷贝进程控制配置文件到互联网域1成功！");
@@ -180,7 +196,7 @@ namespace Load_Balancer_Server
                         break;
                     case "RequestPowerOn":
                         VM3.vmStatus = VirtualMachine.VirtualMachineStatus.RequestPowerOn;
-                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM3, NetVM2Config.MemorySize, out bool isRequestMemory);
+                        bool requestPowerOnRet = LoadBalancer.PreparePowerOnVM(VM3, VM3Config.MemorySize, out bool isRequestMemory);
                         if (isRequestMemory)
                         {
                             // 尝试回收其他虚拟机内存
@@ -190,7 +206,7 @@ namespace Load_Balancer_Server
                         break;
                     case "PowerOn":
                         VM3.vmStatus = VirtualMachine.VirtualMachineStatus.PowerOn;
-                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM3, NetVM2Config.MemorySize);
+                        bool resumePowerOnRet = LoadBalancer.ResumePowerOnVM(VM3, VM3Config.MemorySize);
                         //int copyFileRet = NetVM2.CopyFileToGuest("NetVM2", GetConfig.NetVM2ProcessInfoPath, @"C:\TEMP\ProcConfig.json");
                         //if (copyFileRet == 0)
                         //    Console.WriteLine("拷贝互联网域2进程控制配置文件成功！");
