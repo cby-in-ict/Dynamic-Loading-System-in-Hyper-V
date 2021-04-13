@@ -4,7 +4,7 @@
  * resource of a VM. for more information, Please refer to Readme.md.
  *                       Copyright preserved by ChenBoYan, chenboyan@ict.ac.cn 
 */
-//#define TEST
+#define TEST
 using HyperVWcfTransport;
 using System;
 using System.Collections.Generic;

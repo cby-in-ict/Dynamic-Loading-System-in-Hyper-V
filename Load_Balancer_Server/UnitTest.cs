@@ -10,7 +10,8 @@
 //#define HyperVPerfCounter
 //#define CallSetVMStatus
 //#define CopyFileTest
-#define DockerTest
+//#define DockerTest
+#define HvContainer
 
 using System;
 using System.Collections.Generic;
@@ -264,6 +265,38 @@ namespace Load_Balancer_Server
         }
 #endif
 
+#if HvContainer
+        public static async Task TestHvContainerAsync()
+        {
+            try
+            {
+                DockerMonitor dockerMonitor = new DockerMonitor();
+                List<ContainerListResponse> containerList = await dockerMonitor.GetContainerListAsync();
+                string id = "";
+                foreach (ContainerListResponse containerListResponse in containerList)
+                {
+                    id = containerListResponse.ID;
+                    if (id.Contains("368e680fa44e"))
+                        break;
+                }
+                ManagementScope scope;
+                ManagementObject managementService;
+
+                scope = new ManagementScope(@"\\.\root\virtualization\v2", null);
+                managementService = WmiUtilities.GetVirtualMachineManagementService(scope);
+
+                VirtualMachine Hv = new VirtualMachine(id, scope, managementService);
+                HyperVPerfCounter hyperVPerfCounter = new HyperVPerfCounter();
+                VMHvPerfCounterInfo VM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(id);
+               
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("异常出现，详细信息为：" + exp.Message);
+            }
+        }
+#endif
+
 #if TEST
         static async Task Main(string[] args) 
         {
@@ -300,10 +333,14 @@ namespace Load_Balancer_Server
 #if HyperVPerfCounter
             HyperVPerfCounter();
 #endif
+
 #if DockerTest
             await DockerTestAsync();
 #endif
 
+#if HvContainer
+            await TestHvContainerAsync();
+#endif
         }
 #endif
 

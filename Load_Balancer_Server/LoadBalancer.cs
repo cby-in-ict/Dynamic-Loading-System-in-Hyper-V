@@ -547,7 +547,6 @@ namespace Load_Balancer_Server
                 // Detect Docker VM
                 float dockerVMRatio = VMState.DockerDesktopVM.GetPerformanceSetting().GuestCpuRatio;
                 ushort[] dockerVMLoadHistory = currentVirtualMachine.GetPerformanceSetting().ProcessorLoadHistory;
-                dockerVMLoadHistory
 
 
                 // if not PowerOn, do nothing
