@@ -45,3 +45,5 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Se
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Memory.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Microsoft.Windows.ComputeVirtualization.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Load_Balancer_Server\bin\Debug\Microsoft.Windows.ComputeVirtualization.pdb

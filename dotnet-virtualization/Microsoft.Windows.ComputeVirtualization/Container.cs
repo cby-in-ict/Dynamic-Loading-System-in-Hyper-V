@@ -191,5 +191,12 @@ namespace Microsoft.Windows.ComputeVirtualization
                 _cs = IntPtr.Zero;
             }
         }
+
+        public string GetContainerSetting(string Property)
+        {
+            string result = "Empty";
+            _hcs.GetComputeSystemProperties(_cs, Property, out result);
+            return result;   
+        }
     }
 }

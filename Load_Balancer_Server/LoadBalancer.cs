@@ -5,6 +5,7 @@ using System.Text;
 using Perf_Transfer;
 using System.Threading;
 using System.Timers;
+using Microsoft.Windows.ComputeVirtualization;
 
 /* Load-balancer main function for dynamic loading system in Hyper-V, copyright reserved by chenboyan */
 namespace Load_Balancer_Server

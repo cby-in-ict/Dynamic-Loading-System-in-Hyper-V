@@ -270,6 +270,8 @@ namespace Load_Balancer_Server
         {
             try
             {
+                HvContainer container = new HvContainer();
+                Console.ReadLine();
                 DockerMonitor dockerMonitor = new DockerMonitor();
                 List<ContainerListResponse> containerList = await dockerMonitor.GetContainerListAsync();
                 string id = "";
@@ -296,6 +298,8 @@ namespace Load_Balancer_Server
             }
         }
 #endif
+
+
 
 #if TEST
         static async Task Main(string[] args) 

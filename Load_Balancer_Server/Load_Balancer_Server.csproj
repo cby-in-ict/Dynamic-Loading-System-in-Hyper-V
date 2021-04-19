@@ -80,6 +80,7 @@
     <Compile Include="CommonUtility.cs" />
     <Compile Include="DockerMonitor.cs" />
     <Compile Include="ElasticSearchClient.cs" />
+    <Compile Include="HvContainer.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="DynamicAdjustment.cs" />
     <Compile Include="GetConfig.cs" />
@@ -99,6 +100,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dotnet-virtualization\Microsoft.Windows.ComputeVirtualization\Microsoft.Windows.ComputeVirtualization.csproj">
+      <Project>{518979e7-c2e1-46b2-85e5-e46eb0d48666}</Project>
+      <Name>Microsoft.Windows.ComputeVirtualization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HyperVWcfTransport.Common\HyperVWcfTransport.csproj">
       <Project>{704364e1-847f-4dc5-a84e-55fcbc773484}</Project>
       <Name>HyperVWcfTransport</Name>

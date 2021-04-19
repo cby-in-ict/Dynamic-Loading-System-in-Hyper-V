@@ -199,7 +199,7 @@ namespace Microsoft.Windows.ComputeVirtualization.Schema
 
 
     [DataContract]
-    struct ContainerSettings
+    public struct ContainerSettings
     {
         [DataMember(Name = "SystemType")]
         private string _SystemType;

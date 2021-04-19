@@ -22,3 +22,9 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Cl
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Transfer.pdb
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Newtonsoft.Json.dll
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Newtonsoft.Json.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Docker.DotNet.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\System.Buffers.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\HyperVWcfTransport.dll.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Perf_Transfer.dll.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\Docker.DotNet.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Detector_Client\bin\Debug\System.Buffers.xml
