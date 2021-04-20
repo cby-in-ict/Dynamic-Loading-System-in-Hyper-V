@@ -161,8 +161,9 @@ namespace Microsoft.Windows.ComputeVirtualization
         public static List<Container> EmulateComputerSystem(IHcs hcs = null)
         {
             IntPtr computeSystem;
+            string output;
             var h = hcs ?? HcsFactory.GetHcs();
-            //h.EnumerateComputeSystems("SELECT * FROM {0}");
+            h.EnumerateComputeSystems("SELECT * FROM {0}", out output);
             return null;
         }
     }

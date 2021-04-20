@@ -23,6 +23,7 @@ namespace Load_Balancer_Server
                 Console.WriteLine(container.GetType().Name);
 
                 ContainerSettings containerSettings = new ContainerSettings();
+
                 //Console.WriteLine(container.);
             }
             

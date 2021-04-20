@@ -3,3 +3,12 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTranspo
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Release\HyperVWcfTransport.csproj.CoreCompileInputs.cache
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Release\HyperVWcfTransport.dll
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Release\HyperVWcfTransport.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\HyperVWcfTransport.dll.config
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\Docker.DotNet.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\Newtonsoft.Json.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\System.Buffers.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\Docker.DotNet.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\Newtonsoft.Json.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Release\System.Buffers.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Release\HyperVWcfTransport.csproj.CopyComplete
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Release\HyperVWcfTransport.csprojAssemblyReference.cache

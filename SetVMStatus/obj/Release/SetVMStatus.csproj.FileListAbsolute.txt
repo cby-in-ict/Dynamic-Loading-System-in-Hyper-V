@@ -1,7 +1,13 @@
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\SetVMStatus.exe.config
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\SetVMStatus.exe
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\SetVMStatus.pdb
-C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Release\SetVMStatus.csprojAssemblyReference.cache
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Release\SetVMStatus.csproj.CoreCompileInputs.cache
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Release\SetVMStatus.exe
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Release\SetVMStatus.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\Docker.DotNet.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\Newtonsoft.Json.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\System.Buffers.dll
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\Docker.DotNet.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\Newtonsoft.Json.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Release\System.Buffers.xml
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Release\SetVMStatus.csproj.CopyComplete
