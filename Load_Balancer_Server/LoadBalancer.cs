@@ -249,7 +249,7 @@ namespace Load_Balancer_Server
                         continue;
                     }
                 }
-                else if (VMState.isDockerInstalled && VMState.isDockerVMPowerOn)
+                if (VMState.isDockerInstalled && VMState.isDockerVMPowerOn)
                 {
                     if (VMState.DockerDesktopVM.IsPowerOff())
                         continue;
@@ -265,14 +265,26 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity));
+                            Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        else
+                        {
+                            ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
+                            if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
+                                Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentMemSize)+ "MB");
+                        }
                         continue;
                     }
-                    else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 90))
+                    else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 95))
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
                             Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        else
+                        {
+                            ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
+                            if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
+                                Console.WriteLine("监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentMemSize) + "MB");
+                        }
                         continue;
                     }
                 }
@@ -299,6 +311,8 @@ namespace Load_Balancer_Server
                 currentVM.GetPerformanceSetting();
                 ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
                 ulong currentCpuReserve = currentVM.performanceSetting.CPU_Reservation;
+
+
                 if (currentAnalysor.isCpuAlarm == true)
                 {
                     if (currentCpuLimit > 90000)
@@ -365,6 +379,84 @@ namespace Load_Balancer_Server
                         }
                     }
                 }
+
+                // Docker CPU 动态调节
+                if (!VMState.isDockerInstalled)
+                    continue;
+                // Docker VM是否安装
+                if (VMState.DockerDesktopVM.IsPowerOn())
+                {
+                    VMState.DockerDesktopVM.GetPerformanceSetting();
+                    ulong currentDockerCpuLimit = VMState.DockerDesktopVM.performanceSetting.CPU_Limit;
+                    ulong currentDockerCpuReserve = VMState.DockerDesktopVM.performanceSetting.CPU_Reservation;
+
+                    if (currentAnalysor.isDockerCpuAlarm == true)
+                    {
+                        if (currentDockerCpuLimit > 90000)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit + 10000);
+                            if (currentDockerCpuReserve < 50000)
+                            {
+                                ret &= dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve + 10000);
+                                Console.WriteLine("[+] 监测到虚拟机：" + VMState.DockerDesktopVM.vmName + " CPU预警出现，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentDockerCpuReserve + 10000) / 1000));
+                            }
+
+                            if (ret)
+                            {
+                                Console.WriteLine("[+] 监测到虚拟机：" + VMState.DockerDesktopVM.vmName + " CPU预警出现，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentDockerCpuLimit + 10000) / 1000));
+                                // 取消CPU预警
+                                currentAnalysor.isCpuAlarm = false;
+                                // CPU become more free
+                                if (currentAnalysor.dockerVmCpuFreeRanking <= 5)
+                                    currentAnalysor.dockerVmCpuFreeRanking += 1;
+                                continue;
+                            }
+                        }
+                    }
+
+                    // 尝试调低CPU保留值
+                    if (currentAnalysor.dockerVmCpuFreeRanking > 6)
+                    {
+                        // 等级为9和10，同时调低保留和限制
+                        if (currentAnalysor.dockerVmCpuFreeRanking > 8)
+                        {
+                            if (currentDockerCpuReserve > 0)
+                            {
+                                // 首先调低保留值，确保保留<限制
+                                bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                                // 虚拟机保留最低40%
+                                if (ret)
+                                {
+                                    Console.WriteLine("监测到虚拟机：" + VMState.DockerDesktopVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
+                                }
+                            }
+                            // 尝试调低CPU限制值
+                            if (currentDockerCpuLimit > 40000)
+                            {
+                                bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit - 10000);
+                                if (ret)
+                                {
+                                    Console.WriteLine("监测到虚拟机：" + VMState.DockerDesktopVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentDockerCpuLimit - 10000) / 1000));
+                                }
+                            }
+                            currentAnalysor.dockerVmCpuFreeRanking -= 2;
+                        }
+                        // 等级为7、8
+                        else if (currentDockerCpuReserve > 0)
+                        {
+                            bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                            if (ret)
+                            {
+                                Console.WriteLine("监测到虚拟机：" + VMState.DockerDesktopVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
+                                currentAnalysor.dockerVmCpuFreeRanking -= 1;
+                            }
+                        }
+                    }
+                } 
             }
         }
         public bool CheckMemCanDeploy()
@@ -490,12 +582,16 @@ namespace Load_Balancer_Server
             public int detectAlarmTimes { set; get; }
             // CPU告警限制次数，超过该次数isCpuAlarm变量置为true
             public int cpuAlarmTimesLimit { set; get; }
-            // CPU空闲等级
+            // CPU空闲等级CPU空闲等级
             public int cpuFreeRanking { set; get; }
+            // DockerDesktopVM
+            public int dockerVmCpuFreeRanking { set; get; }
             public int detectTimeGap { set; get; }
             public bool isCpuAlarm = false;
 
-            
+            // Docker虚拟机CPU告警信号
+            public bool isDockerCpuAlarm = false;
+
             // CPU检测定时器
             private System.Timers.Timer RUtimer;
             // 清空detectAlarmTimes和isCpuAlarm的定时器
@@ -509,6 +605,7 @@ namespace Load_Balancer_Server
                 cpuAlarmTimesLimit = alarmTimesLimit;
                 detectTimeGap = detectionGap;
                 cpuFreeRanking = 5;
+                dockerVmCpuFreeRanking = 5;
                 freePercThredHold = freepercentagethredhold;
             }
 
@@ -548,6 +645,39 @@ namespace Load_Balancer_Server
                 // Detect Docker VM
                 float dockerVMRatio = VMState.DockerDesktopVM.GetPerformanceSetting().GuestCpuRatio;
                 ushort[] dockerVMLoadHistory = currentVirtualMachine.GetPerformanceSetting().ProcessorLoadHistory;
+                if (dockerVMLoadHistory == null)
+                    return;
+                
+                if (dockerVMLoadHistory.Length > 90)
+                {
+                    bool isDockerCpuFree = true;
+                    int freeCountSample = 0;
+                    foreach (UInt16 percentage in dockerVMLoadHistory)
+                    {
+                        // 换算成占总物理CPU的百分比
+                        // 判断CPU是否紧张
+                        if (percentage > dockerVMRatio * percentageThredHold)
+                        {
+                            detectAlarmTimes += 1;
+                        }
+                        if (detectAlarmTimes > 50)
+                        {
+                            isDockerCpuAlarm= true;
+                            if (dockerVmCpuFreeRanking > 1)
+                                dockerVmCpuFreeRanking -= 1;
+                        }
+
+                        // 计算空闲的采样数
+                        if (percentage < dockerVMRatio * freePercThredHold)
+                        {
+                            freeCountSample += 1;
+                        }
+                    }
+                    if (freeCountSample < 85)
+                        isDockerCpuFree = false;
+                    if (isDockerCpuFree & dockerVmCpuFreeRanking <= 9)
+                        dockerVmCpuFreeRanking += 1;
+                }
 
 
                 // if not PowerOn, do nothing

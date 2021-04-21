@@ -153,7 +153,9 @@ namespace Microsoft.Windows.ComputeVirtualization
         {
             IntPtr computeSystem;
             var h = hcs ?? HcsFactory.GetHcs();
-            h.OpenComputeSystem(id, out computeSystem);
+            bool ret = h.OpenComputeSystem(id, out computeSystem);
+            if (ret)
+                Console.WriteLine("123");
 
             return Container.Initialize(id, computeSystem, false, h);
         }
