@@ -20,9 +20,11 @@ namespace Load_Balancer_Server
             foreach (ContainerListResponse c in containerListResponses)
             {
                 Container container = HostComputeService.GetComputeSystem(c.ID);
-                Console.WriteLine(container.GetType().Name);
+                dockerLoader.GetContainerStats(c.ID).GetAwaiter().GetResult();
+                //Console.WriteLine(perfInfo.memLimit);
+                //Console.WriteLine(container.GetType().Name);
 
-                ContainerSettings containerSettings = new ContainerSettings();
+                //ContainerSettings containerSettings = new ContainerSettings();
 
                 //Console.WriteLine(container.);
             }
