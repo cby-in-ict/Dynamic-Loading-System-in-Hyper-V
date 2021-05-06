@@ -63,6 +63,7 @@ namespace HyperVWcfTransport
 
         public static void Complete(IAsyncResult iar) => ((Task)iar).Wait();
 
-        public static TResult Complete<TResult>(IAsyncResult iar) => ((Task<TResult>)iar).Result;
+        public static TResult Complete<TResult>(IAsyncResult iar) => 
+            ((Task<TResult>)iar).Result;
     }
 }

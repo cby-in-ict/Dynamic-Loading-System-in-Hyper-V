@@ -36,7 +36,7 @@ namespace Load_Balancer_Server
         public UInt64 RAM_VirtualQuantity;
         public UInt32 RAM_Weight;//分配权重   1-10000
         public bool RAM_DynamicMemoryEnabled;//动态内存
-        public float GuestCpuRatio;
+        public float GuestCpuRatio; //客户机CPU核心数占总数的比例
         }
     #endregion
 

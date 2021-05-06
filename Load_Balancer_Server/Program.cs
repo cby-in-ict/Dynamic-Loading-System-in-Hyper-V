@@ -40,6 +40,8 @@ namespace Load_Balancer_Server
             VMState vMState = new VMState();
             vMState.StartDetectVMState(5000);
 #endif
+            InitVMSetting initVMSetting = new InitVMSetting();
+            initVMSetting.InitAllVM();
 
             string HvAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
             Server detectorServer = new Server(HvAddr);
@@ -49,7 +51,7 @@ namespace Load_Balancer_Server
             });
             task.Start();
 
-            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 10, 3, 15000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 5, 5, 10000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.WriteLine("负载均衡器启动成功！");

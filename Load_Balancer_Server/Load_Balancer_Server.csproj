@@ -78,6 +78,7 @@
     <Compile Include="DockerMonitor.cs" />
     <Compile Include="ElasticSearchClient.cs" />
     <Compile Include="HvContainer.cs" />
+    <Compile Include="InitVMSetting.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="DynamicAdjustment.cs" />
     <Compile Include="GetConfig.cs" />
