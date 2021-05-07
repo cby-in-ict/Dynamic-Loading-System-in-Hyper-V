@@ -238,14 +238,13 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity));
+                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                     else if (VMState.VM3PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                             Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
@@ -318,13 +317,22 @@ namespace Load_Balancer_Server
                 // isCpuAlarm标记了瞬时的CPU预警，cpuFreeRanking小于等于3说明CPU长期负载较高
                 if (currentAnalysor.isCpuAlarm == true || currentAnalysor.cpuFreeRanking <= 4)
                 {
-                    if (currentCpuLimit > 90000)
+                    if (currentCpuLimit > 95000)
                     {
                         continue;
                     }
                     else
                     {
-                        bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 10000);
+                        bool ret;
+                        if ((currentCpuLimit + 20000) < 100000)
+                        {
+                            ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 20000);
+                        }
+                        else
+                        {
+                            ret = dynamicAdjustment.AdjustCPULimit(currentVM, 100000);
+                        }
+                        
                         if (currentCpuReserve < 50000)
                         {
                             ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
@@ -361,7 +369,7 @@ namespace Load_Balancer_Server
                             }
                         }
                         // 尝试调低CPU限制值
-                        if (currentCpuLimit > 30000)
+                        if (currentCpuLimit > 50000)
                         {
                             bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
                             if (ret)
