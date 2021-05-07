@@ -51,7 +51,7 @@ namespace Load_Balancer_Server
             });
             task.Start();
 
-            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 5, 5, 10000, 200000);
+            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 5000, 200000);
             testLoadBalancer.setDetectorServer(detectorServer);
             testLoadBalancer.BalanceByTime();
             Console.WriteLine("负载均衡器启动成功！");

@@ -34,7 +34,7 @@ namespace Load_Balancer_Server
         // 动态资源调节
         public DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
         /*List<VirtualMachine> vmList, */
-        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve, int recycleMemThredHold = 60, int appendMemThredHold = 90) 
+        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve, int recycleMemThredHold = 58, int appendMemThredHold = 85) 
         {
             detectTimeGap = timeGap;
             hostMemReservedPercentage = hostMemReserve;
@@ -336,12 +336,12 @@ namespace Load_Balancer_Server
                         if (currentCpuReserve < 50000)
                         {
                             ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
-                            Console.WriteLine("[+ CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
+                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
                         }
 
                         if (ret)
                         {
-                            Console.WriteLine("[+ CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 10000)/1000));
+                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 20000)/1000));
                             // 取消CPU预警
                             currentAnalysor.isCpuAlarm = false;
                             // CPU become more free
@@ -356,7 +356,7 @@ namespace Load_Balancer_Server
                 if (currentAnalysor.cpuFreeRanking > 6)
                 {
                     // 等级为9和10，同时调低保留和限制
-                    if (currentAnalysor.cpuFreeRanking > 8)
+                    if (currentAnalysor.cpuFreeRanking >= 8)
                     {
                         if (currentCpuReserve > 0) 
                         {
@@ -365,7 +365,7 @@ namespace Load_Balancer_Server
                             // 虚拟机保留最低40%
                             if (ret)
                             {
-                                Console.WriteLine("[- CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                                Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
                             }
                         }
                         // 尝试调低CPU限制值
@@ -374,7 +374,7 @@ namespace Load_Balancer_Server
                             bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
                             if (ret)
                             {
-                                Console.WriteLine("[- CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
+                                Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
                             }
                         }
                         currentAnalysor.cpuFreeRanking -= 2;
@@ -385,7 +385,7 @@ namespace Load_Balancer_Server
                         bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
                         if (ret)
                         {
-                            Console.WriteLine("[- CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                            Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
                             currentAnalysor.cpuFreeRanking -= 1;
                         }
                     }
@@ -758,7 +758,7 @@ namespace Load_Balancer_Server
                             return;
                         }
                     }
-                    // 监测瞬时压力没有返回，则判断
+                    // 监测瞬时压力没有返回，则判断历史使用信息
                     ushort[] processorLoadHistory = currentVirtualMachine.GetPerformanceSetting().ProcessorLoadHistory;
                     float guestCpuRatio = currentVirtualMachine.GetPerformanceSetting().GuestCpuRatio;
                     if (processorLoadHistory == null)
