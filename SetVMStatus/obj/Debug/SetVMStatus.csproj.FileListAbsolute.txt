@@ -11,4 +11,3 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Debug\Newtonsoft.Json.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\bin\Debug\System.Buffers.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.csproj.CopyComplete
-C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\SetVMStatus\obj\Debug\SetVMStatus.csprojAssemblyReference.cache

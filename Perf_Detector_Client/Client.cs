@@ -20,6 +20,8 @@ namespace Perf_Detector_Client
     {
         [OperationContract]
         VMPerf TransferPerfStr(string perf_Str);
+        [OperationContract]
+        void KeyProcStart(string VMName, string keyProcName);
 
     }
 
@@ -31,8 +33,9 @@ namespace Perf_Detector_Client
         }
 
         public VMPerf TransferPerfStr(string perf_Str) => Channel.TransferPerfStr(perf_Str);
+        public void KeyProcStart(string VMName, string keyProcName) => Channel.KeyProcStart(VMName, keyProcName);
 
-        
+
     }
     public class Client 
     {
@@ -59,7 +62,6 @@ namespace Perf_Detector_Client
             //定时发送
             SendByTime();
             //detectorClient.Close();
-            Console.ReadLine();
         }
 
         public void SendByTime()

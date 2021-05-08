@@ -129,7 +129,7 @@ namespace HyperVWcfTransport
             }
             catch (SocketException socketException)
             {
-                throw ConvertSocketException(socketException, "Send");
+                //throw ConvertSocketException(socketException, "Send");
             }
         }
 

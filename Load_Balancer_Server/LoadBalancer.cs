@@ -341,7 +341,9 @@ namespace Load_Balancer_Server
 
                         if (ret)
                         {
-                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentCpuLimit + 20000)/1000));
+                            // fix: log显示limit不超过100
+                            ulong dst= (currentCpuLimit + 20000)>(ulong)100000 ?100:(currentCpuLimit + 20000) / 1000;
+                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString(dst));
                             // 取消CPU预警
                             currentAnalysor.isCpuAlarm = false;
                             // CPU become more free
@@ -654,12 +656,12 @@ namespace Load_Balancer_Server
             public void DetectCpuState(object sender, ElapsedEventArgs e)
             {
                 // Detect Docker VM
-                if (VMState.DockerDesktopVM != null & VMState.DockerDesktopVM.IsPowerOn()) 
+                if (VMState.DockerDesktopVM != null && VMState.DockerDesktopVM.IsPowerOn()) 
                 {
                     float dockerVMRatio = VMState.DockerDesktopVM.GetPerformanceSetting().GuestCpuRatio;
                     ushort[] dockerVMLoadHistory = VMState.DockerDesktopVM.GetPerformanceSetting().ProcessorLoadHistory;
          
-                    if (dockerVMLoadHistory != null & dockerVMLoadHistory.Length > 90)
+                    if (dockerVMLoadHistory != null && dockerVMLoadHistory.Length > 90)
                     {
                         bool isDockerCpuFree = true;
                         int freeCountSample = 0;
@@ -686,7 +688,7 @@ namespace Load_Balancer_Server
                         }
                         if (freeCountSample < 85)
                             isDockerCpuFree = false;
-                        if (isDockerCpuFree & dockerVmCpuFreeRanking <= 9)
+                        if (isDockerCpuFree && dockerVmCpuFreeRanking <= 9)
                             dockerVmCpuFreeRanking += 1;
                     }
                 }
@@ -728,10 +730,10 @@ namespace Load_Balancer_Server
                             isCpuFree = false;
                         }
                         // 若CPU空闲，增大空闲评级
-                        if (isCpuFree & cpuFreeRanking <= 9)
+                        if (isCpuFree && cpuFreeRanking <= 9)
                             cpuFreeRanking += 1;
                         // 若CPU繁忙，减小空闲评级
-                        if (isCpuBusy & cpuFreeRanking >= 2)
+                        if (isCpuBusy && cpuFreeRanking >= 2)
                             cpuFreeRanking -= 1;
                     }
                 }
@@ -790,10 +792,10 @@ namespace Load_Balancer_Server
                             isCpuFree = false;
                         }
                         // 若CPU空闲，增大空闲评级
-                        if (isCpuFree & cpuFreeRanking <= 9)
+                        if (isCpuFree && cpuFreeRanking <= 9)
                             cpuFreeRanking += 1;
                         // 若CPU繁忙，减小空闲评级
-                        if (isCpuBusy & cpuFreeRanking >= 2)
+                        if (isCpuBusy && cpuFreeRanking >= 2)
                             cpuFreeRanking -= 1;
                     }
                 }

@@ -16,4 +16,3 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTranspo
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Debug\Newtonsoft.Json.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\bin\Debug\System.Buffers.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.csproj.CopyComplete
-C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\HyperVWcfTransport.Common\obj\Debug\HyperVWcfTransport.csprojAssemblyReference.cache

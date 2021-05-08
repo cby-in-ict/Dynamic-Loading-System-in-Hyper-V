@@ -1,13 +1,18 @@
 {
-  "BlackList":
-    [
-      {
-        "name": "cmd",
-        "memLimit": 0
-      },
-      {
-        "name": "chrome",
-        "memLimit": 100
-      }
-    ]
+  "BlackList": [
+    {
+      "name": "12",
+      "memLimit": 0
+    },
+    {
+      "name": "12315",
+      "memLimit": 100
+    }
+  ],
+  "WhiteList": [
+    {
+      "name": "chrome",
+      "memLimit": 0
+    }
+  ]
 }

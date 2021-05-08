@@ -43,6 +43,11 @@ namespace Perf_Detector_Client
         private System.Timers.Timer RUtimer;
         public string ProcConfigPath { set; get; }
         public int CheckingTimeSpan = 10000;
+
+        // public bool NeedSendKeyProc = true;
+        // 标记是否是第一次发送KeyProc启动信息
+        public bool IsFristSend = true;
+        public Client ProcControllerClient { set; get; }
         public ProcessControler(string procConfigPath, int checkingTimeSpan)
         {
             ProcConfigPath = procConfigPath;
@@ -120,10 +125,6 @@ namespace Perf_Detector_Client
                                 WhiteProcDict.Add(procName, memLimit);
                             }
                         }
-                        else
-                        {
-                            Console.WriteLine("白名单为空");
-                        }
                         return true;
                     }
                 }
@@ -179,11 +180,59 @@ namespace Perf_Detector_Client
             }
         }
 
+        public void TrySendWhiteProc(List<ProcessInfo> procList)
+        {
+            if (WhiteProcDict.Count == 0)
+                return;
+            // 每次判断是否含有关键进程
+            bool hasKeyProc = false;
+            foreach (ProcessInfo proc in procList)
+            {
+                // 是否含有关键进程
+                if (proc.procName == null)
+                    continue;
+                if (WhiteProcDict.ContainsKey(proc.procName))
+                {
+                    hasKeyProc = true;
+                }
+
+                // 包含关键进程且需要发送
+                if (WhiteProcDict.ContainsKey(proc.procName) && IsFristSend)
+                {
+                    hasKeyProc = true;
+                    try
+                    {
+                        if (IsFristSend == true)
+                            ProcControllerClient.detectorClient.KeyProcStart(ProcControllerClient.clientPerfInfo.VMName, proc.procName);
+                        
+                    }
+                    catch (Exception exp)
+                    {
+                        Console.WriteLine("KeyProc Send Exp:" + exp.Message);
+                        // 发送失败，相当于没有该进程
+                    }
+                }
+            }
+
+            // 已经发送过了，就不需要发送，除非监测不到关键进程
+            if (hasKeyProc)
+            {
+                IsFristSend = false;
+            }
+
+            // 若没有关键进程，激活下一次发送信息
+            if (!hasKeyProc)
+            {
+                IsFristSend = true;
+            }
+                
+        }
+
         public void CheckProcessByTime()
         {
             while (!File.Exists(ProcConfigPath))
             {
-                Thread.Sleep(10000);
+                Thread.Sleep(15000);
             }
             bool ret = GetBlackListFromConfig();
             if (!ret)
@@ -191,6 +240,8 @@ namespace Perf_Detector_Client
                 Console.WriteLine("读取配置文件：" + ProcConfigPath +" 失败，请检查json格式！");
                 return;
             }
+            GetWhiteListFromConfig();
+
             // 创建一个100ms定时的定时器
             RUtimer = new System.Timers.Timer(CheckingTimeSpan);    // 参数单位为ms
                                                                     // 定时时间到，处理函数为OnTimedUEvent(...)
@@ -206,11 +257,12 @@ namespace Perf_Detector_Client
         {
             List<ProcessInfo> processInfoList = GetProcInfoList();
             TryKillBlackProcs(processInfoList);
+            TrySendWhiteProc(processInfoList);
         }
 
-        public void StartUpCheckingProcess()
+        public void StartUpCheckingProcess(Client client)
         {
-
+            ProcControllerClient = client;
             var task = new Task(() =>
             {
                 CheckProcessByTime();

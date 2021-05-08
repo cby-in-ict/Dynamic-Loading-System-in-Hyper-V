@@ -29,6 +29,8 @@ namespace Load_Balancer_Server
         {
             [OperationContract]
             VMPerf TransferPerfStr(string perf_Str);
+            [OperationContract]
+            void KeyProcStart(string VMName,string keyProcName);
 
         }
 
@@ -80,6 +82,22 @@ namespace Load_Balancer_Server
 
             }
 
+            public void KeyProcStart(string VMName, string keyProcName)
+            {
+                DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
+                if (VMName == "VM1")
+                {
+                    dynamicAdjustment.AdjustCPULimit(VMState.VM1, 100000);
+                }
+                if (VMName == "VM2")
+                {
+                    dynamicAdjustment.AdjustCPULimit(VMState.VM2, 100000);
+                }
+                if (VMName == "VM3")
+                {
+                    dynamicAdjustment.AdjustCPULimit(VMState.VM3, 100000);
+                }
+            }
         }
         public void StartUpServer()
         {
@@ -91,14 +109,13 @@ namespace Load_Balancer_Server
                 sh.AddServiceEndpoint(typeof(IServer), binding, DetectorServerAddr);
                 sh.Open();
                 
-                Console.ReadLine();
-                sh.Close();
-                //return true;
+                string input = Console.ReadLine();
+                if (input == "s")
+                    sh.Close();
             }
             catch (Exception exp)
             {
                 Console.WriteLine(exp.Message, "启动服务器失败，出现异常");
-                //return false;
             }
             
         }

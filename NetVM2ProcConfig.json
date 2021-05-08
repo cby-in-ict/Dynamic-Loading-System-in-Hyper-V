@@ -1,17 +1,14 @@
 {
-  "BlackList":
-    [
-      {
-        "name": "cmd",
-        "memLimit": 0
-      },
-      {
-        "name": "MicrosoftEdge",
-        "memLimit": 10
-      },
-      {
-        "name": "notepad",
-        "memLimit": 0
-      }
-    ]
+  "BlackList": [
+    {
+      "name": "MicrosoftEdge",
+      "memLimit": 1000
+    }
+  ],
+  "WhiteList": [
+    {
+      "name": "chrome",
+      "memLimit": 0
+    }
+  ]
 }
