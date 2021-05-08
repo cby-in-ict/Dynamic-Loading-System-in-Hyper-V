@@ -13,50 +13,24 @@ namespace Load_Balancer_Server
         public string VMName { set; get; }
         public float averagePressure { set; get; }
         public float currentPressure { set; get; }
-
+        public float availableMemory { set; get; }
+        public float guestMemory { set; get; }
+        public float availablePercentage { set; get; }
     }
     public class HyperVPerfCounter
     {
         private PerformanceCounter memoryAveragePressure;
         private PerformanceCounter memoryCurrentPressure;
+        private PerformanceCounter currentAvailableMemory;
+        private PerformanceCounter guestPhycicalMemory;
         public bool SetPerCounter(string VMName)
         {
             try
             {
-                //if (VMName == VMState.VM1Config.VMName)
-                //{
-                //    if (VMState.VM1 == null)
-                //        return false;
-                //    if (!VMState.VM1.IsPowerOn())
-                //    {
-                //        return false;
-                //    }    
-                //}
-                //else if (VMName == VMState.VM2Config.VMName)
-                //{
-                //    if (VMState.VM2 == null)
-                //        return false;
-                //    if (!VMState.VM2.IsPowerOn())
-                //    {
-                //        return false;
-                //    }
-                //}
-                //else if (VMName == VMState.VM3Config.VMName)
-                //{
-                //    if (VMState.VM3 == null)
-                //        return false;
-                //    if (!VMState.VM3.IsPowerOn())
-                //    {
-                //        return false;
-                //    }
-                //}
-                //else
-                //{
-                //    Console.WriteLine("虚拟机名：" + VMName + "，不存在配置文件中");
-                //    return false;
-                //}
                 memoryCurrentPressure = new PerformanceCounter("Hyper-V Dynamic Memory VM", "Current Pressure", VMName);
                 memoryAveragePressure = new PerformanceCounter("Hyper-V Dynamic Memory VM", "Average Pressure", VMName);
+                currentAvailableMemory = new PerformanceCounter("Hyper-V Dynamic Memory VM", "Guest Available Memory", VMName);
+                guestPhycicalMemory = new PerformanceCounter("Hyper-V Dynamic Memory VM", "Guest Visible Physical Memory", VMName);
                 return true;
             }
             catch (Exception exp) 
@@ -81,6 +55,9 @@ namespace Load_Balancer_Server
                 vmHvPerfCounterInfo.VMName = VMName;
                 vmHvPerfCounterInfo.averagePressure = memoryAveragePressure.NextValue();
                 vmHvPerfCounterInfo.currentPressure = memoryCurrentPressure.NextValue();
+                vmHvPerfCounterInfo.availableMemory = currentAvailableMemory.NextValue();
+                vmHvPerfCounterInfo.guestMemory = guestPhycicalMemory.NextValue();
+                vmHvPerfCounterInfo.availablePercentage = vmHvPerfCounterInfo.availableMemory / vmHvPerfCounterInfo.guestMemory;
                 return vmHvPerfCounterInfo;
             }
             else

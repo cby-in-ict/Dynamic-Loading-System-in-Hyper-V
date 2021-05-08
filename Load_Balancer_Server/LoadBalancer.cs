@@ -185,14 +185,21 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        continue;
+                    }
+                    if (VMState.VM1PerfCounterInfo.availablePercentage < 0.1)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                     else if (VMState.VM1PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[- VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[- VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
@@ -212,14 +219,21 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        continue;
+                    }
+                    if (VMState.VM2PerfCounterInfo.availablePercentage < 0.1)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                     else if (VMState.VM2PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[- VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[- VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
@@ -238,14 +252,21 @@ namespace Load_Balancer_Server
                     {
                         bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展内存大小，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                        continue;
+                    }
+                    if (VMState.VM3PerfCounterInfo.availablePercentage < 0.1)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                     else if (VMState.VM3PerfCounterInfo.averagePressure < recycleMemPressure)
                     {
                         bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                         if (ret)
-                            Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                         continue;
                     }
                 }
@@ -478,7 +499,6 @@ namespace Load_Balancer_Server
             return true;
         }
 
-
         public class MemoryAnalysor 
         {
             VirtualMachine currentVirtualMachine { set; get; }
@@ -578,7 +598,6 @@ namespace Load_Balancer_Server
                 SetAlarmTimesZero();
                 CancelMemAlarm();
             }
-
         }
 
         public class CpuAnalysor
