@@ -11,4 +11,3 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\bi
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\bin\Debug\Newtonsoft.Json.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\bin\Debug\System.Buffers.xml
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Debug\Perf_Transfer.csproj.CopyComplete
-C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Debug\Perf_Transfer.csprojAssemblyReference.cache

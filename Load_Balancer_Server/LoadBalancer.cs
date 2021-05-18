@@ -27,6 +27,9 @@ namespace Load_Balancer_Server
         public int recycleMemPressure { set; get; }
         // 监测的时间间隔，单位为毫秒(ms)
         int detectTimeGap = 10000;
+        // 是否开启内存和CPU的负载均衡，默认开启
+        public bool IsMemoryBalanceOn = true;
+        public bool IsCPUBalanceOn = true;
         // 动态均衡的定时器
         private System.Timers.Timer Balancetimer;
         // 接收性能信息的服务器
@@ -40,6 +43,21 @@ namespace Load_Balancer_Server
             hostMemReservedPercentage = hostMemReserve;
             this.recycleMemPressure = recycleMemThredHold;
             this.appendMemPressure = appendMemThredHold;
+
+            // 读取整个系统的配置文件，是否开启内存、CPU负载均衡
+            try
+            {
+                GetConfig getConfig = new GetConfig();
+                getConfig.GetSysConfig();
+                IsMemoryBalanceOn = getConfig.currentSysConfig.IsMemoryBalanceOn;
+                IsCPUBalanceOn = getConfig.currentSysConfig.IsCPUBalanceOn;
+            }
+            catch 
+            {
+                IsMemoryBalanceOn = true;
+                IsCPUBalanceOn = true;
+            }
+
 
             if (VMState.VM1 != null)
             {
@@ -165,332 +183,338 @@ namespace Load_Balancer_Server
         public void BalanceAllVM(object sender, ElapsedEventArgs e)
         {
             // TODO: finish all 
-            foreach (KeyValuePair<VirtualMachine, MemoryAnalysor> kvp in memoryAnalysorDict)
+            if (IsMemoryBalanceOn)
             {
-                VirtualMachine currentVM = kvp.Key;
-                MemoryAnalysor currentAnalysor = kvp.Value;
-                currentVM.GetPerformanceSetting();
-                // if (currentVM.vmName == "LocalVM" && currentVM.is == VirtualMachine.VirtualMachineStatus.PowerOn)
-                if (VMState.VM1Config != null && currentVM.vmName == VMState.VM1Config.VMName && currentVM.IsPowerOn())
+                foreach (KeyValuePair<VirtualMachine, MemoryAnalysor> kvp in memoryAnalysorDict)
                 {
-                    if (VMState.VM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
-                        continue;
+                    VirtualMachine currentVM = kvp.Key;
+                    MemoryAnalysor currentAnalysor = kvp.Value;
+                    currentVM.GetPerformanceSetting();
+                    // if (currentVM.vmName == "LocalVM" && currentVM.is == VirtualMachine.VirtualMachineStatus.PowerOn)
+                    if (VMState.VM1Config != null && currentVM.vmName == VMState.VM1Config.VMName && currentVM.IsPowerOn())
+                    {
+                        if (VMState.VM1.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                            continue;
 
-                    if (VMState.VM1PerfCounterInfo == null)
-                    {
-                        Console.WriteLine("VM1 初始化Hyper-V计数器失败");
-                    }
-                    VMState.VM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM1Config.VMName);
-                    if (VMState.VM1PerfCounterInfo.currentPressure > appendMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    if (VMState.VM1PerfCounterInfo.availablePercentage < 0.1)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    else if (VMState.VM1PerfCounterInfo.averagePressure < recycleMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[- VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                }
-                // else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
-                else if (VMState.VM2Config != null && currentVM.vmName == VMState.VM2Config.VMName && currentVM.IsPowerOn())
-                {
-                    if (VMState.VM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
-                        continue;
-
-                    VMState.VM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM2Config.VMName);
-                    if (VMState.VM2PerfCounterInfo == null)
-                    {
-                        Console.WriteLine("VM2 初始化Hyper-V计数器失败");
-                        continue;
-                    }
-                    if (VMState.VM2PerfCounterInfo.currentPressure > appendMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    if (VMState.VM2PerfCounterInfo.availablePercentage < 0.1)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    else if (VMState.VM2PerfCounterInfo.averagePressure < recycleMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[- VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                }
-                else if (VMState.VM3Config != null && currentVM.vmName == VMState.VM3Config.VMName && currentVM.IsPowerOn())
-                {
-                    if(VMState.VM3.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
-                        continue;
-
-                    VMState.VM3PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM3Config.VMName);
-                    if (VMState.VM3PerfCounterInfo == null)
-                    {
-                        Console.WriteLine("VM3 初始化Hyper-V计数器失败");
-                        continue;
-                    }
-                    if (VMState.VM3PerfCounterInfo.currentPressure > appendMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    if (VMState.VM3PerfCounterInfo.availablePercentage < 0.1)
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                    else if (VMState.VM3PerfCounterInfo.averagePressure < recycleMemPressure)
-                    {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        continue;
-                    }
-                }
-                if (VMState.isDockerInstalled && VMState.isDockerVMPowerOn)
-                {
-                    if (VMState.DockerDesktopVM.IsPowerOff())
-                        continue;
-
-                    VMState.DockerVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("DockerDesktopVM");
-                    if (VMState.DockerVMPerfCounterInfo == null)
-                    {
-                        Console.WriteLine("DockerDesktopVM 初始化Hyper-V计数器失败");
-                        continue;
-                    }
-                    VMState.DockerDesktopVM.GetPerformanceSetting();
-                    if (VMState.DockerVMPerfCounterInfo.currentPressure > (2 * 120))
-                    {
-                        bool ret = dynamicAdjustment.AppendVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[+ Docker Mem]监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        else
+                        if (VMState.VM1PerfCounterInfo == null)
                         {
-                            ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
-                            if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
-                                Console.WriteLine("[+ Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentMemSize)+ "MB");
+                            Console.WriteLine("VM1 初始化Hyper-V计数器失败");
                         }
-                        continue;
-                    }
-                    else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 100))
-                    {
-                        bool ret = dynamicAdjustment.RecycleVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
-                        if (ret)
-                            Console.WriteLine("[- Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
-                        else
+                        VMState.VM1PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM1Config.VMName);
+                        if (VMState.VM1PerfCounterInfo.currentPressure > appendMemPressure)
                         {
-                            ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
-                            if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
-                                Console.WriteLine("[- Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentMemSize) + "MB");
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
                         }
-                        continue;
+                        if (VMState.VM1PerfCounterInfo.availablePercentage < 0.1)
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                        else if (VMState.VM1PerfCounterInfo.averagePressure < recycleMemPressure)
+                        {
+                            bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[- VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
                     }
-                }
-                /*
-                if (currentAnalysor.isMemAlarm == true)
-                {
-                    bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
-                    if (ret)
+                    // else if (currentVM.vmName == "NetVM1" && currentVM.vmStatus == VirtualMachine.VirtualMachineStatus.PowerOn)
+                    else if (VMState.VM2Config != null && currentVM.vmName == VMState.VM2Config.VMName && currentVM.IsPowerOn())
                     {
-                        Console.WriteLine("内存预警出现，分配内存");
-                        // 分配内存后，刷新虚拟机性能参数
-                        currentVM.GetPerformanceSetting();
-                        // 分配内存后，取消内存预警并增加内存空闲等级
-                        currentAnalysor.isMemAlarm = false;
-                        if (memoryAnalysorDict[currentVM].memFreeRanking <= 8)
-                            // Memory become more free
-                            memoryAnalysorDict[currentVM].memFreeRanking += 1;
+                        if (VMState.VM2.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                            continue;
+
+                        VMState.VM2PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM2Config.VMName);
+                        if (VMState.VM2PerfCounterInfo == null)
+                        {
+                            Console.WriteLine("VM2 初始化Hyper-V计数器失败");
+                            continue;
+                        }
+                        if (VMState.VM2PerfCounterInfo.currentPressure > appendMemPressure)
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                        if (VMState.VM2PerfCounterInfo.availablePercentage < 0.1)
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                        else if (VMState.VM2PerfCounterInfo.averagePressure < recycleMemPressure)
+                        {
+                            bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[- VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
                     }
+                    else if (VMState.VM3Config != null && currentVM.vmName == VMState.VM3Config.VMName && currentVM.IsPowerOn())
+                    {
+                        if (VMState.VM3.vmStatus == VirtualMachine.VirtualMachineStatus.RequestPowerOn)
+                            continue;
+
+                        VMState.VM3PerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo(VMState.VM3Config.VMName);
+                        if (VMState.VM3PerfCounterInfo == null)
+                        {
+                            Console.WriteLine("VM3 初始化Hyper-V计数器失败");
+                            continue;
+                        }
+                        if (VMState.VM3PerfCounterInfo.currentPressure > appendMemPressure)
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                        if (VMState.VM3PerfCounterInfo.availablePercentage < 0.1)
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 空闲内存不足\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                        else if (VMState.VM3PerfCounterInfo.averagePressure < recycleMemPressure)
+                        {
+                            bool ret = dynamicAdjustment.RecycleVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[- VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存空闲\n回收VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            continue;
+                        }
+                    }
+                    if (VMState.isDockerInstalled && VMState.isDockerVMPowerOn)
+                    {
+                        if (VMState.DockerDesktopVM.IsPowerOff())
+                            continue;
+
+                        VMState.DockerVMPerfCounterInfo = hyperVPerfCounter.GetVMHyperVPerfInfo("DockerDesktopVM");
+                        if (VMState.DockerVMPerfCounterInfo == null)
+                        {
+                            Console.WriteLine("DockerDesktopVM 初始化Hyper-V计数器失败");
+                            continue;
+                        }
+                        VMState.DockerDesktopVM.GetPerformanceSetting();
+                        if (VMState.DockerVMPerfCounterInfo.currentPressure > (2 * 120))
+                        {
+                            bool ret = dynamicAdjustment.AppendVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[+ Docker Mem]监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            else
+                            {
+                                ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
+                                if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
+                                    Console.WriteLine("[+ Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存压力大\n扩展内存大小，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentMemSize) + "MB");
+                            }
+                            continue;
+                        }
+                        else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 100))
+                        {
+                            bool ret = dynamicAdjustment.RecycleVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
+                            if (ret)
+                                Console.WriteLine("[- Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
+                            else
+                            {
+                                ulong currentMemSize = VMState.DockerDesktopVM.GetPerformanceSetting().RAM_VirtualQuantity;
+                                if (VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity != currentMemSize)
+                                    Console.WriteLine("[- Docker Mem] 监测到Docker开启，且处于Hyper-V模式，虚拟机：DockerDesktopVM 内存空闲\n回收内存，从:" + Convert.ToString(VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity) + "MB 回收到:" + Convert.ToString(currentMemSize) + "MB");
+                            }
+                            continue;
+                        }
+                    }
+                    /*
+                    if (currentAnalysor.isMemAlarm == true)
+                    {
+                        bool ret = dynamicAdjustment.AppendVMMemory(currentVM, 2048, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
+                        if (ret)
+                        {
+                            Console.WriteLine("内存预警出现，分配内存");
+                            // 分配内存后，刷新虚拟机性能参数
+                            currentVM.GetPerformanceSetting();
+                            // 分配内存后，取消内存预警并增加内存空闲等级
+                            currentAnalysor.isMemAlarm = false;
+                            if (memoryAnalysorDict[currentVM].memFreeRanking <= 8)
+                                // Memory become more free
+                                memoryAnalysorDict[currentVM].memFreeRanking += 1;
+                        }
+                    }
+                    */
                 }
-                */
             }
-            foreach (KeyValuePair<VirtualMachine, CpuAnalysor> kvp in cpuAnalysorrDict)
+            if (IsCPUBalanceOn)
             {
-                VirtualMachine currentVM = kvp.Key;
-                CpuAnalysor currentAnalysor = kvp.Value;
-                currentVM.GetPerformanceSetting();
-                ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
-                ulong currentCpuReserve = currentVM.performanceSetting.CPU_Reservation;
-
-                // isCpuAlarm标记了瞬时的CPU预警，cpuFreeRanking小于等于3说明CPU长期负载较高
-                if (currentAnalysor.isCpuAlarm == true || currentAnalysor.cpuFreeRanking <= 4)
+                foreach (KeyValuePair<VirtualMachine, CpuAnalysor> kvp in cpuAnalysorrDict)
                 {
-                    if (currentCpuLimit > 95000)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        bool ret;
-                        if ((currentCpuLimit + 20000) < 100000)
-                        {
-                            ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 20000);
-                        }
-                        else
-                        {
-                            ret = dynamicAdjustment.AdjustCPULimit(currentVM, 100000);
-                        }
-                        
-                        if (currentCpuReserve < 50000)
-                        {
-                            ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
-                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
-                        }
+                    VirtualMachine currentVM = kvp.Key;
+                    CpuAnalysor currentAnalysor = kvp.Value;
+                    currentVM.GetPerformanceSetting();
+                    ulong currentCpuLimit = currentVM.performanceSetting.CPU_Limit;
+                    ulong currentCpuReserve = currentVM.performanceSetting.CPU_Reservation;
 
-                        if (ret)
-                        {
-                            // fix: log显示limit不超过100
-                            ulong dst= (currentCpuLimit + 20000)>(ulong)100000 ?100:(currentCpuLimit + 20000) / 1000;
-                            Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString(dst));
-                            // 取消CPU预警
-                            currentAnalysor.isCpuAlarm = false;
-                            // CPU become more free
-                            if (cpuAnalysorrDict[currentVM].cpuFreeRanking <= 5)
-                                cpuAnalysorrDict[currentVM].cpuFreeRanking += 1;
-                        }
-                        continue;
-                    }
-                }
-                
-                // 尝试调低CPU保留值
-                if (currentAnalysor.cpuFreeRanking > 6)
-                {
-                    // 等级为9和10，同时调低保留和限制
-                    if (currentAnalysor.cpuFreeRanking >= 8)
+                    // isCpuAlarm标记了瞬时的CPU预警，cpuFreeRanking小于等于3说明CPU长期负载较高
+                    if (currentAnalysor.isCpuAlarm == true || currentAnalysor.cpuFreeRanking <= 4)
                     {
-                        if (currentCpuReserve > 0) 
-                        {
-                            // 首先调低保留值，确保保留<限制
-                            bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
-                            // 虚拟机保留最低40%
-                            if (ret)
-                            {
-                                Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
-                            }
-                        }
-                        // 尝试调低CPU限制值
-                        if (currentCpuLimit > 50000)
-                        {
-                            bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
-                            if (ret)
-                            {
-                                Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
-                            }
-                        }
-                        currentAnalysor.cpuFreeRanking -= 2;
-                    }
-                    // 等级为7、8
-                    else if(currentCpuReserve > 0)
-                    {
-                        bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
-                        if (ret)
-                        {
-                            Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
-                            currentAnalysor.cpuFreeRanking -= 1;
-                        }
-                    }
-                }
-
-                // Docker CPU 动态调节
-                if (!VMState.isDockerInstalled)
-                    continue;
-                // Docker VM是否安装
-                if (VMState.DockerDesktopVM.IsPowerOn())
-                {
-                    VMState.DockerDesktopVM.GetPerformanceSetting();
-                    ulong currentDockerCpuLimit = VMState.DockerDesktopVM.performanceSetting.CPU_Limit;
-                    ulong currentDockerCpuReserve = VMState.DockerDesktopVM.performanceSetting.CPU_Reservation;
-
-                    if (currentAnalysor.isDockerCpuAlarm == true)
-                    {
-                        if (currentDockerCpuLimit > 90000)
+                        if (currentCpuLimit > 95000)
                         {
                             continue;
                         }
                         else
                         {
-                            bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit + 10000);
-                            if (currentDockerCpuReserve < 50000)
+                            bool ret;
+                            if ((currentCpuLimit + 20000) < 100000)
                             {
-                                ret &= dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve + 10000);
-                                Console.WriteLine("[+ Docker CPU] 监测到DockerDesktopVM虚拟机 CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentDockerCpuReserve + 10000) / 1000));
+                                ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit + 20000);
+                            }
+                            else
+                            {
+                                ret = dynamicAdjustment.AdjustCPULimit(currentVM, 100000);
+                            }
+
+                            if (currentCpuReserve < 50000)
+                            {
+                                ret &= dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve + 10000);
+                                Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentCpuReserve + 10000) / 1000));
                             }
 
                             if (ret)
                             {
-                                Console.WriteLine("[+ Docker CPU] 监测到虚拟机DockerDesktopVM虚拟机 CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentDockerCpuLimit + 10000) / 1000));
+                                // fix: log显示limit不超过100
+                                ulong dst = (currentCpuLimit + 20000) > (ulong)100000 ? 100 : (currentCpuLimit + 20000) / 1000;
+                                Console.WriteLine("[+ " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString(dst));
                                 // 取消CPU预警
                                 currentAnalysor.isCpuAlarm = false;
-                                // CPU become more free。调高CPU空闲等级
-                                if (currentAnalysor.dockerVmCpuFreeRanking <= 5)
-                                    currentAnalysor.dockerVmCpuFreeRanking += 1;
-                                continue;
+                                // CPU become more free
+                                if (cpuAnalysorrDict[currentVM].cpuFreeRanking <= 5)
+                                    cpuAnalysorrDict[currentVM].cpuFreeRanking += 1;
                             }
+                            continue;
                         }
                     }
 
                     // 尝试调低CPU保留值
-                    if (currentAnalysor.dockerVmCpuFreeRanking > 6)
+                    if (currentAnalysor.cpuFreeRanking > 6)
                     {
                         // 等级为9和10，同时调低保留和限制
-                        if (currentAnalysor.dockerVmCpuFreeRanking > 8)
+                        if (currentAnalysor.cpuFreeRanking >= 8)
                         {
-                            if (currentDockerCpuReserve > 0)
+                            if (currentCpuReserve > 0)
                             {
                                 // 首先调低保留值，确保保留<限制
-                                bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                                bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
                                 // 虚拟机保留最低40%
                                 if (ret)
                                 {
-                                    Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
+                                    Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
                                 }
                             }
                             // 尝试调低CPU限制值
-                            if (currentDockerCpuLimit > 40000)
+                            if (currentCpuLimit > 50000)
                             {
-                                bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit - 10000);
+                                bool ret = dynamicAdjustment.AdjustCPULimit(currentVM, currentCpuLimit - 10000);
                                 if (ret)
                                 {
-                                    Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentDockerCpuLimit - 10000) / 1000));
+                                    Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentCpuLimit - 10000) / 1000));
                                 }
                             }
-                            currentAnalysor.dockerVmCpuFreeRanking -= 2;
+                            currentAnalysor.cpuFreeRanking -= 2;
                         }
                         // 等级为7、8
-                        else if (currentDockerCpuReserve > 0)
+                        else if (currentCpuReserve > 0)
                         {
-                            bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                            bool ret = dynamicAdjustment.AdjustCPUReservation(currentVM, currentCpuReserve - 10000);
                             if (ret)
                             {
-                                Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
-                                currentAnalysor.dockerVmCpuFreeRanking -= 1;
+                                Console.WriteLine("[- " + currentVM.vmName + " CPU] 监测到虚拟机：" + currentVM.vmName + " CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.cpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentCpuReserve - 10000) / 1000));
+                                currentAnalysor.cpuFreeRanking -= 1;
                             }
                         }
                     }
-                } 
+
+                    // Docker CPU 动态调节
+                    if (!VMState.isDockerInstalled)
+                        continue;
+                    // Docker VM是否安装
+                    if (VMState.DockerDesktopVM.IsPowerOn())
+                    {
+                        VMState.DockerDesktopVM.GetPerformanceSetting();
+                        ulong currentDockerCpuLimit = VMState.DockerDesktopVM.performanceSetting.CPU_Limit;
+                        ulong currentDockerCpuReserve = VMState.DockerDesktopVM.performanceSetting.CPU_Reservation;
+
+                        if (currentAnalysor.isDockerCpuAlarm == true)
+                        {
+                            if (currentDockerCpuLimit > 90000)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit + 10000);
+                                if (currentDockerCpuReserve < 50000)
+                                {
+                                    ret &= dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve + 10000);
+                                    Console.WriteLine("[+ Docker CPU] 监测到DockerDesktopVM虚拟机 CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU保留比到：" + Convert.ToString((currentDockerCpuReserve + 10000) / 1000));
+                                }
+
+                                if (ret)
+                                {
+                                    Console.WriteLine("[+ Docker CPU] 监测到虚拟机DockerDesktopVM虚拟机 CPU压力大，CPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 分配CPU\n提高CPU限制比到：" + Convert.ToString((currentDockerCpuLimit + 10000) / 1000));
+                                    // 取消CPU预警
+                                    currentAnalysor.isCpuAlarm = false;
+                                    // CPU become more free。调高CPU空闲等级
+                                    if (currentAnalysor.dockerVmCpuFreeRanking <= 5)
+                                        currentAnalysor.dockerVmCpuFreeRanking += 1;
+                                    continue;
+                                }
+                            }
+                        }
+
+                        // 尝试调低CPU保留值
+                        if (currentAnalysor.dockerVmCpuFreeRanking > 6)
+                        {
+                            // 等级为9和10，同时调低保留和限制
+                            if (currentAnalysor.dockerVmCpuFreeRanking > 8)
+                            {
+                                if (currentDockerCpuReserve > 0)
+                                {
+                                    // 首先调低保留值，确保保留<限制
+                                    bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                                    // 虚拟机保留最低40%
+                                    if (ret)
+                                    {
+                                        Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
+                                    }
+                                }
+                                // 尝试调低CPU限制值
+                                if (currentDockerCpuLimit > 40000)
+                                {
+                                    bool ret = dynamicAdjustment.AdjustCPULimit(VMState.DockerDesktopVM, currentDockerCpuLimit - 10000);
+                                    if (ret)
+                                    {
+                                        Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 \n调低虚拟机限制到:" + Convert.ToString((currentDockerCpuLimit - 10000) / 1000));
+                                    }
+                                }
+                                currentAnalysor.dockerVmCpuFreeRanking -= 2;
+                            }
+                            // 等级为7、8
+                            else if (currentDockerCpuReserve > 0)
+                            {
+                                bool ret = dynamicAdjustment.AdjustCPUReservation(VMState.DockerDesktopVM, currentDockerCpuReserve - 10000);
+                                if (ret)
+                                {
+                                    Console.WriteLine("[- Docker CPU] 监测到DockerDesktopVM虚拟机 CPU空闲\nCPUFreeRanking 等级为：" + Convert.ToString(currentAnalysor.dockerVmCpuFreeRanking) + "。 调低虚拟机保留到:" + Convert.ToString((currentDockerCpuReserve - 10000) / 1000));
+                                    currentAnalysor.dockerVmCpuFreeRanking -= 1;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         public bool CheckMemCanDeploy()

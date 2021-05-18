@@ -18,10 +18,21 @@ namespace Load_Balancer_Server
     {
         public string DetectorServerAddr = "hypervnb://00000000-0000-0000-0000-000000000000/C7240163-6E2B-4466-9E41-FF74E7F0DE47";
         public static DetectorServer mySampleServer;
+        public bool IsDetectKeyProc = true;
        // public static VMPerf currentPerfTransfer;
         public Server(string Addr)
         {
             DetectorServerAddr = Addr;
+            try 
+            {
+                GetConfig getConfig = new GetConfig();
+                getConfig.GetSysConfig();
+                IsDetectKeyProc = getConfig.currentSysConfig.IsDetectKeyProc;
+            }
+            catch 
+            {
+                IsDetectKeyProc = true;
+            }
         }
 
         [ServiceContract]

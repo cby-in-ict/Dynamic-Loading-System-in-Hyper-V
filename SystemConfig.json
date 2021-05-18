@@ -1,4 +1,7 @@
 {
+  "IsMemoryBalanceOn": "true",
+  "IsCPUBalanceOn": "true",
+  "IsDetectKeyProc": "true",
   "BalanceStrategy": "User",
   "CPUDefaultCount": "2",
   "MemoryDefaultSize": "4096",

@@ -29,6 +29,11 @@ namespace Load_Balancer_Server
 
     public class SysConfig
     {
+        // 是否开启内存和CPU的负载均衡
+        public bool IsMemoryBalanceOn = true;
+        public bool IsCPUBalanceOn = true;
+        // 是否监测关键进程启动
+        public bool IsDetectKeyProc = true;
         public string BalanceStrategy { set; get; }
         public int CPUDefaultCount { set; get; }
         public UInt64 MemoryDefaultSize { set; get; }
@@ -109,6 +114,12 @@ namespace Load_Balancer_Server
                 using (JsonTextReader reader = new JsonTextReader(file))
                 {
                     JObject o = (JObject)JToken.ReadFrom(reader);
+                    if(o.ContainsKey("IsMemoryBalanceOn"))
+                        currentSysConfig.IsMemoryBalanceOn = Convert.ToBoolean(o["IsMemoryBalanceOn"].ToString());
+                    if (o.ContainsKey("IsCPUBalanceOn"))
+                        currentSysConfig.IsCPUBalanceOn = Convert.ToBoolean(o["IsCPUBalanceOn"].ToString());
+                    if (o.ContainsKey("IsDetectKeyProc"))
+                        currentSysConfig.IsDetectKeyProc = Convert.ToBoolean(o["IsDetectKeyProc"].ToString()); 
                     if (o.ContainsKey("BalanceStrategy"))
                         currentSysConfig.BalanceStrategy = o["BalanceStrategy"].ToString();
                     if (o.ContainsKey("CPUDefaultCount"))

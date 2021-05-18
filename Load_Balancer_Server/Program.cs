@@ -51,9 +51,9 @@ namespace Load_Balancer_Server
             });
             task.Start();
 
-            LoadBalancer testLoadBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 5000, 200000);
-            testLoadBalancer.setDetectorServer(detectorServer);
-            testLoadBalancer.BalanceByTime();
+            LoadBalancer currentBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 5000, 200000);
+            currentBalancer.setDetectorServer(detectorServer);
+            currentBalancer.BalanceByTime();
             Console.WriteLine("负载均衡器(HvBalancer)启动成功！");
             // 按s键退出
             while (true)
