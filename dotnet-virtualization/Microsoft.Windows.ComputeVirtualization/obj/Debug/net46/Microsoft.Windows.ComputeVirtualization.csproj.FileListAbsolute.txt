@@ -5,3 +5,4 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\dotnet-virtualiz
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\dotnet-virtualization\Microsoft.Windows.ComputeVirtualization\obj\Debug\net46\Microsoft.Windows.ComputeVirtualization.csproj.CoreCompileInputs.cache
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\dotnet-virtualization\Microsoft.Windows.ComputeVirtualization\obj\Debug\net46\Microsoft.Windows.ComputeVirtualization.dll
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\dotnet-virtualization\Microsoft.Windows.ComputeVirtualization\obj\Debug\net46\Microsoft.Windows.ComputeVirtualization.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\dotnet-virtualization\Microsoft.Windows.ComputeVirtualization\obj\Debug\net46\Microsoft.Windows.ComputeVirtualization.csprojAssemblyReference.cache

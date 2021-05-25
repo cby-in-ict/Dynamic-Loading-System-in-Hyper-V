@@ -40,7 +40,7 @@ namespace Load_Balancer_Server
         {
             [OperationContract]
             VMPerf TransferPerfStr(string perf_Str);
-            [OperationContract]
+            [OperationContract(IsOneWay = true)]
             void KeyProcStart(string VMName,string keyProcName);
 
         }
@@ -98,19 +98,29 @@ namespace Load_Balancer_Server
                 DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
                 if (VMName == "VM1")
                 {
-                    dynamicAdjustment.AdjustCPULimit(VMState.VM1, 70000);
+                    if (keyProcName == "chrome")
+                    {
+                        dynamicAdjustment.AdjustCPULimit(VMState.VM1, 70000);
+                    }
                     dynamicAdjustment.AdjustCPUWeight(VMState.VM1, 10000);
                 }
                 if (VMName == "VM2")
                 {
-                    dynamicAdjustment.AdjustCPULimit(VMState.VM2, 70000);
+                    if (keyProcName == "chrome")
+                    {
+                        dynamicAdjustment.AdjustCPULimit(VMState.VM2, 70000);
+                    }
                     dynamicAdjustment.AdjustCPUWeight(VMState.VM2, 10000);
                 }
                 if (VMName == "VM3")
                 {
-                    dynamicAdjustment.AdjustCPULimit(VMState.VM3, 70000);
-                    dynamicAdjustment.AdjustCPULimit(VMState.VM3, 10000);
+                    if (keyProcName == "chrome")
+                    {
+                        dynamicAdjustment.AdjustCPULimit(VMState.VM3, 70000);
+                    }
+                    dynamicAdjustment.AdjustCPUWeight(VMState.VM3, 10000);
                 }
+                return;
             }
         }
         public void StartUpServer()

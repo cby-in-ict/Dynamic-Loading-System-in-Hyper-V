@@ -5,6 +5,8 @@
  *                       Copyright preserved by ChenBoYan, chenboyan@ict.ac.cn 
 */
 //#define TEST
+// 是否统计各个VM的内存使用情况
+#define VMMemStatistic
 using HyperVWcfTransport;
 using System;
 using System.Collections.Generic;
@@ -40,6 +42,10 @@ namespace Load_Balancer_Server
             VMState vMState = new VMState();
             vMState.StartDetectVMState(5000);
 #endif
+#if VMMemStatistic
+            // 统计各个VM的内存使用情况,输出到Excel
+            CommonUtility.GetVMMemoryUsage(5000);
+#endif
             InitVMSetting initVMSetting = new InitVMSetting();
             initVMSetting.InitAllVM();
 
@@ -51,7 +57,7 @@ namespace Load_Balancer_Server
             });
             task.Start();
 
-            LoadBalancer currentBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 5000, 200000);
+            LoadBalancer currentBalancer = new LoadBalancer(80.0, 1, 85.0, 3, 3, 10000, 200000);
             currentBalancer.setDetectorServer(detectorServer);
             currentBalancer.BalanceByTime();
             Console.WriteLine("负载均衡器(HvBalancer)启动成功！");

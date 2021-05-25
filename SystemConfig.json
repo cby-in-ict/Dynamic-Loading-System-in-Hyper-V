@@ -1,6 +1,6 @@
 {
   "IsMemoryBalanceOn": "true",
-  "IsCPUBalanceOn": "true",
+  "IsCPUBalanceOn": "false",
   "IsDetectKeyProc": "true",
   "BalanceStrategy": "User",
   "CPUDefaultCount": "2",

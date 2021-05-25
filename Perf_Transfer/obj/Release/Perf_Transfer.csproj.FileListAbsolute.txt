@@ -11,3 +11,4 @@ C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\ob
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Release\Perf_Transfer.csproj.CopyComplete
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Release\Perf_Transfer.dll
 C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Release\Perf_Transfer.pdb
+C:\Users\CBY\Documents\GitHub\Dynamic-Loading-System-in-Hyper-V\Perf_Transfer\obj\Release\Perf_Transfer.csprojAssemblyReference.cache

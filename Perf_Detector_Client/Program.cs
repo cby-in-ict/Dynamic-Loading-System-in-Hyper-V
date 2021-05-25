@@ -32,7 +32,7 @@ namespace Perf_Detector_Client
             {
                 Console.WriteLine("Exp in Client：" + exp.Message);
                 Console.WriteLine("Trying to restart client...");
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
                 RecursiveStartClient(HvAddr);
             }
         }

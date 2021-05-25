@@ -20,7 +20,7 @@ namespace Perf_Detector_Client
     {
         [OperationContract]
         VMPerf TransferPerfStr(string perf_Str);
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void KeyProcStart(string VMName, string keyProcName);
 
     }
@@ -45,7 +45,7 @@ namespace Perf_Detector_Client
         public DetectorClient detectorClient;
         public int sendTimeGap { set; get; }
        
-        public Client(string Addr, int TimeGap = 100)
+        public Client(string Addr, int TimeGap = 5000)
         {
             clientPerfInfo = new PerformanceInfo();
             HvAddr = Addr;

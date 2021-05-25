@@ -26,7 +26,7 @@ namespace Load_Balancer_Server
         public int appendMemPressure { set; get; }
         public int recycleMemPressure { set; get; }
         // 监测的时间间隔，单位为毫秒(ms)
-        int detectTimeGap = 10000;
+        int detectTimeGap = 5000;
         // 是否开启内存和CPU的负载均衡，默认开启
         public bool IsMemoryBalanceOn = true;
         public bool IsCPUBalanceOn = true;
@@ -37,7 +37,7 @@ namespace Load_Balancer_Server
         // 动态资源调节
         public DynamicAdjustment dynamicAdjustment = new DynamicAdjustment();
         /*List<VirtualMachine> vmList, */
-        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve, int recycleMemThredHold = 58, int appendMemThredHold = 85) 
+        public LoadBalancer(double memPercentageThredHold, int memAlarmTimesLimit, double percentagethredhold, int queuelengththredhold, int cpuAlarmTimesLimit, int timeGap, double hostMemReserve, int recycleMemThredHold = 57, int appendMemThredHold = 85) 
         {
             detectTimeGap = timeGap;
             hostMemReservedPercentage = hostMemReserve;
@@ -208,7 +208,7 @@ namespace Load_Balancer_Server
                                 Console.WriteLine("[+ VM1 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM1 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                             continue;
                         }
-                        if (VMState.VM1PerfCounterInfo.availablePercentage < 0.1)
+                        if (VMState.VM1PerfCounterInfo.availablePercentage < 0.15)
                         {
                             bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM1Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                             if (ret)
@@ -242,7 +242,7 @@ namespace Load_Balancer_Server
                                 Console.WriteLine("[+ VM2 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM2 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB 扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                             continue;
                         }
-                        if (VMState.VM2PerfCounterInfo.availablePercentage < 0.1)
+                        if (VMState.VM2PerfCounterInfo.availablePercentage < 0.15)
                         {
                             bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM2Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                             if (ret)
@@ -275,7 +275,7 @@ namespace Load_Balancer_Server
                                 Console.WriteLine("[+ VM3 Mem] 监测到虚拟机：" + currentVM.vmName + " 内存压力大\n扩展VM3 内存，从:" + Convert.ToString(currentVM.performanceSetting.RAM_VirtualQuantity) + "MB扩展到:" + Convert.ToString(currentVM.GetPerformanceSetting().RAM_VirtualQuantity) + "MB");
                             continue;
                         }
-                        if (VMState.VM3PerfCounterInfo.availablePercentage < 0.1)
+                        if (VMState.VM3PerfCounterInfo.availablePercentage < 0.15)
                         {
                             bool ret = dynamicAdjustment.AppendVMMemory(currentVM, VMState.VM3Config.MemorySize, currentVM.performanceSetting.RAM_VirtualQuantity, 1);
                             if (ret)
@@ -302,7 +302,7 @@ namespace Load_Balancer_Server
                             continue;
                         }
                         VMState.DockerDesktopVM.GetPerformanceSetting();
-                        if (VMState.DockerVMPerfCounterInfo.currentPressure > (2 * 120))
+                        if (VMState.DockerVMPerfCounterInfo.currentPressure > (2 * 130))
                         {
                             bool ret = dynamicAdjustment.AppendVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
                             if (ret)
@@ -315,7 +315,7 @@ namespace Load_Balancer_Server
                             }
                             continue;
                         }
-                        else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 100))
+                        else if (VMState.DockerVMPerfCounterInfo.averagePressure < (2 * 105))
                         {
                             bool ret = dynamicAdjustment.RecycleVMMemory(VMState.DockerDesktopVM, VMState.DockerVMConfig.MemorySize, VMState.DockerDesktopVM.performanceSetting.RAM_VirtualQuantity, 1);
                             if (ret)
@@ -566,8 +566,9 @@ namespace Load_Balancer_Server
 
             public void DetectMemByTime()
             {
+                return;
                 // 创建一个detectTimeGap定时的定时器
-                RUtimer = new System.Timers.Timer(detectTimeGap * 10);    // 参数单位为ms
+                RUtimer = new System.Timers.Timer(detectTimeGap);    // 参数单位为ms
                 RUtimer.Elapsed += DetectMemoryState;
                 // 为true时，定时时间到会重新计时；为false则只定时一次
                 RUtimer.AutoReset = true;
@@ -687,7 +688,7 @@ namespace Load_Balancer_Server
                 RUtimer.Start();
 
                 // 创建一个detectTimeGap*1000定时的清空状态定时器
-                Cleartimer = new System.Timers.Timer(detectTimeGap * 1000);    // 参数单位为ms
+                Cleartimer = new System.Timers.Timer(detectTimeGap * 100);    // 参数单位为ms
                 Cleartimer.Elapsed += ClearCpuState;
                 // 为true时，定时时间到会重新计时；为false则只定时一次
                 Cleartimer.AutoReset = true;
@@ -849,8 +850,6 @@ namespace Load_Balancer_Server
                 SetAlarmTimesZero();
                 CancelCpuAlarm();
             }
-
         }
-
     }
 }
